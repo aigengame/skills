@@ -29,9 +29,9 @@ Each skill uses one top-level directory:
 
 ## Initial migration
 
-The initial catalog will be extracted from [`aigengame/godot-agent`](https://github.com/aigengame/godot-agent) at pinned revision [`04d3e089b32330aeffc7da98f4824bb21873c2b3`](https://github.com/aigengame/godot-agent/commit/04d3e089b32330aeffc7da98f4824bb21873c2b3). The migration must preserve the relevant history from the current `.agents/skills` path and the former `.claude/skills` path.
+The initial catalog was extracted from [`aigengame/godot-agent`](https://github.com/aigengame/godot-agent) at pinned revision [`04d3e089b32330aeffc7da98f4824bb21873c2b3`](https://github.com/aigengame/godot-agent/commit/04d3e089b32330aeffc7da98f4824bb21873c2b3). The import preserves the relevant history from the current `.agents/skills` path and the former `.claude/skills` path.
 
-The migration excludes unrelated product files and source-repository release tags.
+The migration excludes unrelated product files and source-repository release tags. See the [migration record](docs/migrations/2026-08-28-godot-agent.md) for the commands and evidence.
 
 Track the bootstrap work in these issues:
 
