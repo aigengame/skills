@@ -27,6 +27,33 @@ Each skill uses one top-level directory:
 
 `SKILL.md` is required. A skill can include only the bundled resources that it needs.
 
+## Validation
+
+The catalog validator checks every top-level skill directory. It requires a readable `SKILL.md`, validates the supported Agent Skills frontmatter fields, requires the frontmatter name to match the directory, and checks relative Markdown links to bundled files.
+
+Supported frontmatter consists of required `name` and `description` fields and the optional `license`, `compatibility`, `metadata`, and `allowed-tools` fields defined by the [Agent Skills specification](https://agentskills.io/specification). Repository infrastructure lives in `.github`, `docs`, `scripts`, and `tests`; other non-hidden top-level directories are treated as skills.
+
+Create a local environment and install the pinned validator dependency:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+```
+
+Run the focused tests and validate the complete catalog:
+
+```bash
+python -m unittest discover -s tests -v
+python scripts/validate_catalog.py
+```
+
+A valid checkout ends the catalog command with:
+
+```text
+Catalog validation passed.
+```
+
 ## Initial migration
 
 The initial catalog was extracted from [`aigengame/godot-agent`](https://github.com/aigengame/godot-agent) at pinned revision [`04d3e089b32330aeffc7da98f4824bb21873c2b3`](https://github.com/aigengame/godot-agent/commit/04d3e089b32330aeffc7da98f4824bb21873c2b3). The import preserves the relevant history from the current `.agents/skills` path and the former `.claude/skills` path.
