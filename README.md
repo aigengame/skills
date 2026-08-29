@@ -33,7 +33,7 @@ The catalog validator checks every top-level skill directory. It requires a read
 
 Supported frontmatter consists of required `name` and `description` fields and the optional `license`, `compatibility`, `metadata`, and `allowed-tools` fields defined by the [Agent Skills specification](https://agentskills.io/specification). Repository infrastructure lives in `.github`, `docs`, `scripts`, and `tests`; other non-hidden top-level directories are treated as skills.
 
-Create a local environment and install the pinned validator dependency:
+Python 3.10 or newer is required. Create a local environment and install the pinned validator dependencies:
 
 ```bash
 python3 -m venv .venv

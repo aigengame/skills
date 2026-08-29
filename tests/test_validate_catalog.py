@@ -77,6 +77,47 @@ class ValidateCatalogTests(unittest.TestCase):
             errors,
         )
 
+    def test_accepts_yaml_12_plain_strings(self) -> None:
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            write_skill(
+                root,
+                "on",
+                frontmatter=(
+                    "---\n"
+                    "name: on\n"
+                    "description: No\n"
+                    "---\n"
+                ),
+            )
+
+            skill_count, errors = validate_catalog(root)
+
+        self.assertEqual(1, skill_count)
+        self.assertEqual([], errors)
+
+    def test_rejects_duplicate_frontmatter_fields(self) -> None:
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            write_skill(
+                root,
+                "duplicate-name",
+                frontmatter=(
+                    "---\n"
+                    "name: wrong-name\n"
+                    "name: duplicate-name\n"
+                    "description: A duplicate field is ambiguous.\n"
+                    "---\n"
+                ),
+            )
+
+            _, errors = validate_catalog(root)
+
+        self.assertEqual(
+            ["duplicate-name/SKILL.md: frontmatter is not valid YAML"],
+            errors,
+        )
+
     def test_rejects_a_name_that_does_not_match_its_directory(self) -> None:
         with TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
@@ -119,6 +160,47 @@ class ValidateCatalogTests(unittest.TestCase):
             ],
             errors,
         )
+
+    def test_rejects_a_broken_reference_style_link(self) -> None:
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            write_skill(
+                root,
+                "broken-reference-style-link",
+                body=(
+                    "Read [the reference][reference].\n\n"
+                    "[reference]: REFERENCE.md\n"
+                ),
+            )
+
+            _, errors = validate_catalog(root)
+
+        self.assertEqual(
+            [
+                "broken-reference-style-link/SKILL.md: relative reference "
+                "'REFERENCE.md' does not name a repository file"
+            ],
+            errors,
+        )
+
+    def test_ignores_link_syntax_in_code_and_escaped_text(self) -> None:
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            write_skill(
+                root,
+                "literal-links",
+                body=(
+                    "```markdown\n"
+                    "[code example](MISSING.md)\n"
+                    "```\n\n"
+                    "\\[escaped example](ALSO-MISSING.md)\n"
+                ),
+            )
+
+            skill_count, errors = validate_catalog(root)
+
+        self.assertEqual(1, skill_count)
+        self.assertEqual([], errors)
 
     def test_accepts_supported_folded_description_and_existing_reference(self) -> None:
         with TemporaryDirectory() as temporary_directory:
