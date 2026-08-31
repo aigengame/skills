@@ -1,0 +1,207 @@
+name: Release catalog
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  SKILLS_CLI_VERSION: "1.5.23"
+  SMOKE_SKILL: artifact-review
+
+jobs:
+  candidate:
+    name: Validate release candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      sha: ${{ steps.candidate.outputs.sha }}
+
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v6
+
+      - name: Record the exact candidate revision
+        id: candidate
+        run: |
+          candidate_sha="$(git rev-parse HEAD)"
+          if [ "$candidate_sha" != "$GITHUB_SHA" ]; then
+            echo "Checked out ${candidate_sha}, expected ${GITHUB_SHA}." >&2
+            exit 1
+          fi
+          echo "sha=${candidate_sha}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install validator dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run focused tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Validate catalog
+        run: python scripts/validate_catalog.py
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: List every skill with the pinned Skills CLI
+        run: |
+          catalog_count="$(find skills -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
+          list_output="$(npx --yes "skills@${SKILLS_CLI_VERSION}" add . --list)"
+          printf '%s\n' "$list_output"
+          if ! grep -Fq "Found ${catalog_count} skills" <<< "$list_output"; then
+            echo "Skills CLI did not report all ${catalog_count} catalog skills." >&2
+            exit 1
+          fi
+
+      - name: Validate an isolated project installation
+        run: |
+          project_root="${RUNNER_TEMP}/skills-project"
+          mkdir -p "$project_root"
+          git -C "$project_root" init --quiet
+          (
+            cd "$project_root"
+            npx --yes "skills@${SKILLS_CLI_VERSION}" add "$GITHUB_WORKSPACE" \
+              --skill "$SMOKE_SKILL" --agent codex --copy -y
+          )
+          installed_root="${project_root}/.agents/skills"
+          diff -ru "skills/${SMOKE_SKILL}" "${installed_root}/${SMOKE_SKILL}"
+          test "$(find "$installed_root" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')" = "1"
+          for infrastructure in .github docs scripts tests; do
+            test ! -e "${installed_root}/${infrastructure}"
+          done
+
+      - name: Validate an isolated global installation
+        run: |
+          global_root="${HOME}/.codex/skills"
+          test ! -e "${global_root}/${SMOKE_SKILL}"
+          npx --yes "skills@${SKILLS_CLI_VERSION}" add "$GITHUB_WORKSPACE" \
+            --skill "$SMOKE_SKILL" --agent codex --global --copy -y
+          diff -ru "skills/${SMOKE_SKILL}" "${global_root}/${SMOKE_SKILL}"
+          for infrastructure in .github docs scripts tests; do
+            test ! -e "${global_root}/${infrastructure}"
+          done
+
+  release:
+    name: Run Release Please
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: candidate
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    outputs:
+      created: ${{ steps.release.outputs.release_created }}
+      sha: ${{ steps.release.outputs.sha }}
+      tag: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+
+    steps:
+      - name: Create or update the release
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ github.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  tagged-release:
+    name: Validate tagged release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs:
+      - candidate
+      - release
+    if: needs.release.outputs.created == 'true'
+    permissions:
+      contents: write
+    env:
+      CANDIDATE_SHA: ${{ needs.candidate.outputs.sha }}
+      RELEASE_SHA: ${{ needs.release.outputs.sha }}
+      RELEASE_TAG: ${{ needs.release.outputs.tag }}
+      RELEASE_VERSION: ${{ needs.release.outputs.version }}
+
+    steps:
+      - name: Checkout the emitted tag
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.release.outputs.tag }}
+
+      - name: Verify the tag resolves to the validated candidate
+        run: |
+          checkout_sha="$(git rev-parse HEAD)"
+          tag_sha="$(git rev-list -n 1 "$RELEASE_TAG")"
+          if [ "$RELEASE_TAG" != "v${RELEASE_VERSION}" ]; then
+            echo "Tag ${RELEASE_TAG} does not match version ${RELEASE_VERSION}." >&2
+            exit 1
+          fi
+          if [ "$checkout_sha" != "$RELEASE_SHA" ] || \
+             [ "$tag_sha" != "$RELEASE_SHA" ] || \
+             [ "$RELEASE_SHA" != "$CANDIDATE_SHA" ]; then
+            echo "Release tag, release output, and validated candidate do not resolve to one revision." >&2
+            exit 1
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: List skills from the emitted tag
+        run: |
+          release_source="${GITHUB_REPOSITORY}#${RELEASE_TAG}"
+          catalog_count="$(find skills -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
+          list_output="$(npx --yes "skills@${SKILLS_CLI_VERSION}" add "$release_source" --list)"
+          printf '%s\n' "$list_output"
+          if ! grep -Fq "Found ${catalog_count} skills" <<< "$list_output"; then
+            echo "Tagged source did not report all ${catalog_count} catalog skills." >&2
+            exit 1
+          fi
+
+      - name: Install a skill from the emitted tag
+        run: |
+          project_root="${RUNNER_TEMP}/tagged-skills-project"
+          release_source="${GITHUB_REPOSITORY}#${RELEASE_TAG}"
+          mkdir -p "$project_root"
+          git -C "$project_root" init --quiet
+          (
+            cd "$project_root"
+            npx --yes "skills@${SKILLS_CLI_VERSION}" add "$release_source" \
+              --skill "$SMOKE_SKILL" --agent codex --copy -y
+          )
+          installed_root="${project_root}/.agents/skills"
+          diff -ru "skills/${SMOKE_SKILL}" "${installed_root}/${SMOKE_SKILL}"
+          test "$(find "$installed_root" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')" = "1"
+          for infrastructure in .github docs scripts tests; do
+            test ! -e "${installed_root}/${infrastructure}"
+          done
+
+      - name: Record release validation metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          marker="<!-- aigengame-skills-catalog-validation -->"
+          release_body="$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json body --jq .body)"
+          if [[ "$release_body" == *"$marker"* ]]; then
+            echo "Release validation metadata is already present."
+            exit 0
+          fi
+          validation_notes="$(printf '\n\n%s\n## Catalog validation\n\n- Catalog tag: `%s`\n- Catalog revision: `%s`\n- Skills CLI: `skills@%s`\n' \
+            "$marker" "$RELEASE_TAG" "$RELEASE_SHA" "$SKILLS_CLI_VERSION")"
+          gh release edit "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+            --notes "${release_body}${validation_notes}"

@@ -52,18 +52,18 @@ A source without a Git ref resolves the repository's current default branch when
 
 ## Publishing
 
-Issue [#10](https://github.com/aigengame/skills/issues/10) tracks the first tagged release and its automation. The planned release contract makes Release Please the only authority that creates catalog tags and GitHub Releases. Each release is one immutable repository revision with a full SemVer tag in the form `vX.Y.Z`; tags do not include a component prefix.
+This repository uses Release Please as the only authority that creates catalog tags and GitHub Releases. It manages one root `simple` release. Each release is one immutable repository revision with a full SemVer tag in the form `vX.Y.Z`; tags do not include a component prefix. Release Please derives versions and release notes from Conventional Commit messages.
 
-The planned release flow is:
+The release flow is:
 
 1. merge reviewed catalog changes only after the required GitHub Actions check passes;
 2. let Release Please create or update its release pull request;
 3. review and merge the release pull request;
-4. validate the exact resulting `main` revision with the catalog checks and a pinned Skills CLI version before Release Please can create a tag;
+4. validate the exact resulting `main` revision with the catalog checks and Skills CLI `1.5.23` before Release Please can create a tag;
 5. let Release Please create the `vX.Y.Z` tag and GitHub Release; and
-6. in the same workflow, confirm that the emitted tag resolves to the validated revision and install a selected skill from that tag.
+6. in the same workflow, confirm that the emitted tag resolves to the validated revision, install a selected skill from that tag, and record the tag, revision, and Skills CLI version in the GitHub Release.
 
-Until issue #10 is complete, this repository has no supported stable release tag and the commands above resolve the default branch. The first planned release is `v0.1.0`; do not present it as available until its tagged smoke validation passes.
+The version manifest starts at `0.0.0`, and the first release is `v0.1.0`. Until that tag exists and its tagged smoke validation passes, this repository has no supported stable release tag and the commands above resolve the default branch. Do not present a concrete tag as available before its tagged smoke validation passes.
 
 ## Validation
 
