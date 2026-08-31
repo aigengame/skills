@@ -54,6 +54,14 @@ A valid checkout ends the catalog command with:
 Catalog validation passed.
 ```
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for skill ownership, change, validation, and review rules.
+
+## License
+
+This repository is available under the [MIT License](LICENSE).
+
 ## Initial migration
 
 The initial catalog was extracted from [`aigengame/godot-agent`](https://github.com/aigengame/godot-agent) at pinned revision [`04d3e089b32330aeffc7da98f4824bb21873c2b3`](https://github.com/aigengame/godot-agent/commit/04d3e089b32330aeffc7da98f4824bb21873c2b3). The import preserves the relevant history from the current `.agents/skills` path and the former `.claude/skills` path.
