@@ -59,13 +59,9 @@ jobs:
 
       - name: List every skill with the pinned Skills CLI
         run: |
-          catalog_count="$(find skills -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
-          list_output="$(npx --yes "skills@${SKILLS_CLI_VERSION}" add . --list)"
-          printf '%s\n' "$list_output"
-          if ! grep -Fq "Found ${catalog_count} skills" <<< "$list_output"; then
-            echo "Skills CLI did not report all ${catalog_count} catalog skills." >&2
-            exit 1
-          fi
+          list_output="${RUNNER_TEMP}/candidate-skills-list.txt"
+          npx --yes "skills@${SKILLS_CLI_VERSION}" add . --list | tee "$list_output"
+          python scripts/validate_skills_cli_list.py "$list_output"
 
       - name: Validate an isolated project installation
         run: |
@@ -111,13 +107,62 @@ jobs:
       version: ${{ steps.release.outputs.version }}
 
     steps:
-      - name: Create or update the release
+      - name: Bind release creation to this validated revision
+        id: release_gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          associated_prs="$(
+            gh api \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls"
+          )"
+          pending_release_prs="$(
+            jq --arg base "$GITHUB_REF_NAME" \
+              '[.[] | select(
+                .merged_at != null and
+                .base.ref == $base and
+                (.labels | map(.name) | index("autorelease: pending"))
+              )]' <<< "$associated_prs"
+          )"
+          pending_count="$(jq 'length' <<< "$pending_release_prs")"
+          if [ "$pending_count" -gt 1 ]; then
+            echo "Revision ${GITHUB_SHA} is associated with multiple pending release pull requests." >&2
+            exit 1
+          fi
+          if [ "$pending_count" -eq 0 ]; then
+            echo "release_ready=false" >> "$GITHUB_OUTPUT"
+            echo "This is not a merged pending release pull request revision."
+            exit 0
+          fi
+
+          release_pr_number="$(jq -r '.[0].number' <<< "$pending_release_prs")"
+          release_pr_sha="$(jq -r '.[0].merge_commit_sha' <<< "$pending_release_prs")"
+          if [ "$release_pr_sha" != "$GITHUB_SHA" ]; then
+            echo "Release pull request #${release_pr_number} merged at ${release_pr_sha}, not ${GITHUB_SHA}." >&2
+            exit 1
+          fi
+          echo "release_ready=true" >> "$GITHUB_OUTPUT"
+          echo "Validated revision ${GITHUB_SHA} is release pull request #${release_pr_number}."
+
+      - name: Create or update the release pull request
+        if: steps.release_gate.outputs.release_ready != 'true'
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ github.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          skip-github-release: true
+
+      - name: Create the validated release
+        if: steps.release_gate.outputs.release_ready == 'true'
         id: release
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ github.token }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+          skip-github-pull-request: true
 
   tagged-release:
     name: Validate tagged release
@@ -162,16 +207,17 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
       - name: List skills from the emitted tag
         run: |
           release_source="${GITHUB_REPOSITORY}#${RELEASE_TAG}"
-          catalog_count="$(find skills -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
-          list_output="$(npx --yes "skills@${SKILLS_CLI_VERSION}" add "$release_source" --list)"
-          printf '%s\n' "$list_output"
-          if ! grep -Fq "Found ${catalog_count} skills" <<< "$list_output"; then
-            echo "Tagged source did not report all ${catalog_count} catalog skills." >&2
-            exit 1
-          fi
+          list_output="${RUNNER_TEMP}/tagged-skills-list.txt"
+          npx --yes "skills@${SKILLS_CLI_VERSION}" add "$release_source" --list | tee "$list_output"
+          python scripts/validate_skills_cli_list.py "$list_output"
 
       - name: Install a skill from the emitted tag
         run: |

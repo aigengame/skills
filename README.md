@@ -57,11 +57,13 @@ This repository uses Release Please as the only authority that creates catalog t
 The release flow is:
 
 1. merge reviewed catalog changes only after the required GitHub Actions check passes;
-2. let Release Please create or update its release pull request;
+2. let an ordinary `main` push create or update the Release Please release pull request without creating a tag;
 3. review and merge the release pull request;
-4. validate the exact resulting `main` revision with the catalog checks and Skills CLI `1.5.23` before Release Please can create a tag;
+4. identify that merge as the pending release pull request revision and validate that exact `main` revision with the catalog checks and Skills CLI `1.5.23`;
 5. let Release Please create the `vX.Y.Z` tag and GitHub Release; and
 6. in the same workflow, confirm that the emitted tag resolves to the validated revision, install a selected skill from that tag, and record the tag, revision, and Skills CLI version in the GitHub Release.
+
+Only the validated merge revision of a pending Release Please pull request can create a tag. An ordinary later push runs only release pull request maintenance; it cannot release an older pending revision. If validation or release creation fails for the release pull request merge, rerun that merge revision's workflow.
 
 The version manifest starts at `0.0.0`, and the first release is `v0.1.0`. Until that tag exists and its tagged smoke validation passes, this repository has no supported stable release tag and the commands above resolve the default branch. Do not present a concrete tag as available before its tagged smoke validation passes.
 
