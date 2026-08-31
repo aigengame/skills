@@ -15,6 +15,8 @@ This document records the initial catalog migration for [issue #2](https://githu
 
 The migration moved both source paths to the repository root. It did not import product paths or source tags. It changed bare issue and pull request references in imported commit messages from `#N` to `aigengame/godot-agent#N`. It did not rewrite file content.
 
+Issue [#12](https://github.com/aigengame/skills/issues/12) later moved the imported skill directories under `skills/`. The commands and evidence below describe the original history migration and remain unchanged.
+
 ## Reproduction commands
 
 The migration used `git-filter-repo` 2.47.0. The following commands reproduce the history filter without `--force`:
@@ -99,8 +101,8 @@ A zero exit status confirms that the filtered history is reachable from
 
 | Check | Result |
 | --- | --- |
-| Current catalog directories | 13 |
-| Current catalog files | 23 |
+| Imported catalog directories | 13 |
+| Imported catalog files | 23 |
 | Source catalog tree | `130cc305354d03daedfac1c7e0573eb2be4b2ab5` |
 | Filtered catalog tree | `130cc305354d03daedfac1c7e0573eb2be4b2ab5` |
 | Retained filtered commits | 29 |

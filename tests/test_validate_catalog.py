@@ -20,8 +20,8 @@ def write_skill(
     body: str = "# Test skill\n",
 ) -> Path:
     """Create one test skill and return its directory."""
-    skill_directory = root / directory_name
-    skill_directory.mkdir()
+    skill_directory = root / "skills" / directory_name
+    skill_directory.mkdir(parents=True)
     if frontmatter is None:
         frontmatter = (
             "---\n"
@@ -42,19 +42,38 @@ class ValidateCatalogTests(unittest.TestCase):
         self.assertGreater(skill_count, 0)
         self.assertEqual([], errors)
 
-    def test_rejects_a_top_level_skill_without_skill_md(self) -> None:
+    def test_rejects_a_catalog_skill_without_skill_md(self) -> None:
         with TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            (root / "missing-skill").mkdir()
+            (root / "skills" / "missing-skill").mkdir(parents=True)
             (root / "docs").mkdir()
 
             skill_count, errors = validate_catalog(root)
 
         self.assertEqual(1, skill_count)
         self.assertEqual(
-            ["missing-skill/SKILL.md: file is missing"],
+            ["skills/missing-skill/SKILL.md: file is missing"],
             errors,
         )
+
+    def test_rejects_a_missing_catalog_directory(self) -> None:
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+
+            skill_count, errors = validate_catalog(root)
+
+        self.assertEqual(0, skill_count)
+        self.assertEqual(["skills: catalog directory is missing"], errors)
+
+    def test_rejects_an_empty_catalog(self) -> None:
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            (root / "skills").mkdir()
+
+            skill_count, errors = validate_catalog(root)
+
+        self.assertEqual(0, skill_count)
+        self.assertEqual(["skills: catalog must contain at least one skill"], errors)
 
     def test_rejects_malformed_frontmatter(self) -> None:
         with TemporaryDirectory() as temporary_directory:
@@ -73,7 +92,7 @@ class ValidateCatalogTests(unittest.TestCase):
             _, errors = validate_catalog(root)
 
         self.assertEqual(
-            ["broken-frontmatter/SKILL.md: frontmatter is not valid YAML"],
+            ["skills/broken-frontmatter/SKILL.md: frontmatter is not valid YAML"],
             errors,
         )
 
@@ -114,7 +133,7 @@ class ValidateCatalogTests(unittest.TestCase):
             _, errors = validate_catalog(root)
 
         self.assertEqual(
-            ["duplicate-name/SKILL.md: frontmatter is not valid YAML"],
+            ["skills/duplicate-name/SKILL.md: frontmatter is not valid YAML"],
             errors,
         )
 
@@ -136,7 +155,7 @@ class ValidateCatalogTests(unittest.TestCase):
 
         self.assertEqual(
             [
-                "expected-name/SKILL.md: frontmatter name 'another-name' "
+                "skills/expected-name/SKILL.md: frontmatter name 'another-name' "
                 "does not match directory 'expected-name'"
             ],
             errors,
@@ -155,7 +174,7 @@ class ValidateCatalogTests(unittest.TestCase):
 
         self.assertEqual(
             [
-                "broken-reference/SKILL.md: relative reference "
+                "skills/broken-reference/SKILL.md: relative reference "
                 "'REFERENCE.md' does not name a repository file"
             ],
             errors,
@@ -177,7 +196,7 @@ class ValidateCatalogTests(unittest.TestCase):
 
         self.assertEqual(
             [
-                "broken-reference-style-link/SKILL.md: relative reference "
+                "skills/broken-reference-style-link/SKILL.md: relative reference "
                 "'REFERENCE.md' does not name a repository file"
             ],
             errors,
@@ -270,7 +289,7 @@ class ValidateCatalogTests(unittest.TestCase):
 
         self.assertEqual(
             [
-                "unsupported-field/SKILL.md: unsupported frontmatter field "
+                "skills/unsupported-field/SKILL.md: unsupported frontmatter field "
                 "'owner'"
             ],
             errors,

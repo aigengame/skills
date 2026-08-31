@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the repository's top-level Agent Skills catalog."""
+"""Validate the repository's Agent Skills catalog under ``skills/``."""
 
 from __future__ import annotations
 
@@ -16,7 +16,6 @@ from yaml.constructor import ConstructorError
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-NON_SKILL_DIRECTORIES = frozenset({"docs", "scripts", "tests"})
 SUPPORTED_FRONTMATTER_FIELDS = frozenset(
     {
         "allowed-tools",
@@ -85,14 +84,12 @@ def _relative_path(path: Path, root: Path) -> str:
     return path.relative_to(root).as_posix()
 
 
-def _skill_directories(root: Path) -> list[Path]:
+def _skill_directories(catalog_root: Path) -> list[Path]:
     return sorted(
         (
             path
-            for path in root.iterdir()
-            if path.is_dir()
-            and not path.name.startswith(".")
-            and path.name not in NON_SKILL_DIRECTORIES
+            for path in catalog_root.iterdir()
+            if path.is_dir() and not path.name.startswith(".")
         ),
         key=lambda path: path.name,
     )
@@ -289,7 +286,14 @@ def _validate_skill(skill_directory: Path, root: Path) -> list[str]:
 
 def validate_catalog(root: Path) -> tuple[int, list[str]]:
     """Return the number of skill directories and all validation errors."""
-    skill_directories = _skill_directories(root)
+    catalog_root = root / "skills"
+    if not catalog_root.is_dir():
+        return 0, ["skills: catalog directory is missing"]
+
+    skill_directories = _skill_directories(catalog_root)
+    if not skill_directories:
+        return 0, ["skills: catalog must contain at least one skill"]
+
     errors: list[str] = []
     for skill_directory in skill_directories:
         errors.extend(_validate_skill(skill_directory, root))
