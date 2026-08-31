@@ -2,9 +2,9 @@
 
 ## Purpose and scope
 
-This repository is the shared upstream for reusable Agent Skills maintained by aigengame. Add a skill here only when it is useful beyond one consumer repository. Keep repository-specific private skills in the consumer that owns them.
+This repository is the shared upstream for reusable Agent Skills maintained by aigengame. It publishes the catalog as a Git source for the Vercel Skills CLI. Add a skill here only when it is useful across repositories and does not depend on repository-specific private context.
 
-Do not implement or prescribe a consumer installation method here. Each consumer owns its submodule, symbolic-link, vendoring, plugin, or other integration choice.
+Repository changes can cover catalog content, validation, release automation, release metadata, and usage documentation. Changes to another repository are outside this repository's scope.
 
 ## Repository layout
 
@@ -21,7 +21,7 @@ Write tracked files, commit messages, issues, pull requests, and review comments
 Before you propose a merge:
 
 1. Read the complete changed skill and each affected bundled resource.
-2. Keep reusable skill changes separate from consumer-repository changes.
+2. Keep catalog changes separate from changes to other repositories.
 3. Run `python -m unittest discover -s tests -v`.
 4. Run `python scripts/validate_catalog.py`.
 5. Confirm that GitHub Actions passes and that a maintainer reviews the change.

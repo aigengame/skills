@@ -2,14 +2,9 @@
 
 Reusable Agent Skills maintained by aigengame.
 
-> [!IMPORTANT]
-> This repository is being bootstrapped. It is not ready for consumer use until the [readiness review](https://github.com/aigengame/skills/issues/5) is complete.
-
 ## Purpose
 
-This repository is the shared upstream for reusable Agent Skills maintained by aigengame. It gives maintainers and contributors one place to review, validate, and evolve skills that are useful across repositories.
-
-Repository-specific private skills remain owned by their consumer repositories.
+This repository is the shared upstream for reusable Agent Skills maintained by aigengame. It gives maintainers and contributors one place to review, validate, publish, and evolve skills that are useful across repositories.
 
 ## Repository layout
 
@@ -26,6 +21,42 @@ Each skill uses one top-level directory:
 ```
 
 `SKILL.md` is required. A skill can include only the bundled resources that it needs.
+
+## Use the catalog
+
+This repository is a Git source for the [Vercel Skills CLI](https://github.com/vercel-labs/skills). List the available skills without installing them:
+
+```bash
+npx skills add aigengame/skills --list
+```
+
+Start an interactive project-level installation:
+
+```bash
+npx skills add aigengame/skills
+```
+
+Install one named skill at project level or global user level:
+
+```bash
+npx skills add aigengame/skills --skill artifact-review
+npx skills add aigengame/skills --skill artifact-review --global
+```
+
+The Skills CLI also accepts explicit agent and install-mode options. Run `npx skills add --help` for the current option set. Scope, target agent, and install mode are selected at installation time.
+
+The `skills` package executed by `npx` is the Vercel CLI. The skill content comes directly from this Git repository; `aigengame/skills` does not publish a separate npm package. A selected installation contains the selected skill payload, not repository infrastructure such as `.github`, `docs`, `scripts`, or `tests`.
+
+## Publishing
+
+Catalog releases are Git revisions of this repository. Maintainers publish a release by:
+
+1. running the catalog tests and validation;
+2. merging the reviewed change only after the required GitHub Actions check passes;
+3. validating the release candidate with a pinned Skills CLI version; and
+4. creating the release tag only after the CLI smoke checks pass.
+
+The end-to-end smoke workflow, supported tag syntax, and first tagged release are tracked in [issue #10](https://github.com/aigengame/skills/issues/10). Until that work is complete, the commands above resolve the repository's default branch.
 
 ## Validation
 
@@ -67,20 +98,3 @@ This repository is available under the [MIT License](LICENSE).
 The initial catalog was extracted from [`aigengame/godot-agent`](https://github.com/aigengame/godot-agent) at pinned revision [`04d3e089b32330aeffc7da98f4824bb21873c2b3`](https://github.com/aigengame/godot-agent/commit/04d3e089b32330aeffc7da98f4824bb21873c2b3). The import preserves the relevant history from the current `.agents/skills` path and the former `.claude/skills` path.
 
 The migration excludes unrelated product files and source-repository release tags. See the [migration record](docs/migrations/2026-08-28-godot-agent.md) for the commands and evidence.
-
-Track the bootstrap work in these issues:
-
-- [Import shared skill history](https://github.com/aigengame/skills/issues/2)
-- [Add catalog validation](https://github.com/aigengame/skills/issues/3)
-- [Establish governance](https://github.com/aigengame/skills/issues/4)
-- [Review migration evidence and readiness](https://github.com/aigengame/skills/issues/5)
-
-## Consumer integration
-
-Each consumer repository chooses and maintains its own integration mechanism. A consumer can use a submodule, symbolic links, vendoring, a plugin, or another mechanism that fits its requirements.
-
-This repository does not create or maintain consumer-side paths. It also does not prevent a consumer from keeping its own project-scoped skills in `.agents/skills` or another local directory.
-
-## Current status
-
-The repository contract is tracked in [issue #1](https://github.com/aigengame/skills/issues/1). Do not add this repository as a consumer dependency until the [readiness review](https://github.com/aigengame/skills/issues/5) records a ready decision.
