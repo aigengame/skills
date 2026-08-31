@@ -51,11 +51,12 @@ Classify a commit by its effect on the published catalog, not by the source file
 
 - Use `feat(<skill-name>):` for a new skill or a backward-compatible capability.
 - Use `fix(<skill-name>):` to correct skill behavior, instructions, triggers, or bundled resources.
-- Use `feat(catalog):` or `fix(catalog):` for a user-visible addition or correction to the catalog publication contract, such as tag, version, source, or verified-install behavior. The Conventional Commits scope is recommended but optional.
 - Add `!` or a `BREAKING CHANGE:` footer when a skill change is not backward compatible.
 - Use `docs(<skill-name>):` only for a cosmetic correction that does not change skill behavior. This type does not create an immediate catalog release.
 
-Use `test:`, `ci:`, `docs:`, or `chore(release):` for internal repository tests, automation, documentation, or release maintenance that changes neither installed skill content nor the user-visible catalog publication contract. When one commit changes a skill and its tests, select the type from the skill's catalog effect.
+Before the first catalog release exists, `feat:` or `feat(catalog):` can establish the initial public publication contract, and `fix:` or `fix(catalog):` can correct it. This bootstrap exception lets Release Please generate and validate `v0.1.0`; it does not make later repository infrastructure changes catalog features or fixes.
+
+Use `test:`, `ci:`, `docs:`, or `chore(release):` for repository tests, automation, documentation, or release maintenance that does not change installed skill content. When one commit changes a skill and its tests, select the type from the skill's catalog effect.
 
 Release Please ignores a commit when all of its files are under `.github/`, `docs/`, `scripts/`, or `tests/`. A commit that also changes `skills/` remains eligible for a release. Root-level repository files still depend on the commit type to express release intent.
 
