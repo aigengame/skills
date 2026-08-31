@@ -220,6 +220,11 @@ jobs:
             echo "Release tag ${release_tag} resolves to ${release_sha}, not ${GITHUB_SHA}." >&2
             exit 1
           fi
+          if [ "$RELEASE_ACTION_OUTCOME" = "failure" ]; then
+            echo "Release ${release_tag} exists, but Release Please did not finish successfully." >&2
+            echo "Rerun the failed jobs so Release Please can complete its release bookkeeping." >&2
+            exit 1
+          fi
 
           echo "validate=true" >> "$GITHUB_OUTPUT"
           echo "sha=${release_sha}" >> "$GITHUB_OUTPUT"
