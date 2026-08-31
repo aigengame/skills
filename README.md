@@ -61,9 +61,9 @@ The release flow is:
 3. review and merge the release pull request;
 4. identify that merge as the pending release pull request revision and validate that exact `main` revision with the catalog checks and Skills CLI `1.5.23`;
 5. let Release Please create the `vX.Y.Z` tag and GitHub Release; and
-6. in the same workflow, confirm that the emitted tag resolves to the validated revision, install a selected skill from that tag, and record the tag, revision, and Skills CLI version in the GitHub Release.
+6. in the same workflow, confirm that the emitted tag resolves to the validated revision, install a selected skill from that tag, and record the tag, revision, Skills CLI version, and complete verified install command in the GitHub Release.
 
-Only the validated merge revision of a pending Release Please pull request can create a tag. An ordinary later push runs only release pull request maintenance; it cannot release an older pending revision. If validation or release creation fails for the release pull request merge, rerun that merge revision's workflow.
+Only the validated merge revision of a pending Release Please pull request can create a tag. An ordinary later push runs only release pull request maintenance; it cannot release an older pending revision. If validation or release creation fails, rerun the failed jobs in that merge revision's original workflow run. A full rerun is also safe: the workflow recognizes an existing release for the exact revision and repeats tagged validation instead of attempting to create a duplicate release.
 
 The version manifest starts at `0.0.0`, and the first release is `v0.1.0`. Until that tag exists and its tagged smoke validation passes, this repository has no supported stable release tag and the commands above resolve the default branch. Do not present a concrete tag as available before its tagged smoke validation passes.
 

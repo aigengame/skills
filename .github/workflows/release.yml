@@ -82,7 +82,7 @@ jobs:
 
       - name: Validate an isolated global installation
         run: |
-          global_root="${HOME}/.codex/skills"
+          global_root="${HOME}/.agents/skills"
           test ! -e "${global_root}/${SMOKE_SKILL}"
           npx --yes "skills@${SKILLS_CLI_VERSION}" add "$GITHUB_WORKSPACE" \
             --skill "$SMOKE_SKILL" --agent codex --global --copy -y
@@ -101,10 +101,10 @@ jobs:
       issues: write
       pull-requests: write
     outputs:
-      created: ${{ steps.release.outputs.release_created }}
-      sha: ${{ steps.release.outputs.sha }}
-      tag: ${{ steps.release.outputs.tag_name }}
-      version: ${{ steps.release.outputs.version }}
+      validate: ${{ steps.release_target.outputs.validate }}
+      sha: ${{ steps.release_target.outputs.sha }}
+      tag: ${{ steps.release_target.outputs.tag }}
+      version: ${{ steps.release_target.outputs.version }}
 
     steps:
       - name: Bind release creation to this validated revision
@@ -117,36 +117,55 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls"
           )"
-          pending_release_prs="$(
+          release_prs="$(
             jq --arg base "$GITHUB_REF_NAME" \
               '[.[] | select(
                 .merged_at != null and
                 .base.ref == $base and
-                (.labels | map(.name) | index("autorelease: pending"))
+                (.labels | map(.name) | any(
+                  . == "autorelease: pending" or . == "autorelease: tagged"
+                ))
               )]' <<< "$associated_prs"
           )"
-          pending_count="$(jq 'length' <<< "$pending_release_prs")"
-          if [ "$pending_count" -gt 1 ]; then
-            echo "Revision ${GITHUB_SHA} is associated with multiple pending release pull requests." >&2
+          release_pr_count="$(jq 'length' <<< "$release_prs")"
+          if [ "$release_pr_count" -gt 1 ]; then
+            echo "Revision ${GITHUB_SHA} is associated with multiple release pull requests." >&2
             exit 1
           fi
-          if [ "$pending_count" -eq 0 ]; then
-            echo "release_ready=false" >> "$GITHUB_OUTPUT"
-            echo "This is not a merged pending release pull request revision."
+          if [ "$release_pr_count" -eq 0 ]; then
+            echo "mode=maintain" >> "$GITHUB_OUTPUT"
+            echo "This is not a merged release pull request revision."
             exit 0
           fi
 
-          release_pr_number="$(jq -r '.[0].number' <<< "$pending_release_prs")"
-          release_pr_sha="$(jq -r '.[0].merge_commit_sha' <<< "$pending_release_prs")"
+          release_pr_number="$(jq -r '.[0].number' <<< "$release_prs")"
+          release_pr_sha="$(jq -r '.[0].merge_commit_sha' <<< "$release_prs")"
           if [ "$release_pr_sha" != "$GITHUB_SHA" ]; then
             echo "Release pull request #${release_pr_number} merged at ${release_pr_sha}, not ${GITHUB_SHA}." >&2
             exit 1
           fi
-          echo "release_ready=true" >> "$GITHUB_OUTPUT"
-          echo "Validated revision ${GITHUB_SHA} is release pull request #${release_pr_number}."
+
+          has_pending="$(
+            jq -r '.[0].labels | map(.name) | index("autorelease: pending") != null' \
+              <<< "$release_prs"
+          )"
+          has_tagged="$(
+            jq -r '.[0].labels | map(.name) | index("autorelease: tagged") != null' \
+              <<< "$release_prs"
+          )"
+          if [ "$has_tagged" = "true" ]; then
+            echo "mode=validate-existing" >> "$GITHUB_OUTPUT"
+            echo "Validated revision ${GITHUB_SHA} is tagged release pull request #${release_pr_number}."
+          elif [ "$has_pending" = "true" ]; then
+            echo "mode=create" >> "$GITHUB_OUTPUT"
+            echo "Validated revision ${GITHUB_SHA} is pending release pull request #${release_pr_number}."
+          else
+            echo "Release pull request #${release_pr_number} has no recognized release label." >&2
+            exit 1
+          fi
 
       - name: Create or update the release pull request
-        if: steps.release_gate.outputs.release_ready != 'true'
+        if: steps.release_gate.outputs.mode == 'maintain'
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ github.token }}
@@ -155,14 +174,58 @@ jobs:
           skip-github-release: true
 
       - name: Create the validated release
-        if: steps.release_gate.outputs.release_ready == 'true'
+        if: steps.release_gate.outputs.mode == 'create'
         id: release
+        continue-on-error: true
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ github.token }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
           skip-github-pull-request: true
+
+      - name: Resolve the release validation target
+        if: steps.release_gate.outputs.mode != 'maintain'
+        id: release_target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_ACTION_OUTCOME: ${{ steps.release.outcome }}
+        run: |
+          matching_releases="$(
+            gh api --paginate \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${GITHUB_REPOSITORY}/releases?per_page=100" |
+              jq -s --arg sha "$GITHUB_SHA" \
+                '[.[][] | select(.target_commitish == $sha and .draft == false)]'
+          )"
+          matching_count="$(jq 'length' <<< "$matching_releases")"
+          if [ "$matching_count" -ne 1 ]; then
+            echo "Expected one non-draft release for ${GITHUB_SHA}, found ${matching_count}." >&2
+            echo "Release Please outcome: ${RELEASE_ACTION_OUTCOME:-not-run}." >&2
+            exit 1
+          fi
+
+          release_tag="$(jq -r '.[0].tag_name' <<< "$matching_releases")"
+          if [[ ! "$release_tag" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            echo "Release tag ${release_tag} is not a full v-prefixed SemVer tag." >&2
+            exit 1
+          fi
+          release_sha="$(
+            gh api \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${GITHUB_REPOSITORY}/commits/${release_tag}" \
+              --jq .sha
+          )"
+          if [ "$release_sha" != "$GITHUB_SHA" ]; then
+            echo "Release tag ${release_tag} resolves to ${release_sha}, not ${GITHUB_SHA}." >&2
+            exit 1
+          fi
+
+          echo "validate=true" >> "$GITHUB_OUTPUT"
+          echo "sha=${release_sha}" >> "$GITHUB_OUTPUT"
+          echo "tag=${release_tag}" >> "$GITHUB_OUTPUT"
+          echo "version=${release_tag#v}" >> "$GITHUB_OUTPUT"
+          echo "Release ${release_tag} is ready for tagged validation at ${release_sha}."
 
   tagged-release:
     name: Validate tagged release
@@ -171,7 +234,7 @@ jobs:
     needs:
       - candidate
       - release
-    if: needs.release.outputs.created == 'true'
+    if: needs.release.outputs.validate == 'true'
     permissions:
       contents: write
     env:
@@ -247,7 +310,8 @@ jobs:
             echo "Release validation metadata is already present."
             exit 0
           fi
-          validation_notes="$(printf '\n\n%s\n## Catalog validation\n\n- Catalog tag: `%s`\n- Catalog revision: `%s`\n- Skills CLI: `skills@%s`\n' \
-            "$marker" "$RELEASE_TAG" "$RELEASE_SHA" "$SKILLS_CLI_VERSION")"
+          validation_notes="$(printf '\n\n%s\n## Catalog validation\n\n- Catalog tag: `%s`\n- Catalog revision: `%s`\n- Skills CLI: `skills@%s`\n- Verified install: `npx skills@%s add %s#%s`\n' \
+            "$marker" "$RELEASE_TAG" "$RELEASE_SHA" "$SKILLS_CLI_VERSION" \
+            "$SKILLS_CLI_VERSION" "$GITHUB_REPOSITORY" "$RELEASE_TAG")"
           gh release edit "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
             --notes "${release_body}${validation_notes}"
