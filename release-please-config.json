@@ -6,6 +6,13 @@
   "include-v-in-tag": true,
   "include-component-in-tag": false,
   "packages": {
-    ".": {}
+    ".": {
+      "exclude-paths": [
+        ".github",
+        "docs",
+        "scripts",
+        "tests"
+      ]
+    }
   }
 }
