@@ -93,7 +93,7 @@ git -C "$MIGRATION_ROOT/post-merge" merge-base --is-ancestor \
 ```
 
 A zero exit status confirms that the filtered history is reachable from
-`main`. The readiness review must not accept the migration if this check fails.
+`main`. This result is required for a valid migration.
 
 ## Recorded evidence
 
