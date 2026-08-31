@@ -2,7 +2,7 @@
 
 ## Purpose and scope
 
-This repository is the shared upstream for reusable Agent Skills maintained by aigengame. It publishes the catalog as a Git source for the Vercel Skills CLI. Add a skill here only when it is useful across repositories and does not depend on repository-specific private context.
+This repository is the shared upstream for reusable Agent Skills maintained by aigengame. It publishes the catalog as a Git source for the Vercel Skills CLI. Add a skill here only when its guidance is reusable across repositories. A shared skill can operate on consumer-owned project files at runtime, but it must not embed one consumer's private policy or configuration.
 
 Repository changes can cover catalog content, validation, release automation, release metadata, and usage documentation. Changes to another repository are outside this repository's scope.
 

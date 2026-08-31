@@ -47,16 +47,22 @@ The Skills CLI also accepts explicit agent and install-mode options. Run `npx sk
 
 The `skills` package executed by `npx` is the Vercel CLI. The skill content comes directly from this Git repository; `aigengame/skills` does not publish a separate npm package. A selected installation contains the selected skill payload, not repository infrastructure such as `.github`, `docs`, `scripts`, or `tests`.
 
+A source without a Git ref resolves the repository's current default branch when the command runs. It is a floating source, and an existing installation does not update automatically. An immutable catalog release uses a full SemVer tag in the form `vX.Y.Z`. After a tagged release is available, select a tag from [GitHub Releases](https://github.com/aigengame/skills/releases) and append it to the source as `aigengame/skills#vX.Y.Z`. For a reproducible installation, also use the Skills CLI version recorded for that release.
+
 ## Publishing
 
-Catalog releases are Git revisions of this repository. Maintainers publish a release by:
+Issue [#10](https://github.com/aigengame/skills/issues/10) tracks the first tagged release and its automation. The planned release contract makes Release Please the only authority that creates catalog tags and GitHub Releases. Each release is one immutable repository revision with a full SemVer tag in the form `vX.Y.Z`; tags do not include a component prefix.
 
-1. running the catalog tests and validation;
-2. merging the reviewed change only after the required GitHub Actions check passes;
-3. validating the release candidate with a pinned Skills CLI version; and
-4. creating the release tag only after the CLI smoke checks pass.
+The planned release flow is:
 
-The end-to-end smoke workflow, supported tag syntax, and first tagged release are tracked in [issue #10](https://github.com/aigengame/skills/issues/10). Until that work is complete, the commands above resolve the repository's default branch.
+1. merge reviewed catalog changes only after the required GitHub Actions check passes;
+2. let Release Please create or update its release pull request;
+3. review and merge the release pull request;
+4. validate the exact resulting `main` revision with the catalog checks and a pinned Skills CLI version before Release Please can create a tag;
+5. let Release Please create the `vX.Y.Z` tag and GitHub Release; and
+6. in the same workflow, confirm that the emitted tag resolves to the validated revision and install a selected skill from that tag.
+
+Until issue #10 is complete, this repository has no supported stable release tag and the commands above resolve the default branch. The first planned release is `v0.1.0`; do not present it as available until its tagged smoke validation passes.
 
 ## Validation
 

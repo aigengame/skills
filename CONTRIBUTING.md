@@ -2,7 +2,7 @@
 
 ## Scope and ownership
 
-This repository accepts Agent Skills that are reusable across repositories and self-contained within their skill directories. Repository-specific configuration and changes to other repositories are outside this repository's scope.
+This repository accepts Agent Skills whose guidance is reusable across repositories. Bundle each skill's reusable resources inside its skill directory. A shared skill can operate on consumer-owned project files at runtime, but it must not embed one consumer's private policy or configuration. Changes to other repositories are outside this repository's scope.
 
 aigengame maintainers own catalog acceptance, publication, and review. Contributors own the accuracy and completeness of their proposed changes. See `README.md` for the supported catalog publication and usage flow.
 
@@ -19,7 +19,7 @@ aigengame maintainers own catalog acceptance, publication, and review. Contribut
 
 - Read the complete `SKILL.md` and each affected bundled resource before editing.
 - Keep the frontmatter description, instructions, resources, and relative links consistent.
-- Keep repository-specific assumptions out of the shared skill.
+- Describe required project inputs generically. Do not embed one consumer's private policy or configuration.
 
 ### Rename a skill
 
@@ -43,7 +43,7 @@ python scripts/validate_catalog.py
 
 Both commands and the `Skill catalog` GitHub Actions check must pass before merge. A maintainer must review each skill change for reusable scope, correct instructions, accurate frontmatter, valid bundled resources, consistent terminology, and clear prose.
 
-Passing automated checks is structural evidence only. The review must also confirm that the skill fulfills its declared purpose without depending on repository-specific private context.
+Passing automated checks is structural evidence only. The review must also confirm that the skill fulfills its declared purpose without embedding one consumer's private policy or configuration.
 
 ## Pull requests
 
