@@ -8,7 +8,7 @@ Repository changes can cover catalog content, validation, release automation, re
 
 ## Repository layout
 
-Each skill has one non-hidden top-level directory. Its `SKILL.md` is required, and its optional scripts, references, assets, templates, and agent metadata stay inside that directory. Repository infrastructure lives in `.github`, `docs`, `scripts`, and `tests`.
+All skills live under `skills/`. Each non-hidden directory directly under `skills/` is one skill. Its `SKILL.md` is required, and its optional scripts, references, assets, templates, and agent metadata stay inside that directory. Repository infrastructure stays outside `skills/`.
 
 Read `README.md` for the public repository contract and validation setup. Follow `CONTRIBUTING.md` when you add, change, rename, or remove a skill.
 

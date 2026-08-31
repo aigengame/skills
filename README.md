@@ -8,19 +8,20 @@ This repository is the shared upstream for reusable Agent Skills maintained by a
 
 ## Repository layout
 
-Each skill uses one top-level directory:
+Each skill uses one directory under `skills/`:
 
 ```text
-<skill-name>/
-├── SKILL.md
-├── agents/       # Optional agent metadata
-├── scripts/      # Optional executable resources
-├── references/   # Optional reference documents
-├── assets/       # Optional static assets
-└── templates/    # Optional reusable templates
+skills/
+└── <skill-name>/
+    ├── SKILL.md
+    ├── agents/       # Optional agent metadata
+    ├── scripts/      # Optional executable resources
+    ├── references/   # Optional reference documents
+    ├── assets/       # Optional static assets
+    └── templates/    # Optional reusable templates
 ```
 
-`SKILL.md` is required. A skill can include only the bundled resources that it needs.
+`SKILL.md` is required. A skill can include only the bundled resources that it needs. Repository infrastructure stays outside `skills/`.
 
 ## Use the catalog
 
@@ -66,9 +67,9 @@ Until issue #10 is complete, this repository has no supported stable release tag
 
 ## Validation
 
-The catalog validator checks every top-level skill directory. It requires a readable `SKILL.md`, validates the supported Agent Skills frontmatter fields, requires the frontmatter name to match the directory, and checks relative Markdown links to bundled files.
+The catalog validator checks every non-hidden directory directly under `skills/`. It requires a readable `SKILL.md`, validates the supported Agent Skills frontmatter fields, requires the frontmatter name to match the directory, and checks relative Markdown links to bundled files.
 
-Supported frontmatter consists of required `name` and `description` fields and the optional `license`, `compatibility`, `metadata`, and `allowed-tools` fields defined by the [Agent Skills specification](https://agentskills.io/specification). Repository infrastructure lives in `.github`, `docs`, `scripts`, and `tests`; other non-hidden top-level directories are treated as skills.
+Supported frontmatter consists of required `name` and `description` fields and the optional `license`, `compatibility`, `metadata`, and `allowed-tools` fields defined by the [Agent Skills specification](https://agentskills.io/specification). Repository infrastructure outside `skills/` is not part of the catalog.
 
 Python 3.10 or newer is required. Create a local environment and install the pinned validator dependencies:
 

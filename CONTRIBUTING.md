@@ -10,7 +10,7 @@ aigengame maintainers own catalog acceptance, publication, and review. Contribut
 
 ### Add a skill
 
-- Create one top-level directory whose name matches the `name` in `SKILL.md`.
+- Create one directory under `skills/` whose name matches the `name` in `SKILL.md`.
 - State what the skill does and when to use it in the frontmatter description. Explain the cross-repository use case in the pull request.
 - Bundle only the scripts, references, assets, templates, or agent metadata that the skill needs.
 - Use relative links for bundled files.
