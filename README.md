@@ -34,13 +34,14 @@ authority or human judgment.
 
 #### [`validation-driven-design`](skills/validation-driven-design/SKILL.md)
 
-- **What:** Validates architecture direction through requirements, research,
-  prototypes, real-world trials, and cross-artifact reconciliation.
+- **What:** Tests architecture direction against requirements and research, explores
+  it with prototypes, uses it in real project work, and reconciles the results with
+  project artifacts.
 - **Why:** Important decisions often become expensive before their assumptions have
   been tested.
 - **When:** Use it for novel, disputed, broad, or difficult-to-reverse decisions.
-- **How:** Ask: “Use validation-driven-design to compare these deployment options and
-  recommend an evidence-backed direction.”
+- **How:** Ask: “Use validation-driven-design to compare these deployment options,
+  recommend the best-supported direction, and identify the remaining evidence gaps.”
 
 #### [`design-domain-modular-architecture`](skills/design-domain-modular-architecture/SKILL.md)
 
@@ -66,14 +67,15 @@ authority or human judgment.
 
 #### [`design-verifiable-playtest`](skills/design-verifiable-playtest/SKILL.md)
 
-- **What:** Designs a small player-facing Godot playtest around one balance or
-  gameplay question.
-- **Why:** A model or command-line experiment cannot show whether a mechanic is clear,
-  readable, and convincing to a player.
-- **When:** Use it when a gameplay or balance hypothesis needs direct player feedback,
-  not for a general game or a CLI-only tutorial.
-- **How:** Ask: “Use design-verifiable-playtest to turn this balance question into a
-  focused playable experiment.”
+- **What:** Designs a small player-facing Godot playtest for one gameplay or balance
+  question, using maintained `gda-balancing` model and experiment sources. It builds
+  on [`design-godot-modular-architecture`](skills/design-godot-modular-architecture/SKILL.md).
+- **Why:** CLI-only evidence does not test the intended in-game player experience.
+- **When:** Use it when a gameplay or balance hypothesis defined in
+  `gda-balancing` needs direct player feedback. It is not for general game development
+  or a CLI-only tutorial.
+- **How:** Ask: “Use design-verifiable-playtest to turn this `gda-balancing` hypothesis
+  and its maintained sources into a focused playable experiment.”
 
 #### [`entropy-review`](skills/entropy-review/SKILL.md)
 
@@ -129,8 +131,9 @@ authority or human judgment.
   no longer agree.
 - **When:** Use it after a requirement, scope, decision, responsibility, or term
   changes.
-- **How:** Ask: “Use reconcile to find every artifact affected by this decision change
-  and restore one consistent authority.”
+- **How:** Ask: “Use reconcile to find every artifact affected by this decision change,
+  restore one authoritative home for each affected fact, and update the references
+  derived from those facts.”
 
 ### Execute reliably
 
@@ -179,7 +182,7 @@ authority or human judgment.
 
 ## Install
 
-You need a Node.js installation that includes `npx`.
+You need Node.js 22.20 or newer, with `npx`.
 
 Choose skills interactively:
 
@@ -199,24 +202,26 @@ Install skills for the current user instead of one project:
 npx skills add aigengame/skills --global
 ```
 
-The installer lets you select the target agent and installation scope. For a
-reproducible installation, select a version from
+The installer lets you select the target agent and installation scope. To pin the
+catalog content, select a version from
 [GitHub Releases](https://github.com/aigengame/skills/releases) and append its tag to
 the repository source, such as `aigengame/skills#v0.1.0`.
 
+Installed skills do not update automatically. For an untagged installation, run the
+command for the scope you installed:
+
+```bash
+npx skills update --project
+npx skills update --global
+```
+
+A tagged installation stays on that tag. Choose and install a newer tag when you want
+to move to a new catalog version.
+
 ## Use a skill
 
-Name the skill and the outcome you need in your request. For example:
-
-```text
-Use entropy-review to check whether this caching design is proportionate to
-the current requirements.
-
-Use artifact-review to review this ADR against the implementation and related
-decisions.
-
-Use state to record the current milestone, completed work, and next tasks.
-```
+Name the skill and the outcome you need in your request. Use the **How** example in
+each catalog entry as a starting point.
 
 Agents that support dedicated skill invocation can use their native syntax instead.
 The linked `SKILL.md` for each catalog entry defines its complete workflow and
