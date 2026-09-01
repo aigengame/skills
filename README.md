@@ -6,36 +6,35 @@ complex, changing environments.**
 [![Latest release](https://img.shields.io/github/v/release/aigengame/skills)](https://github.com/aigengame/skills/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-The [Cynefin Framework](https://thecynefin.co/effective-decision-making-support-tool/)
-distinguishes Clear (formerly Simple), Complicated, Complex, and Chaotic contexts.
-Software delivery can contain all four.
+According to the Cynefin Framework, problem contexts are divided into Simple,
+Complicated, Complex, and Chaos domains. Software usually belongs to the latter two.
 
-Work shaped by uncertain requirements, novel architecture, or changing environments
-often sits in the Complex domain. Cause and effect become clear only in retrospect,
-and outcomes remain hard to predict.
+In the Complex or Chaos domains, cause and effect are often unclear, and
+unpredictability outweighs predictability.
 
-In Complex contexts, progress comes through probe–sense–respond: run safe-to-fail
-experiments, observe the patterns that emerge, and adapt. In Chaotic contexts, act
-first to stabilize the situation, then sense and respond.
+Progress therefore requires feedback loops of action, probing, sensing, and
+responding, with continuous exploration, experimentation, inspection, and adaptation.
 
-This feedback-driven cycle of exploration, experimentation, inspection, and adaptation
-is not new. It was central to effective software development before the agentic
+This moves the work into the emergent domain, where patterns can be discovered and
+order established.
+
+This process was the prevailing software development paradigm before the agentic
 engineering era.
 
-Spec-driven development and similar agentic workflows are strongest when the problem
-can be specified in advance. They offer less guidance when the problem itself must be
-discovered through feedback.
+Current agentic methodologies, including SDD (spec-driven development), have not yet
+engaged deeply enough with the Complex domain or applied agile principles.
 
-These skills apply systems thinking and agile principles to that gap. A plan is a
-hypothesis to test, not a promise to implement.
+After all, a plan is a hypothesis to be validated, not a promise to be implemented.
 
 ## Why these skills
 
-AI agents can increase delivery speed, but speed alone does not resolve uncertainty.
-It can also amplify a wrong assumption or an overcomplicated direction.
+Software projects are complex systems. Requirements change, design decisions interact,
+and local improvements can create downstream costs. AI agents increase delivery speed,
+but they can also amplify a wrong assumption or an overcomplicated direction.
 
-These skills provide repeatable methods for making decisions, controlling entropy, and
-maintaining project coherence without replacing project authority or human judgment.
+These skills apply systems thinking, entropy management, and agile feedback to common
+software-engineering work. They provide repeatable methods without replacing project
+authority or human judgment.
 
 - **Evidence before confidence.** Test important assumptions before treating a
   direction as settled.
