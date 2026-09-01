@@ -6,7 +6,6 @@
 ### Features
 
 * automate catalog releases ([819f330](https://github.com/aigengame/skills/commit/819f330cfd51b0af44b440486f06d76298c72cab))
-* automate catalog releases ([66177a2](https://github.com/aigengame/skills/commit/66177a2c5256aaa9ec5b201d6e9e14051a944066))
 
 
 ### Bug Fixes
