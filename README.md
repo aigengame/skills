@@ -7,9 +7,9 @@ complex, changing environments.**
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 According to the Cynefin Framework, problem contexts are divided into Simple,
-Complicated, Complex, and Chaos domains. Software usually belongs to the latter two.
+Complicated, Complex, and Chaotic domains. Software usually belongs to the latter two.
 
-In the Complex or Chaos domains, cause and effect are often unclear, and
+In the Complex or Chaotic domains, cause and effect are often unclear, and
 unpredictability outweighs predictability.
 
 Progress therefore requires feedback loops of action, probing, sensing, and
