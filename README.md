@@ -6,19 +6,36 @@ complex, changing environments.**
 [![Latest release](https://img.shields.io/github/v/release/aigengame/skills)](https://github.com/aigengame/skills/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-This catalog helps AI agents make better software decisions, control unnecessary
-complexity, preserve project knowledge, and validate important changes with evidence.
-Use one skill for a focused task or combine several across a longer workflow.
+The [Cynefin Framework](https://thecynefin.co/effective-decision-making-support-tool/)
+distinguishes Clear (formerly Simple), Complicated, Complex, and Chaotic contexts.
+Software delivery can contain all four.
+
+Work shaped by uncertain requirements, novel architecture, or changing environments
+often sits in the Complex domain. Cause and effect become clear only in retrospect,
+and outcomes remain hard to predict.
+
+In Complex contexts, progress comes through probe–sense–respond: run safe-to-fail
+experiments, observe the patterns that emerge, and adapt. In Chaotic contexts, act
+first to stabilize the situation, then sense and respond.
+
+This feedback-driven cycle of exploration, experimentation, inspection, and adaptation
+is not new. It was central to effective software development before the agentic
+engineering era.
+
+Spec-driven development and similar agentic workflows are strongest when the problem
+can be specified in advance. They offer less guidance when the problem itself must be
+discovered through feedback.
+
+These skills apply systems thinking and agile principles to that gap. A plan is a
+hypothesis to test, not a promise to implement.
 
 ## Why these skills
 
-Software projects are complex systems. Requirements change, design decisions interact,
-and local improvements can create downstream costs. AI agents increase delivery speed,
-but they can also amplify a wrong assumption or an overcomplicated direction.
+AI agents can increase delivery speed, but speed alone does not resolve uncertainty.
+It can also amplify a wrong assumption or an overcomplicated direction.
 
-These skills apply systems thinking, entropy management, and agile feedback to common
-software-engineering work. They provide repeatable methods without replacing project
-authority or human judgment.
+These skills provide repeatable methods for making decisions, controlling entropy, and
+maintaining project coherence without replacing project authority or human judgment.
 
 - **Evidence before confidence.** Test important assumptions before treating a
   direction as settled.
