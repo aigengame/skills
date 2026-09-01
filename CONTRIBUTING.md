@@ -45,6 +45,21 @@ Both commands and the `Skill catalog` GitHub Actions check must pass before merg
 
 Passing automated checks is structural evidence only. The review must also confirm that the skill fulfills its declared purpose without embedding one consumer's private policy or configuration.
 
+## Commit and release intent
+
+Classify a commit by its effect on the published catalog, not by the source file format. A `SKILL.md` file is installed product content:
+
+- Use `feat(<skill-name>):` for a new skill or a backward-compatible capability.
+- Use `fix(<skill-name>):` to correct skill behavior, instructions, triggers, or bundled resources.
+- Add `!` or a `BREAKING CHANGE:` footer when a skill change is not backward compatible.
+- Use `docs(<skill-name>):` only for a cosmetic correction that does not change skill behavior. This type does not create an immediate catalog release.
+
+Before the first catalog release exists, `feat:` or `feat(catalog):` can establish the initial public publication contract, and `fix:` or `fix(catalog):` can correct it. This bootstrap exception lets Release Please generate and validate `v0.1.0`; it does not make later repository infrastructure changes catalog features or fixes.
+
+Use `test:`, `ci:`, `docs:`, or `chore(release):` for repository tests, automation, documentation, or release maintenance that does not change installed skill content. When one commit changes a skill and its tests, select the type from the skill's catalog effect.
+
+Release Please ignores a commit when all of its files are under `.github/`, `docs/`, `scripts/`, or `tests/`. A commit that also changes `skills/` remains eligible for a release. Root-level repository files still depend on the commit type to express release intent.
+
 ## Pull requests
 
 Keep a pull request to one logical catalog change. State whether it adds, changes, renames, or removes a skill; explain the reusable need and catalog compatibility impact; and report the validation commands that ran.
