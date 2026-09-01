@@ -4,7 +4,7 @@
 
 This repository accepts Agent Skills whose guidance is reusable across repositories. Bundle each skill's reusable resources inside its skill directory. A shared skill can operate on consumer-owned project files at runtime, but it must not embed one consumer's private policy or configuration. Changes to other repositories are outside this repository's scope.
 
-aigengame maintainers own catalog acceptance, publication, and review. Contributors own the accuracy and completeness of their proposed changes. See `README.md` for the supported catalog publication and usage flow.
+aigengame maintainers own catalog acceptance, publication, and review. Contributors own the accuracy and completeness of their proposed changes.
 
 ## Make a skill change
 
@@ -34,7 +34,16 @@ aigengame maintainers own catalog acceptance, publication, and review. Contribut
 
 ## Validate and review
 
-Follow the environment setup in `README.md`, then run:
+Python 3.10 or newer is required. Create a local environment and install the pinned
+validator dependencies:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+```
+
+Run the focused tests and validate the complete catalog:
 
 ```bash
 python -m unittest discover -s tests -v
@@ -54,11 +63,25 @@ Classify a commit by its effect on the published catalog, not by the source file
 - Add `!` or a `BREAKING CHANGE:` footer when a skill change is not backward compatible.
 - Use `docs(<skill-name>):` only for a cosmetic correction that does not change skill behavior. This type does not create an immediate catalog release.
 
-Before the first catalog release exists, `feat:` or `feat(catalog):` can establish the initial public publication contract, and `fix:` or `fix(catalog):` can correct it. This bootstrap exception lets Release Please generate and validate `v0.1.0`; it does not make later repository infrastructure changes catalog features or fixes.
-
 Use `test:`, `ci:`, `docs:`, or `chore(release):` for repository tests, automation, documentation, or release maintenance that does not change installed skill content. When one commit changes a skill and its tests, select the type from the skill's catalog effect.
 
 Release Please ignores a commit when all of its files are under `.github/`, `docs/`, `scripts/`, or `tests/`. A commit that also changes `skills/` remains eligible for a release. Root-level repository files still depend on the commit type to express release intent.
+
+## Maintainer release process
+
+Release Please is the authority that creates full `vX.Y.Z` catalog tags and GitHub
+Releases:
+
+1. Merge a reviewed catalog change only after the required checks pass.
+2. Let the next `main` workflow create or update the Release Please pull request.
+3. Review and merge that release pull request.
+4. Confirm that the workflow validates the exact merge revision, creates the tag and
+   GitHub Release, and installs one skill from the remote tag.
+
+A tag is supported only after tagged validation passes. If release validation or
+creation fails, rerun the failed jobs in that merge revision's original workflow
+run. A full rerun recognizes an existing release for the same revision and validates
+it without creating a duplicate.
 
 ## Pull requests
 

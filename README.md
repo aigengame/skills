@@ -1,109 +1,259 @@
 # aigengame/skills
 
-Reusable Agent Skills maintained by aigengame.
+**Systems-thinking and agile-driven Agent Skills for delivering software in
+complex, changing environments.**
 
-## Purpose
+[![Latest release](https://img.shields.io/github/v/release/aigengame/skills)](https://github.com/aigengame/skills/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-This repository is the shared upstream for reusable Agent Skills maintained by aigengame. It gives maintainers and contributors one place to review, validate, publish, and evolve skills that are useful across repositories.
+According to the Cynefin Framework, problem contexts are divided into Simple,
+Complicated, Complex, and Chaotic domains. Software usually belongs to the latter two.
 
-## Repository layout
+In the Complex or Chaotic domains, cause and effect are often unclear, and
+unpredictability outweighs predictability.
 
-Each skill uses one directory under `skills/`:
+Progress therefore requires feedback loops of action, probing, sensing, and
+responding, with continuous exploration, experimentation, inspection, and adaptation.
 
-```text
-skills/
-└── <skill-name>/
-    ├── SKILL.md
-    ├── agents/       # Optional agent metadata
-    ├── scripts/      # Optional executable resources
-    ├── references/   # Optional reference documents
-    ├── assets/       # Optional static assets
-    └── templates/    # Optional reusable templates
-```
+This moves the work into the emergent domain, where patterns can be discovered and
+order established.
 
-`SKILL.md` is required. A skill can include only the bundled resources that it needs. Repository infrastructure stays outside `skills/`.
+This process was the prevailing software development paradigm before the agentic
+engineering era.
 
-## Use the catalog
+Current agentic methodologies, including SDD (spec-driven development), have not yet
+engaged deeply enough with the Complex domain or applied agile principles.
 
-This repository is a Git source for the [Vercel Skills CLI](https://github.com/vercel-labs/skills). List the available skills without installing them:
+After all, a plan is a hypothesis to be validated, not a promise to be implemented.
 
-```bash
-npx skills add aigengame/skills --list
-```
+## Why these skills
 
-Start an interactive project-level installation:
+Software projects are complex systems. Requirements change, design decisions interact,
+and local improvements can create downstream costs. AI agents increase delivery speed,
+but they can also amplify a wrong assumption or an overcomplicated direction.
+
+These skills apply systems thinking, entropy management, and agile feedback to common
+software-engineering work. They provide repeatable methods without replacing project
+authority or human judgment.
+
+- **Evidence before confidence.** Test important assumptions before treating a
+  direction as settled.
+- **Proportionate complexity.** Add architecture, process, and safeguards only when
+  their value matches the current risk.
+- **Fast feedback.** Use small, observable checks to learn and adapt early.
+- **Clear authority.** Keep ownership, terminology, decisions, and project artifacts
+  aligned as the system changes.
+
+## Find the right skill
+
+### Design under uncertainty
+
+#### [`validation-driven-design`](skills/validation-driven-design/SKILL.md)
+
+- **What:** Tests architecture direction against requirements and research, explores
+  it with prototypes, uses it in real project work, and reconciles the results with
+  project artifacts.
+- **Why:** Important decisions often become expensive before their assumptions have
+  been tested.
+- **When:** Use it for novel, disputed, broad, or difficult-to-reverse decisions.
+- **How:** Ask: “Use validation-driven-design to compare these deployment options,
+  recommend the best-supported direction, and identify the remaining evidence gaps.”
+
+#### [`design-domain-modular-architecture`](skills/design-domain-modular-architecture/SKILL.md)
+
+- **What:** Turns a domain model and project constraints into module boundaries,
+  ownership, dependencies, communication, and evolution paths.
+- **Why:** Technical folder boundaries often hide coupling instead of reflecting the
+  system's real responsibilities.
+- **When:** Use it when structuring a system, assigning responsibilities, reviewing
+  coupling, or planning incremental modularization.
+- **How:** Ask: “Use design-domain-modular-architecture to propose boundaries for this
+  domain and explain the dependency direction.”
+
+#### [`design-godot-modular-architecture`](skills/design-godot-modular-architecture/SKILL.md)
+
+- **What:** Designs Godot projects around Add-ons, Systems, Content, and UI with
+  directed dependencies and clear ownership.
+- **Why:** Scenes, scripts, resources, and UI can become tightly coupled as a game
+  grows.
+- **When:** Use it for a new Godot structure, a modularization plan, or a review of
+  where game assets and behavior belong.
+- **How:** Ask: “Use design-godot-modular-architecture to place these scenes and
+  systems in a structure that can evolve safely.”
+
+#### [`design-verifiable-playtest`](skills/design-verifiable-playtest/SKILL.md)
+
+- **What:** Designs a small player-facing Godot playtest for one gameplay or balance
+  question, using maintained `gda-balancing` model and experiment sources. It builds
+  on [`design-godot-modular-architecture`](skills/design-godot-modular-architecture/SKILL.md).
+- **Why:** CLI-only evidence does not test the intended in-game player experience.
+- **When:** Use it when a gameplay or balance hypothesis defined in
+  `gda-balancing` needs direct player feedback. It is not for general game development
+  or a CLI-only tutorial.
+- **How:** Ask: “Use design-verifiable-playtest to turn this `gda-balancing` hypothesis
+  and its maintained sources into a focused playable experiment.”
+
+#### [`entropy-review`](skills/entropy-review/SKILL.md)
+
+- **What:** Reviews whether a design, plan, or implementation introduces complexity
+  proportionate to the problem it solves.
+- **Why:** Scope creep, premature generalization, and defensive mechanisms can make a
+  solution harder to change before they deliver value.
+- **When:** Use it when a proposal feels overengineered or when deciding whether a
+  mechanism is worth adding, retaining, or expanding.
+- **How:** Ask: “Use entropy-review to identify disproportionate complexity in this
+  plan and propose a smaller reversible alternative.”
+
+### Review and maintain coherence
+
+#### [`artifact-review`](skills/artifact-review/SKILL.md)
+
+- **What:** Reviews issues, ADRs, specifications, plans, and other project documents
+  for correctness, usability, consistency, completeness, terminology, and prose.
+- **Why:** A polished document can still contradict its evidence, omit a required
+  decision, or give readers instructions they cannot use.
+- **When:** Use it when you explicitly need a document review or a re-review of claimed
+  fixes.
+- **How:** Ask: “Use artifact-review to review this ADR against the implementation and
+  its related decisions.”
+
+#### [`skill-review`](skills/skill-review/SKILL.md)
+
+- **What:** Reviews a skill's selection description, instructions, resources,
+  terminology, and prose as one usable artifact.
+- **Why:** A skill can pass structural checks while its trigger, workflow, or bundled
+  material remains inaccurate or incomplete.
+- **When:** Use it for a new or changed skill, a skill-focused pull request, or a
+  re-review after fixes.
+- **How:** Ask: “Use skill-review to verify that this skill can do its declared job
+  with the smallest sufficient structure.”
+
+#### [`handle-review`](skills/handle-review/SKILL.md)
+
+- **What:** Verifies review feedback against the current change, requirements,
+  constraints, and runtime evidence before applying it.
+- **Why:** A review can identify a real problem but overstate its impact or recommend
+  the wrong mechanism.
+- **When:** Use it when responding to pull request feedback or deciding whether to
+  adopt, adapt, or decline a finding.
+- **How:** Ask: “Use handle-review to evaluate these comments, implement verified
+  fixes, and explain any finding we should not adopt as written.”
+
+#### [`reconcile`](skills/reconcile/SKILL.md)
+
+- **What:** Finds and repairs drift among tracked work, requirements, decision records,
+  glossaries, tests, and other authoritative artifacts.
+- **Why:** A changed decision can leave several individually plausible documents that
+  no longer agree.
+- **When:** Use it after a requirement, scope, decision, responsibility, or term
+  changes.
+- **How:** Ask: “Use reconcile to find every artifact affected by this decision change,
+  restore one authoritative home for each affected fact, and update the references
+  derived from those facts.”
+
+### Execute reliably
+
+#### [`state`](skills/state/SKILL.md)
+
+- **What:** Rewrites a short `STATE.md` with the current milestone, completed work,
+  reusable experience, next tasks, and unfinished backlog.
+- **Why:** The next session should continue from known state instead of rediscovering
+  project progress and losing pending work.
+- **When:** Use it at the end of a working session or before handing work to another
+  agent.
+- **How:** Ask: “Use state to record today's outcome, the next recommended task, and
+  the unfinished work that must survive this session.”
+
+#### [`pitfalls`](skills/pitfalls/SKILL.md)
+
+- **What:** Uses a project-level `PITFALLS.md` to prevent repeated environment, tool,
+  permission, sandbox, and invocation failures.
+- **Why:** Verified operational lessons are often lost, so later sessions repeat the
+  same failed command or environment assumption.
+- **When:** Use it before tool-heavy work, when a known pitfall may apply, or after
+  confirming a reusable operational failure.
+- **How:** Ask: “Use pitfalls before running the project tools, and record any new
+  environment lesson only after it is verified.”
+
+#### [`subagent-worktree-parallel`](skills/subagent-worktree-parallel/SKILL.md)
+
+- **What:** Plans and orchestrates independent implementation slices in isolated Git
+  worktrees, followed by ordered integration and validation.
+- **Why:** Parallel work can move conflicts from implementation time to a risky,
+  unplanned merge phase.
+- **When:** Use it when several independent slices justify the coordination cost and
+  parallel execution is authorized.
+- **How:** Ask: “Use subagent-worktree-parallel to divide this work into independent
+  slices and define a safe integration order.”
+
+#### [`git-conventional-commits`](skills/git-conventional-commits/SKILL.md)
+
+- **What:** Formulates a Conventional Commit message from the staged change and the
+  target repository's own conventions.
+- **Why:** A vague or inaccurate commit message weakens history and can trigger the
+  wrong release effect.
+- **When:** Use it when one atomic change is staged and ready to commit.
+- **How:** Ask: “Use git-conventional-commits to inspect the staged change and create
+  the precise commit message for it.”
+
+## Install
+
+You need Node.js 22.20 or newer, with `npx`.
+
+Choose skills interactively:
 
 ```bash
 npx skills add aigengame/skills
 ```
 
-Install one named skill at project level or global user level:
+Install one skill:
 
 ```bash
-npx skills add aigengame/skills --skill artifact-review
-npx skills add aigengame/skills --skill artifact-review --global
+npx skills add aigengame/skills --skill entropy-review
 ```
 
-The Skills CLI also accepts explicit agent and install-mode options. Run `npx skills add --help` for the current option set. Scope, target agent, and install mode are selected at installation time.
-
-The `skills` package executed by `npx` is the Vercel CLI. The skill content comes directly from this Git repository; `aigengame/skills` does not publish a separate npm package. A selected installation contains the selected skill payload, not repository infrastructure such as `.github`, `docs`, `scripts`, or `tests`.
-
-A source without a Git ref resolves the repository's current default branch when the command runs. It is a floating source, and an existing installation does not update automatically. An immutable catalog release uses a full SemVer tag in the form `vX.Y.Z`. After a tagged release is available, select a tag from [GitHub Releases](https://github.com/aigengame/skills/releases) and append it to the source as `aigengame/skills#vX.Y.Z`. For a reproducible installation, also use the Skills CLI version recorded for that release.
-
-## Publishing
-
-This repository uses Release Please as the only authority that creates catalog tags and GitHub Releases. It manages one root `simple` release. Each release is one immutable repository revision with a full SemVer tag in the form `vX.Y.Z`; tags do not include a component prefix. Release Please derives versions and release notes from Conventional Commit messages.
-
-The release flow is:
-
-1. merge reviewed catalog changes only after the required GitHub Actions check passes;
-2. let an ordinary `main` push create or update the Release Please release pull request without creating a tag;
-3. review and merge the release pull request;
-4. identify that merge as the pending release pull request revision and validate that exact `main` revision with the catalog checks and Skills CLI `1.5.23`;
-5. let Release Please create the `vX.Y.Z` tag and GitHub Release; and
-6. in the same workflow, confirm that the emitted tag resolves to the validated revision, install a selected skill from that tag, and record the tag, revision, Skills CLI version, and complete verified install command in the GitHub Release.
-
-Only the validated merge revision of a pending Release Please pull request can create a tag. An ordinary later push runs only release pull request maintenance; it cannot release an older pending revision. If validation or release creation fails, rerun the failed jobs in that merge revision's original workflow run. A full rerun is also safe: the workflow recognizes an existing release for the exact revision and repeats tagged validation instead of attempting to create a duplicate release.
-
-The version manifest starts at `0.0.0`, and the first release is `v0.1.0`. Until that tag exists and its tagged smoke validation passes, this repository has no supported stable release tag and the commands above resolve the default branch. Do not present a concrete tag as available before its tagged smoke validation passes.
-
-## Validation
-
-The catalog validator checks every non-hidden directory directly under `skills/`. It requires a readable `SKILL.md`, validates the supported Agent Skills frontmatter fields, requires the frontmatter name to match the directory, and checks relative Markdown links to bundled files.
-
-Supported frontmatter consists of required `name` and `description` fields and the optional `license`, `compatibility`, `metadata`, and `allowed-tools` fields defined by the [Agent Skills specification](https://agentskills.io/specification). Repository infrastructure outside `skills/` is not part of the catalog.
-
-Python 3.10 or newer is required. Create a local environment and install the pinned validator dependencies:
+Install skills for the current user instead of one project:
 
 ```bash
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install -r requirements.txt
+npx skills add aigengame/skills --global
 ```
 
-Run the focused tests and validate the complete catalog:
+The installer lets you select the target agent and installation scope. To pin the
+catalog content, select a version from
+[GitHub Releases](https://github.com/aigengame/skills/releases) and append its tag to
+the repository source, such as `aigengame/skills#v0.1.0`.
+
+Installed skills do not update automatically. For an untagged installation, run the
+command for the scope you installed:
 
 ```bash
-python -m unittest discover -s tests -v
-python scripts/validate_catalog.py
+npx skills update --project
+npx skills update --global
 ```
 
-A valid checkout ends the catalog command with:
+A tagged installation stays on that tag. Choose and install a newer tag when you want
+to move to a new catalog version.
 
-```text
-Catalog validation passed.
-```
+## Use a skill
+
+Name the skill and the outcome you need in your request. Use the **How** example in
+each catalog entry as a starting point.
+
+Agents that support dedicated skill invocation can use their native syntax instead.
+The linked `SKILL.md` for each catalog entry defines its complete workflow and
+boundaries.
+
+## Help and feedback
+
+Use [GitHub Issues](https://github.com/aigengame/skills/issues) for defects, usage
+questions, and proposals for reusable skills. Include the skill name, target agent,
+what you expected, and what happened.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for skill ownership, change, validation, and review rules.
+Want to improve an existing skill or propose a reusable one? Read
+[CONTRIBUTING.md](CONTRIBUTING.md) for scope, validation, review, and release rules.
 
 ## License
 
 This repository is available under the [MIT License](LICENSE).
-
-## Initial migration
-
-The initial catalog was extracted from [`aigengame/godot-agent`](https://github.com/aigengame/godot-agent) at pinned revision [`04d3e089b32330aeffc7da98f4824bb21873c2b3`](https://github.com/aigengame/godot-agent/commit/04d3e089b32330aeffc7da98f4824bb21873c2b3). The import preserves the relevant history from the current `.agents/skills` path and the former `.claude/skills` path.
-
-The migration excludes unrelated product files and source-repository release tags. See the [migration record](docs/migrations/2026-08-28-godot-agent.md) for the commands and evidence.
