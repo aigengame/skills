@@ -46,7 +46,7 @@ The four areas are entry points in a feedback loop, not mandatory sequential pha
 
 ![Choose the area that matches what the work needs now: uncertain direction,
 controlled delivery, quality and coherence, or state and lessons. Evidence from
-each area guides the next decision.](https://media.githubusercontent.com/media/aigengame/skills/main/docs/assets/skill-selection-guide.png)
+each area guides the next decision.](https://github.com/aigengame/skills/raw/main/assets/skill-selection-guide.png)
 
 ### Principles across all four areas
 
