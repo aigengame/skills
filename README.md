@@ -1,40 +1,55 @@
-# aigengame/skills
+# aigengame Agent Skills: Evidence-driven software delivery in complex, changing environments
 
-**Systems-thinking and agile-driven Agent Skills for delivering software in
-complex, changing environments.**
-
+[![CI](https://img.shields.io/github/actions/workflow/status/aigengame/skills/validate.yml?branch=main&label=CI&logo=github)](https://github.com/aigengame/skills/actions/workflows/validate.yml)
 [![Latest release](https://img.shields.io/github/v/release/aigengame/skills)](https://github.com/aigengame/skills/releases)
+[![npx skills](https://img.shields.io/npm/v/skills?logo=npm&label=npx%20skills)](https://www.npmjs.com/package/skills)
+[![Node.js 22.20+](https://img.shields.io/badge/Node.js-%3E%3D22.20.0-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-According to the Cynefin Framework, problem contexts are divided into Simple,
-Complicated, Complex, and Chaotic domains. Software usually belongs to the latter two.
+## Why these skills
+
+According to the
+[Cynefin Framework](https://thecynefin.co/about-us/about-cynefin-framework/),
+problem contexts are divided into Clear, Complicated, Complex, and Chaotic domains.
+Software usually belongs to the latter two.
 
 In the Complex or Chaotic domains, cause and effect are often unclear, and
 unpredictability outweighs predictability.
 
 Progress therefore requires feedback loops of action, probing, sensing, and
 responding, with continuous exploration, experimentation, inspection, and adaptation.
-
 This moves the work into the emergent domain, where patterns can be discovered and
 order established.
 
-This process was the prevailing software development paradigm before the agentic
-engineering era.
+These feedback-oriented practices have long shaped software development.
 
-Current agentic methodologies, including SDD (spec-driven development), have not yet
-engaged deeply enough with the Complex domain or applied agile principles.
+Current agentic methodologies, including SDD (spec-driven development), can overemphasize plans and specifications when evidence from real behavior is weak. This risks recreating the failure modes of waterfall development.
 
-After all, a plan is a hypothesis to be validated, not a promise to be implemented.
+> A plan is a hypothesis to be validated, not a promise to be implemented.
 
-## Why these skills
+## How these skills work
 
 Software projects are complex systems. Requirements change, design decisions interact,
 and local improvements can create downstream costs. AI agents increase delivery speed,
 but they can also amplify a wrong assumption or an overcomplicated direction.
 
-These skills apply systems thinking, entropy management, and agile feedback to common
-software-engineering work. They provide repeatable methods without replacing project
-authority or human judgment.
+These skills provide reusable methods for four kinds of work: design under
+uncertainty, reliable execution, review and coherence, and project learning. They
+include specialized support for domain-centered design, game development, and Godot. See
+[gda](https://github.com/aigengame/godot-agent) for more details.
+
+The skills use systems thinking, complexity management, and fast feedback
+without replacing project rules or human judgment.
+
+### Choose by primary problem
+
+The four areas are entry points in a feedback loop, not mandatory sequential phases.
+
+![Choose the area that matches what the work needs now: uncertain direction,
+controlled delivery, quality and coherence, or state and lessons. Evidence from
+each area guides the next decision.](https://media.githubusercontent.com/media/aigengame/skills/3c31159c0bb4183be33310284018aac3b2c1caaa/assets/skill-selection-guide.png)
+
+### Principles across all four areas
 
 - **Evidence before confidence.** Test important assumptions before treating a
   direction as settled.
@@ -46,7 +61,8 @@ authority or human judgment.
 
 ## Find the right skill
 
-### Design under uncertainty
+<details>
+<summary><strong>Design under uncertainty</strong></summary>
 
 #### [`validation-driven-design`](skills/validation-driven-design/SKILL.md)
 
@@ -93,18 +109,36 @@ authority or human judgment.
 - **How:** Ask: “Use design-verifiable-playtest to turn this `gda-balancing` hypothesis
   and its maintained sources into a focused playable experiment.”
 
-#### [`entropy-review`](skills/entropy-review/SKILL.md)
+</details>
 
-- **What:** Reviews whether a design, plan, or implementation introduces complexity
-  proportionate to the problem it solves.
-- **Why:** Scope creep, premature generalization, and defensive mechanisms can make a
-  solution harder to change before they deliver value.
-- **When:** Use it when a proposal feels overengineered or when deciding whether a
-  mechanism is worth adding, retaining, or expanding.
-- **How:** Ask: “Use entropy-review to identify disproportionate complexity in this
-  plan and propose a smaller reversible alternative.”
+<details>
+<summary><strong>Execute reliably</strong></summary>
 
-### Review and maintain coherence
+#### [`subagent-worktree-parallel`](skills/subagent-worktree-parallel/SKILL.md)
+
+- **What:** Plans and orchestrates independent implementation slices in isolated Git
+  worktrees, followed by ordered integration and validation.
+- **Why:** Parallel work can move conflicts from implementation time to a risky,
+  unplanned merge phase.
+- **When:** Use it when several independent slices justify the coordination cost and
+  parallel execution is authorized.
+- **How:** Ask: “Use subagent-worktree-parallel to divide this work into independent
+  slices and define a safe integration order.”
+
+#### [`git-conventional-commits`](skills/git-conventional-commits/SKILL.md)
+
+- **What:** Formulates a Conventional Commit message from the staged change and the
+  target repository's own conventions.
+- **Why:** A vague or inaccurate commit message weakens history and can trigger the
+  wrong release effect.
+- **When:** Use it when one atomic change is staged and ready to commit.
+- **How:** Ask: “Use git-conventional-commits to inspect the staged change and create
+  the precise commit message for it.”
+
+</details>
+
+<details>
+<summary><strong>Review and maintain coherence</strong></summary>
 
 #### [`artifact-review`](skills/artifact-review/SKILL.md)
 
@@ -127,6 +161,17 @@ authority or human judgment.
   re-review after fixes.
 - **How:** Ask: “Use skill-review to verify that this skill can do its declared job
   with the smallest sufficient structure.”
+
+#### [`entropy-review`](skills/entropy-review/SKILL.md)
+
+- **What:** Reviews whether a design, plan, or implementation introduces complexity
+  proportionate to the problem it solves.
+- **Why:** Scope creep, premature generalization, and defensive mechanisms can make a
+  solution harder to change before they deliver value.
+- **When:** Use it when a proposal feels overengineered or when deciding whether a
+  mechanism is worth adding, retaining, or expanding.
+- **How:** Ask: “Use entropy-review to identify disproportionate complexity in this
+  plan and propose a smaller reversible alternative.”
 
 #### [`handle-review`](skills/handle-review/SKILL.md)
 
@@ -151,7 +196,10 @@ authority or human judgment.
   restore one authoritative home for each affected fact, and update the references
   derived from those facts.”
 
-### Execute reliably
+</details>
+
+<details>
+<summary><strong>Compound project learning</strong></summary>
 
 #### [`state`](skills/state/SKILL.md)
 
@@ -175,73 +223,47 @@ authority or human judgment.
 - **How:** Ask: “Use pitfalls before running the project tools, and record any new
   environment lesson only after it is verified.”
 
-#### [`subagent-worktree-parallel`](skills/subagent-worktree-parallel/SKILL.md)
-
-- **What:** Plans and orchestrates independent implementation slices in isolated Git
-  worktrees, followed by ordered integration and validation.
-- **Why:** Parallel work can move conflicts from implementation time to a risky,
-  unplanned merge phase.
-- **When:** Use it when several independent slices justify the coordination cost and
-  parallel execution is authorized.
-- **How:** Ask: “Use subagent-worktree-parallel to divide this work into independent
-  slices and define a safe integration order.”
-
-#### [`git-conventional-commits`](skills/git-conventional-commits/SKILL.md)
-
-- **What:** Formulates a Conventional Commit message from the staged change and the
-  target repository's own conventions.
-- **Why:** A vague or inaccurate commit message weakens history and can trigger the
-  wrong release effect.
-- **When:** Use it when one atomic change is staged and ready to commit.
-- **How:** Ask: “Use git-conventional-commits to inspect the staged change and create
-  the precise commit message for it.”
+</details>
 
 ## Install
 
-You need Node.js 22.20 or newer, with `npx`.
+You need Node.js 22.20 or newer and `npx`.
 
-Choose skills interactively:
+Run the installer, then choose the skills that match your primary problem, the
+target agent, and the installation scope:
 
 ```bash
 npx skills add aigengame/skills
 ```
 
-Install one skill:
+Install one skill directly, or make skills available across projects:
 
 ```bash
+# Install one skill
 npx skills add aigengame/skills --skill entropy-review
-```
 
-Install skills for the current user instead of one project:
-
-```bash
+# Install across projects
 npx skills add aigengame/skills --global
 ```
 
-The installer lets you select the target agent and installation scope. To pin the
-catalog content, select a version from
-[GitHub Releases](https://github.com/aigengame/skills/releases) and append its tag to
-the repository source, such as `aigengame/skills#v0.1.0`.
+To install a known release, append its
+[release tag](https://github.com/aigengame/skills/releases), such as
+`aigengame/skills#v0.1.0`.
 
-Installed skills do not update automatically. For an untagged installation, run the
-command for the scope you installed:
-
-```bash
-npx skills update --project
-npx skills update --global
-```
-
-A tagged installation stays on that tag. Choose and install a newer tag when you want
-to move to a new catalog version.
+Skills do not update automatically. For an installation without a release tag,
+run `npx skills update`. Add `--project` or `--global` to select the scope
+directly. An installation from a release tag stays on that tag. Install a newer
+tag to upgrade.
 
 ## Use a skill
 
-Name the skill and the outcome you need in your request. Use the **How** example in
-each catalog entry as a starting point.
+Start with what the work needs now. Choose the area that matches the primary
+problem, then name the skill and the outcome you need. Include the relevant
+evidence, constraints, and project decisions.
 
-Agents that support dedicated skill invocation can use their native syntax instead.
-The linked `SKILL.md` for each catalog entry defines its complete workflow and
-boundaries.
+Use the **How** example in each skill entry as a starting point. If new
+evidence changes what the work needs, choose again. If your agent has a skill
+command or picker, you can use it instead of naming the skill in prose.
 
 ## Help and feedback
 
