@@ -1,5 +1,7 @@
 # aigengame Agent Skills: Evidence-driven software delivery in complex, changing environments
 
+**Read this in:** [简体中文](docs/README.zh-CN.md)
+
 [![CI](https://img.shields.io/github/actions/workflow/status/aigengame/skills/validate.yml?branch=main&label=CI&logo=github)](https://github.com/aigengame/skills/actions/workflows/validate.yml)
 [![Latest release](https://img.shields.io/github/v/release/aigengame/skills)](https://github.com/aigengame/skills/releases)
 [![npx skills](https://img.shields.io/npm/v/skills?logo=npm&label=npx%20skills)](https://www.npmjs.com/package/skills)
