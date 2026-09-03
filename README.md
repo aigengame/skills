@@ -19,8 +19,6 @@
 - [Contributing](#contributing)
 - [License](#license)
 
----
-
 ## Why these skills
 
 According to the

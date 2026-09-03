@@ -1,4 +1,4 @@
-<!-- skills-readme-i18n: source=README.md sha256=066ffd11b409c5d232a13e6c5968e29433d155f58e766400a6db899a45d4025d -->
+<!-- skills-readme-i18n: source=README.md sha256=c88559a1bbeee878291e6e2fbc35af32ac91a9d50369278672e64a1f077d9087 -->
 
 # aigengame Agent Skills：在复杂多变的环境中，以证据驱动软件交付
 
@@ -20,8 +20,6 @@
 - [获取帮助和反馈](#help-and-feedback)
 - [参与贡献](#contributing)
 - [许可证](#license)
-
----
 
 <a id="why-these-skills"></a>
 ## 为什么需要这些 Skills
