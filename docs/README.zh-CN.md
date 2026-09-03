@@ -1,4 +1,4 @@
-<!-- skills-readme-i18n: source=README.md sha256=dbaaf37ace81ce2950b96b9dd7527a73800f6cd472c59dc19d0e3a41876e768c -->
+<!-- skills-readme-i18n: source=README.md sha256=066ffd11b409c5d232a13e6c5968e29433d155f58e766400a6db899a45d4025d -->
 
 # aigengame Agent Skills：在复杂多变的环境中，以证据驱动软件交付
 
@@ -9,8 +9,6 @@
 [![npx skills](https://img.shields.io/npm/v/skills?logo=npm&label=npx%20skills)](https://www.npmjs.com/package/skills)
 [![Node.js 22.20+](https://img.shields.io/badge/Node.js-%3E%3D22.20.0-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](../LICENSE)
-
----
 
 ## 目录
 

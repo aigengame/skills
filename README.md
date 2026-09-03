@@ -8,8 +8,6 @@
 [![Node.js 22.20+](https://img.shields.io/badge/Node.js-%3E%3D22.20.0-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
----
-
 ## Contents
 
 - [Why these skills](#why-these-skills)
