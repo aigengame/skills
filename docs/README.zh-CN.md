@@ -1,4 +1,4 @@
-<!-- skills-readme-i18n: source=README.md sha256=31e76458ab20fa1420a1a374557fcb4301ddce839a1854984c8a549370768aa5 -->
+<!-- skills-readme-i18n: source=README.md sha256=c88559a1bbeee878291e6e2fbc35af32ac91a9d50369278672e64a1f077d9087 -->
 
 # aigengame Agent Skills：在复杂多变的环境中，以证据驱动软件交付
 
@@ -10,6 +10,18 @@
 [![Node.js 22.20+](https://img.shields.io/badge/Node.js-%3E%3D22.20.0-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](../LICENSE)
 
+## 目录
+
+- [为什么需要这些 Skills](#why-these-skills)
+- [这些 Skills 如何工作](#how-these-skills-work)
+- [找到适合的 Skill](#find-the-right-skill)
+- [安装](#install)
+- [使用 Skill](#use-a-skill)
+- [获取帮助和反馈](#help-and-feedback)
+- [参与贡献](#contributing)
+- [许可证](#license)
+
+<a id="why-these-skills"></a>
 ## 为什么需要这些 Skills
 
 [Cynefin Framework](https://thecynefin.co/about-us/about-cynefin-framework/)
@@ -23,6 +35,7 @@
 
 > 计划是等待验证的假设，不是必须兑现的承诺。
 
+<a id="how-these-skills-work"></a>
 ## 这些 Skills 如何工作
 
 软件项目是复杂系统：需求会变，设计决策相互影响，一个局部优化也可能把成本转移到下游。AI agent 提高了交付速度，也会更快放大错误假设和不必要的复杂度。
@@ -44,6 +57,7 @@
 - **快速获得反馈。** 先做范围小、结果明确的检查，尽早获得反馈，再据此调整方向。
 - **明确权威来源。** 系统变化时，要同步责任边界、术语、决策和项目资料，避免各说各话。
 
+<a id="find-the-right-skill"></a>
 ## 找到适合的 Skill
 
 <details>
@@ -157,6 +171,7 @@
 
 </details>
 
+<a id="install"></a>
 ## 安装
 
 你需要 Node.js 22.20 或更高版本，以及 `npx`。
@@ -181,20 +196,24 @@ npx skills add aigengame/skills --global
 
 Skills 不会自动更新。未指定 release tag 时，可以运行 `npx skills update`；加上 `--project` 或 `--global` 可直接选择范围。通过 release tag 安装的版本会固定在该 tag，需要升级时请安装新的 tag。
 
+<a id="use-a-skill"></a>
 ## 使用 Skill
 
 先说明当前最需要解决的问题，再选择对应板块，指出要使用的 Skill 和期望结果，并提供相关证据、约束和项目决策。
 
 每个 Skill 条目中的“怎么用”都可以作为起点。如果新证据改变了问题重心，就重新选择。如果你的 agent 提供 Skill 命令或选择器，也可以直接使用，不必在自然语言中点名。
 
+<a id="help-and-feedback"></a>
 ## 获取帮助和反馈
 
 如需报告缺陷、询问用法或提议可复用的 Skill，请使用 [GitHub Issues](https://github.com/aigengame/skills/issues)。请附上 Skill 名称、目标 agent、预期结果和实际情况。
 
+<a id="contributing"></a>
 ## 参与贡献
 
 如果你想改进现有 Skill，或提出新的可复用 Skill，请阅读 [CONTRIBUTING.md](../CONTRIBUTING.md)，了解仓库范围、验证、审查和发布规则。
 
+<a id="license"></a>
 ## 许可证
 
 本仓库采用 [MIT License](../LICENSE)。
