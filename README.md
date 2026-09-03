@@ -8,6 +8,21 @@
 [![Node.js 22.20+](https://img.shields.io/badge/Node.js-%3E%3D22.20.0-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+---
+
+## Contents
+
+- [Why these skills](#why-these-skills)
+- [How these skills work](#how-these-skills-work)
+- [Find the right skill](#find-the-right-skill)
+- [Install](#install)
+- [Use a skill](#use-a-skill)
+- [Help and feedback](#help-and-feedback)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
 ## Why these skills
 
 According to the
