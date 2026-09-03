@@ -37,6 +37,8 @@ These skills provide reusable methods for four kinds of work: design under
 uncertainty, reliable execution, review and coherence, and project learning. They
 include specialized support for domain-centered design, game development, and Godot.
 
+See [gda](https://github.com/aigengame/godot-agent) for more details.
+
 The skills use systems thinking, complexity management, and fast feedback
 without replacing project rules or human judgment.
 
