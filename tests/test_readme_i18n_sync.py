@@ -9,10 +9,11 @@ The marker is a freshness acknowledgement, not proof of translation quality.
 Its format is also defined in ``scripts/update_readme_i18n.py``.
 """
 
-import hashlib
 import re
 import unittest
 from pathlib import Path
+
+from scripts.update_readme_i18n import source_hash
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -25,7 +26,7 @@ MARKER_RE = re.compile(
 
 
 def english_readme_hash() -> str:
-    return hashlib.sha256(README.read_bytes()).hexdigest()
+    return source_hash(README)
 
 
 def recorded_source_hash(text: str) -> str | None:

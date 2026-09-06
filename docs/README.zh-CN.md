@@ -1,4 +1,4 @@
-<!-- skills-readme-i18n: source=README.md sha256=6fbf963945690820f0f99d6680d9fe92702a3525122f1bc27e3d2cd01c16dbd8 -->
+<!-- skills-readme-i18n: source=README.md sha256=aa1606ab02bf1dac53660382c1b0ade15e08cdde340c144d12d33235543e6d9c -->
 
 # AIGen Game Agent Skills：在复杂多变的环境中，以证据驱动软件交付
 

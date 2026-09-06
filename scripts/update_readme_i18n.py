@@ -26,8 +26,14 @@ TRANSLATIONS = [REPOSITORY_ROOT / "docs" / "README.zh-CN.md"]
 MARKER_RE = re.compile(r"<!--\s*skills-readme-i18n:.*?-->", re.DOTALL)
 
 
+def source_hash(path: Path) -> str:
+    """Return a stable hash after normalizing text line endings."""
+    content = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(content).hexdigest()
+
+
 def main() -> None:
-    digest = hashlib.sha256(README.read_bytes()).hexdigest()
+    digest = source_hash(README)
     marker = f"<!-- skills-readme-i18n: source=README.md sha256={digest} -->"
 
     for path in TRANSLATIONS:
