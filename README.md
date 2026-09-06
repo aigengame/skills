@@ -127,6 +127,16 @@ each area guides the next decision.](https://media.githubusercontent.com/media/a
 <details>
 <summary><strong>Execute reliably</strong></summary>
 
+#### [`gda-blender-mcp`](skills/gda-blender-mcp/SKILL.md)
+
+- **What:** Guides Blender MCP asset creation, inspection, and export for Godot,
+  with gda import checks, detailed troubleshooting, and optional Python helpers.
+- **Why:** A successful tool call does not establish that the intended asset was
+  saved, imported, or rendered correctly.
+- **When:** Use it for Blender-to-Godot asset production, handoff, or troubleshooting.
+- **How:** Ask: “Use gda-blender-mcp to create this character through Blender MCP
+  and verify its import and motion in Godot with gda.”
+
 #### [`subagent-worktree-parallel`](skills/subagent-worktree-parallel/SKILL.md)
 
 - **What:** Plans and orchestrates independent implementation slices in isolated Git

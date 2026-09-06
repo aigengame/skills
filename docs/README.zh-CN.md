@@ -1,4 +1,4 @@
-<!-- skills-readme-i18n: source=README.md sha256=aa1606ab02bf1dac53660382c1b0ade15e08cdde340c144d12d33235543e6d9c -->
+<!-- skills-readme-i18n: source=README.md sha256=2e420306f769ba389a92179eb5905b08b9e697067eb45c39c5bc739399e427e4 -->
 
 # AIGen Game Agent Skills：在复杂多变的环境中，以证据驱动软件交付
 
@@ -95,6 +95,13 @@
 
 <details>
 <summary><strong>稳定执行</strong></summary>
+
+#### [`gda-blender-mcp`](../skills/gda-blender-mcp/SKILL.md)
+
+- **做什么：** 指导通过 Blender MCP 制作、检查和导出供 Godot 使用的资产，配合 gda 验证导入，并提供详细踩坑记录和可选的 Python 辅助脚本。
+- **为什么：** 工具调用成功，还不能说明目标资产已正确保存、导入或渲染。
+- **何时使用：** 适合 Blender 到 Godot 的资产制作、交付和故障排查。
+- **怎么用：** “使用 gda-blender-mcp，通过 Blender MCP 制作这个角色，再用 gda 验证它在 Godot 中的导入和动作。”
 
 #### [`subagent-worktree-parallel`](../skills/subagent-worktree-parallel/SKILL.md)
 
