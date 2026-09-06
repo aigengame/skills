@@ -30,8 +30,16 @@ def inspect_asset(parameters):
     # A reopened, non-active scene can still have unevaluated world matrices.
     # Update derived transforms without changing or saving the authored data.
     view_layer.update()
-    if any(o.name not in view_layer.objects for o in objects):
-        raise ValueError("Asset objects are excluded from the scene's first view layer")
+    unavailable = [
+        o.name
+        for o in objects
+        if o.name not in view_layer.objects or not o.visible_get(view_layer=view_layer)
+    ]
+    if unavailable:
+        raise ValueError(
+            "Asset objects are excluded or hidden in the scene's first view layer: "
+            + ", ".join(unavailable)
+        )
     meshes = [o for o in objects if o.type == "MESH"]
     low = [float("inf")] * 3
     high = [-float("inf")] * 3

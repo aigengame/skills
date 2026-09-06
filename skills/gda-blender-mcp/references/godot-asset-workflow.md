@@ -178,8 +178,11 @@ the loaded file, Blender version, nodes, materials, mesh count, base vertices,
 triangle count, unit scale, and world bounds. Shared mesh data is counted once
 per object; polygons contribute `n-2` triangles. Bounds use base vertices and each
 object's world matrix. It updates derived transforms in the scene's first view
-layer before reading them, and reports that layer. Objects excluded from that
-layer cause a diagnostic failure rather than stale bounds. Modifiers, skin deformation, and collection instances are
+layer before reading them, and reports that layer. It conservatively requires
+viewport visibility for all objects in the subtree. Excluded objects, viewport
+disabling on an object or collection, and local hiding cause a diagnostic failure
+that names the objects. The helper does not change visibility to obtain bounds.
+Modifiers, skin deformation, and collection instances are
 not evaluated or expanded. Counts can differ from exported geometry after
 triangulation or vertex splitting. Inspection code does not save, delete, or
 export data; the surrounding MCP CLI synchronization can write a temporary file.

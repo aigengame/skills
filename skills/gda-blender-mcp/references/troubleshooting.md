@@ -204,9 +204,22 @@ with two scenes, a child in the non-active scene had location `(3, 2, 1)` but an
 identity `matrix_world`. This gave incorrect world bounds. Updating that scene's
 view layer evaluated its transform and exposed the correct translation. The
 inspector now updates derived transforms in the first view layer before measuring.
-It reports an error for objects excluded from that layer, rather than assuming
-their cached transforms are current. Checking the non-active scene again verifies
-this behavior without switching or saving the user's scene.
+Checking the non-active scene again verifies this behavior without switching or
+saving the user's scene.
+
+Independent review then found that layer membership alone was insufficient.
+An object with `hide_viewport=True`, or one in a collection with that setting,
+remained in `view_layer.objects` but kept an identity world matrix after update.
+For a triangle at `(3, 2, 1)`, both direct and MCP inspection incorrectly reported
+bounds from `(0, 0, 0)` to `(1, 1, 0)` with successful execution. The visible control
+reported `(3, 2, 1)` to `(4, 3, 1)`.
+
+The helper now checks viewport visibility in the selected layer and reports hidden
+or excluded objects by name. It conservatively refuses local hiding too, although
+the review's `hide_set(True)` control had correct transforms. It does not toggle
+visibility in user data. Regression cases cover object, collection, and local
+hiding alongside the visible control; the hidden cases produce diagnostics instead
+of measurements.
 
 Completion mechanisms also differ. The interactive extension supports
 `check_is_finished`. The `execute_blender_code_for_cli` wrapper only reads the

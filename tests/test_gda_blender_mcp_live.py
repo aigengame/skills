@@ -50,6 +50,21 @@ second.collection.objects.link(extra)
 extra.location = (100,100,100)
 pa = {'scene':first.name, 'root':a.name}
 pb = {'scene':second.name, 'root':b.name, 'expected_nodes':[c.name for c in children]}
+hidden_cases = []
+for mode in ['ObjectHidden', 'CollectionHidden', 'LocallyHidden']:
+    obj = bpy.data.objects.new(mode, mesh)
+    collection = bpy.data.collections.new(mode)
+    second.collection.children.link(collection)
+    collection.objects.link(obj)
+    obj.location = (-6, 4, 2)
+    if mode == 'ObjectHidden':
+        obj.hide_viewport = True
+    elif mode == 'CollectionHidden':
+        collection.hide_viewport = True
+    else:
+        second.view_layers[0].update()
+        obj.hide_set(True, view_layer=second.view_layers[0])
+    hidden_cases.append(obj.name)
 path = folder/'fixture.blend'
 bpy.ops.wm.save_as_mainfile(filepath=str(path))
 bpy.ops.wm.open_mainfile(filepath=str(path))
@@ -62,6 +77,20 @@ assert second_result['triangles'] == 2
 assert second_result['world_bounds'] == {'min':[3.0,2.0,1.0], 'max':[5.0,3.0,1.0]}, second_result
 assert 'Studio' not in [n['name'] for n in second_result['nodes']]
 assert second_result['loaded_file'] == str(path)
+assert path.read_bytes() == before
+for name in hidden_cases:
+    obj = bpy.data.scenes[pb['scene']].objects[name]
+    layer = bpy.data.scenes[pb['scene']].view_layers[0]
+    visibility = (obj.hide_viewport, obj.hide_get(view_layer=layer),
+                  tuple(c.hide_viewport for c in obj.users_collection))
+    try:
+        inspect_asset({'scene':pb['scene'], 'root':name})
+    except ValueError as error:
+        assert 'hidden' in str(error) and name in str(error)
+    else:
+        raise AssertionError('Hidden object returned measurements: ' + name)
+    assert visibility == (obj.hide_viewport, obj.hide_get(view_layer=layer),
+                          tuple(c.hide_viewport for c in obj.users_collection))
 assert path.read_bytes() == before
 try:
     inspect_asset({**pb, 'expected_nodes':['Missing']})
