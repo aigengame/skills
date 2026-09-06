@@ -1,4 +1,4 @@
-# aigengame Agent Skills: Evidence-driven software delivery in complex, changing environments
+# AIGen Game Agent Skills: Evidence-driven software delivery in complex, changing environments
 
 **Read this in:** [简体中文](docs/README.zh-CN.md)
 

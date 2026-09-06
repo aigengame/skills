@@ -1,6 +1,6 @@
-<!-- skills-readme-i18n: source=README.md sha256=c88559a1bbeee878291e6e2fbc35af32ac91a9d50369278672e64a1f077d9087 -->
+<!-- skills-readme-i18n: source=README.md sha256=6fbf963945690820f0f99d6680d9fe92702a3525122f1bc27e3d2cd01c16dbd8 -->
 
-# aigengame Agent Skills：在复杂多变的环境中，以证据驱动软件交付
+# AIGen Game Agent Skills：在复杂多变的环境中，以证据驱动软件交付
 
 **其他语言：** [English](../README.md) · **简体中文**
 
