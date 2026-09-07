@@ -127,7 +127,10 @@ class ClientTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as directory:
             receipt = Path(directory) / "failure.json"
-            with patch.object(client, "call", fail), redirect_stdout(io.StringIO()):
+            with (
+                patch.object(client, "run_mcp_operation", fail),
+                redirect_stdout(io.StringIO()),
+            ):
                 self.assertEqual(client.main(["probe", "--receipt", str(receipt)]), 1)
                 original = receipt.read_text()
                 self.assertEqual(client.main(["probe", "--receipt", str(receipt)]), 1)
@@ -136,9 +139,34 @@ class ClientTests(unittest.TestCase):
             self.assertIn("expected node missing", json.loads(original)["error"])
             self.assertEqual(json.loads(original)["stage"], "execute")
 
+    def test_unsupported_sdk_fails_before_loading_config_or_starting_server(self):
+        with tempfile.TemporaryDirectory() as directory:
+            for sdk in ("1.2.0", "1.29.0", "1.29.2", "2.1.1"):
+                with self.subTest(sdk=sdk):
+                    receipt = Path(directory) / (sdk + ".json")
+                    with (
+                        patch.object(client, "version", return_value=sdk),
+                        patch.object(client, "load_server") as load_server,
+                        redirect_stdout(io.StringIO()),
+                    ):
+                        self.assertEqual(
+                            client.main(["probe", "--receipt", str(receipt)]), 1
+                        )
+                    load_server.assert_not_called()
+                    result = json.loads(receipt.read_text())
+                    self.assertEqual(result["mcp_sdk"], sdk)
+                    self.assertEqual(result["stage"], "prepare")
+                    self.assertFalse(result["ok"])
+                    self.assertIn("requires mcp==1.29.1", result["error"])
+                    self.assertNotIn("tools", result)
+                    self.assertNotIn("result", result)
+
     def test_invalid_timeouts(self):
         for value in ("0", "-1", "nan", "inf"):
-            with self.subTest(value=value), self.assertRaises(argparse.ArgumentTypeError):
+            with (
+                self.subTest(value=value),
+                self.assertRaises(argparse.ArgumentTypeError),
+            ):
                 client.positive_seconds(value)
 
 

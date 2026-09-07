@@ -29,32 +29,32 @@ class BlenderInspectorTests(unittest.TestCase):
                 setup
                 + """
 import bpy
-first = bpy.data.scenes.new('Asset')
-second = bpy.data.scenes.new('Asset')
+mesh_root_scene = bpy.data.scenes.new('Asset')
+nested_mesh_scene = bpy.data.scenes.new('Asset')
 mesh = bpy.data.meshes.new('Triangle')
 mesh.from_pydata([(0,0,0), (1,0,0), (0,1,0)], [], [(0,1,2)])
 mesh.update()
-a = bpy.data.objects.new('Root', mesh)
-first.collection.objects.link(a)
-b = bpy.data.objects.new('Root', None)
-second.collection.objects.link(b)
+mesh_root = bpy.data.objects.new('Root', mesh)
+mesh_root_scene.collection.objects.link(mesh_root)
+empty_root = bpy.data.objects.new('Root', None)
+nested_mesh_scene.collection.objects.link(empty_root)
 children = []
 for index in range(2):
     child = bpy.data.objects.new('Part', mesh)
-    second.collection.objects.link(child)
-    child.parent = b
+    nested_mesh_scene.collection.objects.link(child)
+    child.parent = empty_root
     child.location = (3+index, 2, 1)
     children.append(child)
 extra = bpy.data.objects.new('Studio', mesh)
-second.collection.objects.link(extra)
+nested_mesh_scene.collection.objects.link(extra)
 extra.location = (100,100,100)
-pa = {'scene':first.name, 'root':a.name}
-pb = {'scene':second.name, 'root':b.name, 'expected_nodes':[c.name for c in children]}
+mesh_root_params = {'scene':mesh_root_scene.name, 'root':mesh_root.name}
+nested_mesh_params = {'scene':nested_mesh_scene.name, 'root':empty_root.name, 'expected_nodes':[c.name for c in children]}
 hidden_cases = []
 for mode in ['ObjectHidden', 'CollectionHidden', 'LocallyHidden']:
     obj = bpy.data.objects.new(mode, mesh)
     collection = bpy.data.collections.new(mode)
-    second.collection.children.link(collection)
+    nested_mesh_scene.collection.children.link(collection)
     collection.objects.link(obj)
     obj.location = (-6, 4, 2)
     if mode == 'ObjectHidden':
@@ -62,29 +62,29 @@ for mode in ['ObjectHidden', 'CollectionHidden', 'LocallyHidden']:
     elif mode == 'CollectionHidden':
         collection.hide_viewport = True
     else:
-        second.view_layers[0].update()
-        obj.hide_set(True, view_layer=second.view_layers[0])
+        nested_mesh_scene.view_layers[0].update()
+        obj.hide_set(True, view_layer=nested_mesh_scene.view_layers[0])
     hidden_cases.append(obj.name)
 path = folder/'fixture.blend'
 bpy.ops.wm.save_as_mainfile(filepath=str(path))
 bpy.ops.wm.open_mainfile(filepath=str(path))
 before = path.read_bytes()
-first_result = inspect_asset(pa)
-second_result = inspect_asset(pb)
-assert first_result['mesh_objects'] == 1 and first_result['vertices'] == 3
-assert second_result['mesh_objects'] == 2 and second_result['vertices'] == 6
-assert second_result['triangles'] == 2
-assert second_result['world_bounds'] == {'min':[3.0,2.0,1.0], 'max':[5.0,3.0,1.0]}, second_result
-assert 'Studio' not in [n['name'] for n in second_result['nodes']]
-assert second_result['loaded_file'] == str(path)
+mesh_root_result = inspect_asset(mesh_root_params)
+nested_mesh_result = inspect_asset(nested_mesh_params)
+assert mesh_root_result['mesh_objects'] == 1 and mesh_root_result['vertices'] == 3
+assert nested_mesh_result['mesh_objects'] == 2 and nested_mesh_result['vertices'] == 6
+assert nested_mesh_result['triangles'] == 2
+assert nested_mesh_result['world_bounds'] == {'min':[3.0,2.0,1.0], 'max':[5.0,3.0,1.0]}, nested_mesh_result
+assert 'Studio' not in [n['name'] for n in nested_mesh_result['nodes']]
+assert nested_mesh_result['loaded_file'] == str(path)
 assert path.read_bytes() == before
 for name in hidden_cases:
-    obj = bpy.data.scenes[pb['scene']].objects[name]
-    layer = bpy.data.scenes[pb['scene']].view_layers[0]
+    obj = bpy.data.scenes[nested_mesh_params['scene']].objects[name]
+    layer = bpy.data.scenes[nested_mesh_params['scene']].view_layers[0]
     visibility = (obj.hide_viewport, obj.hide_get(view_layer=layer),
                   tuple(c.hide_viewport for c in obj.users_collection))
     try:
-        inspect_asset({'scene':pb['scene'], 'root':name})
+        inspect_asset({'scene':nested_mesh_params['scene'], 'root':name})
     except ValueError as error:
         assert 'hidden' in str(error) and name in str(error)
     else:
@@ -93,20 +93,20 @@ for name in hidden_cases:
                           tuple(c.hide_viewport for c in obj.users_collection))
 assert path.read_bytes() == before
 try:
-    inspect_asset({**pb, 'expected_nodes':['Missing']})
+    inspect_asset({**nested_mesh_params, 'expected_nodes':['Missing']})
 except ValueError as error:
     assert 'Expected nodes missing' in str(error)
 else:
     raise AssertionError('Missing node was accepted')
-scene = bpy.data.scenes[pb['scene']]
-obj = scene.objects[pb['expected_nodes'][0]]
+scene = bpy.data.scenes[nested_mesh_params['scene']]
+obj = scene.objects[nested_mesh_params['expected_nodes'][0]]
 hidden = bpy.data.collections.new('Hidden')
 scene.collection.children.link(hidden)
 scene.collection.objects.unlink(obj)
 hidden.objects.link(obj)
 scene.view_layers[0].layer_collection.children[hidden.name].exclude = True
 try:
-    inspect_asset(pb)
+    inspect_asset(nested_mesh_params)
 except ValueError as error:
     assert 'excluded' in str(error)
 else:

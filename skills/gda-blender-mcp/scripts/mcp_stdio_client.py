@@ -124,12 +124,13 @@ async def discover(session) -> list:
         seen.add(cursor)
 
 
-async def call(args, receipt: dict, errlog) -> None:
+async def run_mcp_operation(args, receipt: dict, errlog) -> None:
     sdk = version("mcp")
     receipt["mcp_sdk"] = sdk
-    if sdk.split(".")[0] != "1":
+    if sdk != "1.29.1":
         raise ValueError(
-            "This helper targets MCP SDK 1.x; its script dependency pins 1.29.1"
+            f"Unsupported MCP SDK {sdk}; this helper requires mcp==1.29.1. "
+            "Use uv run --script to prepare the pinned dependency."
         )
     from mcp import ClientSession, StdioServerParameters
     from mcp.client.stdio import stdio_client
@@ -245,7 +246,7 @@ def main(argv=None) -> int:
         with args.receipt.open("x") as output:
             try:
                 with stderr_file.open("x") as errlog:
-                    asyncio.run(call(args, receipt, errlog))
+                    asyncio.run(run_mcp_operation(args, receipt, errlog))
                 receipt["ok"] = True
             except (Exception, KeyboardInterrupt) as error:
                 receipt["error"] = error_text(error)

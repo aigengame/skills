@@ -1,188 +1,133 @@
 # Godot asset workflow
 
-Use the parts that affect the current asset. The panda example below supplies
-concrete evidence, not a required model type or directory layout.
+Adapt these decisions to the asset and its consumer. The optional
+[bundled helpers](bundled-helpers.md) automate protocol calls and base-geometry
+inspection. The [worked example](worked-example.md) records one production case
+and the limits of retained validation evidence.
 
-## Decide what the engine needs
+## Establish the consumer and versions
 
-Establish the asset's size, origin, ground contact, front direction, material
-needs, animation method, and any parts the game must address by name. Reuse
-information already present in the project.
+Use the project's asset requirements for size, origin, ground contact, model
+front, materials, animation, and parts addressed by name. Resolve missing choices
+that affect export before building detailed geometry.
 
-The original panda used separate meshes and limb pivots, animated procedurally in
-Godot. It had no skinning or baked walk clip. A character that needs retargeting,
-complex deformation, or animation clips can use a skeleton and a suitable export
-plan instead.
+Check the installed Blender, Godot, gda, and MCP implementation versions. Select
+the matching release in the [Blender Python API documentation](https://docs.blender.org/api/)
+and [Godot documentation](https://docs.godotengine.org/). In that release, consult
+the glTF export operator, supported 3D formats, and model export considerations.
+Use `gda --help` and the relevant subcommand help for the installed CLI. Default
+or latest documentation can describe options absent from the consumer's version.
 
-## Check the relevant connection
+## Choose the exchange and animation strategy
 
-Blender Lab's interactive path is MCP client → stdio server → Blender extension →
-running Blender. Its CLI tool also starts a background Blender process.
+| Requirement | Suitable starting point and check |
+| --- | --- |
+| One file for delivery | Export GLB and confirm the intended mesh, material, and texture data is included. |
+| Independent texture or buffer editing | Use separate glTF resources and preserve their relative paths. |
+| A project already imports editable Blender files | Direct `.blend` import can fit; confirm that the import environment has the Blender version needed for conversion. |
+| Static prop | Export the required geometry and materials; animation data can be omitted. |
+| Rigid parts moved by game code | Preserve addressable parts and useful pivots; verify their imported hierarchy and motion. |
+| Deformation, retargeting, or authored clips | Plan bones, skinning, shape keys, and clips as required; check the exporter options and imported animation behavior. |
+
+These choices can be combined. A single character can contain skinned geometry
+and rigid attachments. Do not disable animation merely because another asset did
+not need it.
+
+## Check the execution path you need
+
+For Blender Lab MCP, the interactive path connects the stdio server to an
+extension in running Blender. Its CLI tool starts a background Blender process.
+Other implementations can expose different tools or results.
 
 | Observation | Evidence it provides |
 | --- | --- |
-| Saved server definition | Startup information exists |
-| MCP initialization and tool discovery | The protocol server responds |
-| Read-only code returns Blender version and scenes | The extension reaches Blender |
-| Tools appear in the current agent session | The client exposes those tools |
-| CLI inspection succeeds | That background path works for its effective input file; see [P08](troubleshooting.md#p08-background-inspection-can-read-an-unsaved-snapshot) |
+| Saved server definition | Startup information exists. |
+| MCP initialization and tool discovery | The protocol server responds. |
+| Read-only code returns Blender version and scenes | The selected execution path reaches Blender. |
+| Tools appear in the current agent session | The agent client exposes those tools. |
+| CLI inspection reports its loaded file | The background path inspected that effective input; see [P08](troubleshooting.md#p08-background-inspection-can-read-an-unsaved-snapshot). |
 
-Do not infer one state from another. The original installation listed 26 tools;
-that number is a historical observation, not a health threshold.
+Check the boundary affected by the current change. A protocol probe alone does
+not establish that the extension can execute Blender code.
 
-## Keep useful recovery points
+## Edit with useful recovery points
 
 For a new asset, a separate scene or collection helps identify task-owned data.
-For existing work, inspect edits before replacing anything. Store actual names
-returned by Blender rather than assuming an unsuffixed name. Restore selection,
-active scene, and UI context when that helps preserve the user's editing session.
+For existing work, inspect edits before replacing anything. Return the actual
+scene and object names, including suffixes, and pass those names to later calls.
+Restore selection and active context when needed to preserve the editing session.
 
-A stage result might contain `scene`, `root`, `stage`, `outputs`, and `checks`.
-Use only fields the next step needs. A path in a result does not prove the file is
-complete. After an export failure, inspect the asset that already exists and
-resume export when appropriate. If ownership is unclear, preserve the data while
-you resolve that uncertainty; cleanup is not an automatic retry step.
+Separate modeling, export, and inspection when this makes failures easier to
+recover from. A stage result can contain identifiers, output paths, and checks
+needed by the next step. A path alone does not prove that a file is complete.
+After an export failure, inspect the existing asset and resume export if the
+geometry is usable. A caught exception does not roll back earlier edits. Preserve
+data whose ownership is unclear while resolving that uncertainty.
 
-## Prepare and export
+## Prepare the export scope and transforms
 
-For assets that follow Godot/glTF conventions, Blender `-Y` is model front and
-becomes Godot `+Z`. Godot camera forward is `-Z`. If the project uses another
-convention, make the conversion explicit in export or a wrapper node. Check
-scale, the contact plane, and pivot motion against the asset's use.
-[Godot export considerations](https://docs.godotengine.org/en/4.6/tutorials/assets_pipeline/importing_3d_scenes/model_export_considerations.html)
+For Godot/glTF conventions, Blender `-Y` model front becomes Godot `+Z`; Godot
+camera forward is `-Z`. If the project uses another convention, make the conversion
+explicit in export or a wrapper node. Check scale, the contact plane, and pivot
+motion against the asset's use.
 
-Use materials the exporter can represent. Complex procedural materials may need
-baking or reconstruction in Godot; the original simple PBR panda did not test
-that workflow. Whether to apply transforms or modifiers depends on deformation
-and animation needs, so inspect the result after those changes.
+Select the intended asset root and descendants, or its asset collection. Keep
+studio objects outside that scope unless the task requires them. Verify the
+actual selection before using a selection-only export option. Use materials the
+exporter can represent. Bake or reconstruct procedural effects when necessary.
+Whether to apply transforms or modifiers depends on deformation and animation;
+inspect the exported result after those changes.
 
-For a character-only export, select its root and descendants, or its asset
-collection. Keep studio objects outside that scope. The original export used
-`export_format="GLB"`, `use_selection=True`, and `export_yup=True`; it disabled
-animations because that asset had none. Check the current
-[Blender glTF export API](https://docs.blender.org/api/current/bpy.ops.export_scene.html)
-for assets with bones, shape keys, or clips.
+## Preserve editable source
 
-Preserve editable source as needed. The original task used
-`bpy.data.libraries.write` to save a dedicated scene and its dependencies without
-switching the user's current main file. It then reopened the saved source. Other
-save operations can suit a complete working file. External textures and linked
-libraries need their own dependency checks; this simple asset did not establish
-that all dependencies of arbitrary `.blend` files are packed.
+Choose a save method for the intended source scope:
 
-GLB can group mesh and texture data. Separate glTF resources can suit independent
-texture editing. Direct `.blend` import invokes Blender to convert the asset to
-glTF, so that import environment needs Blender installed. Explicit GLB export can
-remove that dependency from engine import.
-[Godot supported formats](https://docs.godotengine.org/en/4.6/tutorials/assets_pipeline/importing_3d_scenes/available_formats.html)
+- Save a complete working file when the whole file belongs to the deliverable.
+- Use a save-copy operation when the active editing file should remain in place;
+  check that operation's behavior for the running Blender version.
+- Write selected datablocks and their dependencies when a dedicated asset source
+  is needed. Reopen the result and verify that it contains the required data.
 
-## Import and observe in Godot
+Check external textures and linked libraries separately; a successful save does
+not establish that dependencies are packed. If a save crashes, record the exact
+path and input conditions before choosing a recovery. [P12](troubleshooting.md#p12-partial-library-writing-crashes-in-a-background-fixture)
+records one partial-library-write crash and its bounded recovery.
 
-Put the exchange asset inside the target project. For example, after replacing
-the paths with actual values:
+## Import and integrate
+
+Put the exchange asset inside the target project. After checking the installed
+`gda resource import --help`, a GLB import can use:
 
 ```sh
 gda resource import res://content/character/character.glb \
   --project /absolute/path/to/project --json
 ```
 
-Consult `gda resource import --help` for the installed version. Import can run a
-project-wide pass. A copied source asset does not imply that the import cache
-exists; see [P10](troubleshooting.md#p10-a-clean-godot-checkout-has-no-import-cache).
+Inspect the JSON result. Import can run a project-wide pass. A copied source does
+not imply that its generated import cache exists; see
+[P10](troubleshooting.md#p10-a-clean-godot-checkout-has-no-import-cache).
 
 An editable character scene can instance the imported model and own movement,
 collision, and game behavior outside the imported hierarchy. This helps preserve
-game logic across model exports; follow the project's existing structure.
+game logic across exports. Follow the project's existing structure.
 
-Choose checks that matter: loading, dimensions, orientation, materials, required
-nodes, motion, and collision alignment. For an interactive demo, drive its relevant
-actions through gda and observe the result. A successful input command with no
-movement can concern the input injection path or controller, not the model.
-Use gda-specific guidance to investigate it.
+## Match validation to the delivery
 
-Inspect Blender preview and Godot rendering separately. The original engine
-screenshots exposed color and presentation issues that the studio render did not
-settle. That observation does not prescribe one renderer for every project.
-Record relevant versions, files, measurements, and a rendered view. Hashes help
-identify a file revision. Mesh counts are comparison evidence, not automatic
-quality or performance thresholds. Application packaging is a separate delivery
-step.
+| Layer | Useful evidence | What it leaves open |
+| --- | --- | --- |
+| Editable source | Reopened file, effective path, required objects and dependencies | Export and engine behavior |
+| Exchange asset | Exported scope, geometry, materials, and animation data | Godot import and appearance |
+| Engine import and load | Successful import, instantiated hierarchy, dimensions, and required nodes | Rendered appearance and interaction |
+| Engine rendering | Captured view under the target renderer and lighting | Controller response and gameplay |
+| Interaction | Relevant input followed by observed movement, animation, or collision response | Other actions and delivery platforms |
 
-## Bundled helpers
+For an interactive demo, drive the relevant actions through gda and observe the
+result. Successful input with no movement can indicate a problem in the input
+injection path or controller. Use gda-specific guidance to investigate it.
+Inspect Blender previews and Godot rendering separately because their materials,
+lighting, and presentation can differ.
 
-These helpers target Blender Lab MCP. The client supports Python 3.11+ and MCP SDK
-1.x; its PEP 723 script metadata pins the tested `mcp==1.29.1`. With uv available,
-`uv run --script` prepares that dependency. An existing environment with the SDK
-can instead run the file with its Python executable. `--help` needs no SDK.
-The scripts themselves do not install dependencies or change server configuration.
-
-The client reads one stdio definition from `--config`, defaulting to
-`$CODEX_HOME/config.toml`, or `~/.codex/config.toml` when unset. `--server` defaults
-to `blender`. It uses the definition's `command`, `args`, `env`, and optional
-absolute `cwd`, adding explicit environment values to the caller's environment.
-Arguments are passed literally, without a shell. Without `cwd`, startup uses the
-caller's working directory. This is a protocol helper, not an emulator for Codex
-profiles, authentication, tool permission filters, or remote transports.
-
-Run from any directory using the actual installed skill path in place of
-`/path/to/gda-blender-mcp`:
-
-```sh
-uv run --script /path/to/gda-blender-mcp/scripts/mcp_stdio_client.py probe \
-  --config /absolute/path/to/config.toml --server blender \
-  --receipt /absolute/path/to/results/probe-01.json
-```
-
-`probe` initializes and lists tools; it does not run code in Blender. For an
-interactive asset check, create a JSON parameter file with actual names:
-
-```json
-{"scene": "Asset_Work.001", "root": "Character.001", "expected_nodes": ["Arm_L.001"]}
-```
-
-Then call the bundled inspector:
-
-```sh
-uv run --script /path/to/gda-blender-mcp/scripts/mcp_stdio_client.py execute \
-  --code-file /path/to/gda-blender-mcp/scripts/inspect_blender_asset.py \
-  --params-file /absolute/path/to/asset-params.json \
-  --receipt /absolute/path/to/results/inspect-01.json
-```
-
-Add `--blend-file /absolute/path/to/source.blend` to use the MCP CLI tool. That
-option can synchronize unsaved data before running the inspection; read
-[P08](troubleshooting.md#p08-background-inspection-can-read-an-unsaved-snapshot)
-when validating a disk artifact. `--config` and `--server` also apply to `execute`.
-For custom code, supply another `--code-file`; its inputs are in `params` and its
-output belongs in `result`, a JSON dictionary. Custom code has the side effects
-it specifies. The CLI tool does not wait for deferred completion hooks.
-
-Receipts use new paths and are never overwritten. Each records the last stage
-reached, tool definitions, raw call result when available, decoded result, and
-failure details. Server stderr goes to `<receipt>.stderr.log`; stdout is a short
-JSON summary. Existing stderr files are also preserved. Exit 0 means protocol
-probe or recognized tool execution completed; exit 1 means failure, and argument
-syntax errors use exit 2. Application-specific keys in a CLI result do not define
-success for the client. Custom checks can raise an exception on failure, as the
-bundled inspector does. Results and server logs can contain task data, so select
-what to share rather than publishing receipts automatically.
-
-`--timeout` sets a positive, finite per-request client timeout (default 300 seconds).
-It does not change server timeouts or retry the task. A timeout can leave earlier
-Blender edits in place.
-
-The inspector reads a named scene subtree, including a mesh root itself. Optional
-`expected_nodes` are checked within that subtree, not the whole scene. Missing
-inputs, scenes, roots, or expected nodes raise a diagnostic exception. It reports
-the loaded file, Blender version, nodes, materials, mesh count, base vertices,
-triangle count, unit scale, and world bounds. Shared mesh data is counted once
-per object; polygons contribute `n-2` triangles. Bounds use base vertices and each
-object's world matrix. It updates derived transforms in the scene's first view
-layer before reading them, and reports that layer. It conservatively requires
-viewport visibility for all objects in the subtree. Excluded objects, viewport
-disabling on an object or collection, and local hiding cause a diagnostic failure
-that names the objects. The helper does not change visibility to obtain bounds.
-Modifiers, skin deformation, and collection instances are
-not evaluated or expanded. Counts can differ from exported geometry after
-triangulation or vertex splitting. Inspection code does not save, delete, or
-export data; the surrounding MCP CLI synchronization can write a temporary file.
+Record the checks that ran, their relevant versions and file revisions, and the
+remaining unverified behavior. Hashes identify revisions; mesh counts support
+comparisons. Neither is an automatic quality or performance threshold. Application
+packaging is a separate delivery step.

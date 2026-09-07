@@ -12,12 +12,14 @@ is not a requirement for other implementations or future versions.
 - [P04: Repeated names select an older asset](#p04-fixed-names-can-select-an-older-generation)
 - [P05: Variables and process environments](#p05-python-locals-and-environments-do-not-cross-calls)
 - [P06: Inner errors and result shapes](#p06-protocol-success-does-not-prove-code-success)
-- [P07: Background context and deferred work](#p07-interactive-context-and-background-completion-differ)
+- [P07: UI context in background execution](#p07-interactive-ui-context-is-unavailable-in-background-execution)
 - [P08: Unsaved snapshots during file inspection](#p08-background-inspection-can-read-an-unsaved-snapshot)
 - [P09: Nested timeouts](#p09-the-inner-timeout-can-expire-first)
 - [P10: Godot import cache](#p10-a-clean-godot-checkout-has-no-import-cache)
 - [P11: uv cache permissions](#p11-uv-cannot-prepare-its-cache)
 - [P12: Crash while saving newly created scenes](#p12-partial-library-writing-crashes-in-a-background-fixture)
+- [P13: Incorrect world bounds](#p13-successful-inspection-reports-incorrect-world-bounds)
+- [P14: Deferred work returns too early](#p14-deferred-work-is-not-awaited-by-every-execution-path)
 
 ## Evidence baseline
 
@@ -36,8 +38,10 @@ revision unless stated otherwise.
 
 ## P01: SDK upgrade breaks the FastMCP import
 
-**Applies when:** Source imports `mcp.server.fastmcp.FastMCP`, but its dependency
-range permits MCP SDK 2.x.
+**Applies when:** Startup reports the missing `mcp.server.fastmcp` module, the
+source imports its `FastMCP` class, and the environment has resolved an incompatible
+SDK such as 2.1.1. A dependency range that permits 2.x is not itself a failure
+when the lock still resolves to a compatible release.
 
 **Observed:** The original `mcp[cli]>=1.2.0` resolved to 2.1.1. Server startup failed
 with `ModuleNotFoundError: No module named 'mcp.server.fastmcp'`, before modeling.
@@ -186,7 +190,7 @@ outer MCP failures. For the helper pair, a missing expected node in CLI mode sho
 retain diagnostics and produce a nonzero client exit. See `_execute_code` and
 `mcp/blmcp/tools_helpers/blender_cli.py`.
 
-## P07: Interactive context and background completion differ
+## P07: Interactive UI context is unavailable in background execution
 
 **Evidence type:** Source inspection; background asset inspection passed, but not
 all possible background failure shapes were exercised.
@@ -199,39 +203,9 @@ That does not mean Blender CLI cannot model or render. Data inspection can use
 explicit references without UI access. Choose interactive execution for code that
 needs its context, or adapt the operators and verify background execution.
 
-**Additional observed case during helper validation:** After reopening a file
-with two scenes, a child in the non-active scene had location `(3, 2, 1)` but an
-identity `matrix_world`. This gave incorrect world bounds. Updating that scene's
-view layer evaluated its transform and exposed the correct translation. The
-inspector now updates derived transforms in the first view layer before measuring.
-Checking the non-active scene again verifies this behavior without switching or
-saving the user's scene.
-
-Independent review then found that layer membership alone was insufficient.
-An object with `hide_viewport=True`, or one in a collection with that setting,
-remained in `view_layer.objects` but kept an identity world matrix after update.
-For a triangle at `(3, 2, 1)`, both direct and MCP inspection incorrectly reported
-bounds from `(0, 0, 0)` to `(1, 1, 0)` with successful execution. The visible control
-reported `(3, 2, 1)` to `(4, 3, 1)`.
-
-The helper now checks viewport visibility in the selected layer and reports hidden
-or excluded objects by name. It conservatively refuses local hiding too, although
-the review's `hide_set(True)` control had correct transforms. It does not toggle
-visibility in user data. Regression cases cover object, collection, and local
-hiding alongside the visible control; the hidden cases produce diagnostics instead
-of measurements.
-
-Completion mechanisms also differ. The interactive extension supports
-`check_is_finished`. The `execute_blender_code_for_cli` wrapper only reads the
-synchronous `result`; it does not wait for that hook. A separate background socket
-path in the extension explicitly rejects deferred completion. Thus neither
-“all background calls reject it” nor “all background calls await it” is accurate.
-A CLI script should complete its check before returning its result.
-
-**Check:** Test the chosen path and record the effective file and scene. A returned
-initial dictionary alone does not prove deferred work completed. Compare
-`mcp/blmcp/tools_helpers/blender_cli.py` with the extension's execution paths;
-the tool docstring's broad background statement does not describe every wrapper.
+**Check:** Run the adapted code through the intended execution path. Confirm that
+it uses the requested scene and object references without an interactive window.
+A successful run in interactive Blender does not establish this property.
 
 ## P08: Background inspection can read an unsaved snapshot
 
@@ -338,5 +312,65 @@ the crash location and input conditions. A full save in an isolated process can
 provide a test artifact. Applying that replacement to an interactive user file
 would change the current file and include its other data; choose a save or copy
 strategy that fits the intended source. Verify the saved artifact by reopening it.
-Updating the view layer fixes the separate bounds issue in P07; it has not been
+Updating the view layer fixes the separate non-active-scene bounds issue in P13; it has not been
 established here as a fix for this native save crash.
+
+## P13: Successful inspection reports incorrect world bounds
+
+**Applies when:** A query measures world-space geometry in a reopened, non-active
+scene, or includes hidden or excluded objects whose transforms might be stale.
+
+**Observed during helper validation:** After reopening a file
+with two scenes, a child in the non-active scene had location `(3, 2, 1)` but an
+identity `matrix_world`. This gave incorrect world bounds. Updating that scene's
+view layer evaluated its transform and exposed the correct translation. The
+inspector now updates derived transforms in the first view layer before measuring.
+
+Independent review then found that layer membership alone was insufficient.
+An object with `hide_viewport=True`, or one in a collection with that setting,
+remained in `view_layer.objects` but kept an identity world matrix after update.
+For a triangle at `(3, 2, 1)`, both direct and MCP inspection incorrectly reported
+bounds from `(0, 0, 0)` to `(1, 1, 0)` with successful execution. The visible control
+reported `(3, 2, 1)` to `(4, 3, 1)`.
+
+The helper now checks viewport visibility in the selected layer and reports hidden
+or excluded objects by name. It conservatively refuses local hiding too, although
+the review's `hide_set(True)` control had correct transforms. It does not toggle
+visibility in user data. Regression cases cover object, collection, and local
+hiding alongside the visible control; the hidden cases produce diagnostics instead
+of measurements.
+
+**Reuse:** Update derived transforms in the selected scene's view layer before
+measuring. Check which objects that layer can evaluate. If an inspection cannot
+establish reliable transforms without changing authored visibility, return the
+affected names and a diagnostic instead of successful measurements.
+
+**Check:** Reopen a fixture with a non-active scene and translated children; compare
+measured bounds with known coordinates. Test object, collection, and local hiding
+separately, plus layer exclusion. The helper's tests require either correct visible
+bounds or a diagnostic for unsupported visibility. They also check that the source
+file and visibility remain unchanged.
+
+## P14: Deferred work is not awaited by every execution path
+
+**Evidence type:** Source inspection at the baseline revision; no delayed-work
+failure was reproduced during production.
+
+**Applies when:** A script returns an initial `result` and uses
+`check_is_finished` to signal completion later.
+
+**Cause:** The interactive extension supports that hook. The
+`execute_blender_code_for_cli` wrapper only reads the synchronous `result`; it does
+not wait for the hook. A separate background socket path in the extension
+explicitly rejects deferred completion. Thus neither “all background calls reject
+it” nor “all background calls await it” describes the examined implementation.
+
+**Reuse:** Choose a path that supports the completion mechanism, or complete the
+work synchronously before returning the CLI result. Raising a client timeout does
+not add a missing completion mechanism.
+
+**Suggested check:** Use a small task with a distinct final marker through the
+chosen path. Confirm that the returned result contains that marker. An initial
+dictionary alone does not prove completion. Compare
+`mcp/blmcp/tools_helpers/blender_cli.py` with the extension's execution paths;
+the tool docstring's broad background statement does not describe every wrapper.

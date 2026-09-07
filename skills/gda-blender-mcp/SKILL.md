@@ -14,12 +14,14 @@ own tool guidance.
 
 - For scale, orientation, animation, export, and engine integration, read
   [Godot asset workflow](references/godot-asset-workflow.md).
-- For connection failures or unexpected execution results, find the matching
+- For connection failures, execution results, or incorrect bounds, find the matching
   entry in [Troubleshooting](references/troubleshooting.md).
 - For repeatable protocol calls and asset checks, use the optional
-  [bundled helpers](references/godot-asset-workflow.md#bundled-helpers).
+  [bundled helpers](references/bundled-helpers.md).
   Already connected MCP tools are also suitable; the client helper is not a
   prerequisite for normal work.
+- For the panda case and retained manual validation evidence, read the
+  [worked example](references/worked-example.md).
 
 ## Identify the implementation and intended asset
 
