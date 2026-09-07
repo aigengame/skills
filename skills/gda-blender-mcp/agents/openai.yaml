@@ -1,0 +1,4 @@
+interface:
+  display_name: "GDA Blender MCP"
+  short_description: "Create and verify Blender assets for Godot with MCP"
+  default_prompt: "Use $gda-blender-mcp to create or inspect this Blender asset and verify its import into Godot with gda."
