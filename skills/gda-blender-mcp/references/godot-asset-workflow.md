@@ -134,12 +134,12 @@ packaging is a separate delivery step.
 
 ## Evolve the workflow selectively
 
-Use the optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
-when real work exposes a reusable decision gap whose expected value justifies
-shared maintenance.
+The optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
+defines the authorization and evidence gates for shared maintenance. A reusable
+asset decision belongs here only when its expected value justifies that maintenance.
 
-Start with bounded evidence in troubleshooting or a worked example. Promote the
-smallest decision rule only after repeated evidence or a stable tool or engine
-contract supports it.
+Start with bounded evidence in troubleshooting or a worked example. When skill
+maintenance is authorized, promote the smallest decision rule only after repeated
+evidence or a stable tool or engine contract supports it.
 
-Do not add routine success, a project-specific choice, or a speculative branch.
+Do not promote a single project choice or a speculative branch.

@@ -81,16 +81,24 @@ Use it only when a finding is likely to change a future decision, diagnosis, or
 automated check. Its reuse value should justify the cost of capture, review,
 testing, and maintenance.
 
+During normal asset work, capture a lesson only within the task's authorized
+outputs, or propose it to the user. Changing or publishing shared guidance requires
+explicit authorization for skill maintenance and its upstream source to be in
+scope; do not edit an installed copy.
+
 | Finding | Narrowest owner |
 | --- | --- |
 | Missing or repeated asset decision | [Godot asset workflow](references/godot-asset-workflow.md) |
 | Specific failure condition and recovery | [Troubleshooting](references/troubleshooting.md) |
 | Reusable automation or compatibility gap | [Bundled helpers](references/bundled-helpers.md) and a focused regression test |
-| One bounded production case | [Worked example](references/worked-example.md) |
+| New reusable evidence from one production case | [Worked example](references/worked-example.md) |
 
-Do not add routine success, duplicates, project-specific detail, or low-information
-variants. Avoid process or abstraction whose complexity is disproportionate to
-its expected benefit.
+Do not add routine success, duplicates, non-transferable project records, or
+low-information variants. A worked example can retain only the minimum sanitized
+case facts needed to support evidence that is not represented elsewhere and its
+provenance.
+Avoid process or abstraction whose complexity is disproportionate to its expected
+benefit.
 
 Before sharing evidence, remove secrets and project-private data. Keep observations,
 diagnoses, and limits distinct. Promote a lesson into shared guidance only when

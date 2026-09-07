@@ -137,9 +137,11 @@ and player checks when a consumer asset or its requirements change.
 
 ## Promote lessons selectively
 
-Use the optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
-when an example adds evidence that the skill does not already represent. Do not
-add routine runs or low-information variants.
+The optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
+defines the authorization and evidence gates for shared maintenance. During
+authorized skill maintenance, retain a new case only when it adds evidence that
+is not represented elsewhere. Keep only the minimum sanitized case facts needed
+for that evidence and its provenance.
 
 If later evidence confirms a reusable decision, failure mode, or helper gap, move
 the narrow lesson to its owning reference. Keep this case as provenance rather

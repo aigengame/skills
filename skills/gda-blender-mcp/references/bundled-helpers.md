@@ -11,16 +11,16 @@ These helpers target Blender Lab MCP and can be used together or separately.
 
 ## Evolve helpers selectively
 
-Use the optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
-when real work exposes a reusable compatibility gap, unsafe assumption, weak
-diagnostic, or missing check.
+The optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
+defines the authorization and evidence gates for shared maintenance. A reusable
+compatibility gap, unsafe assumption, weak diagnostic, or missing check belongs
+here only when its expected value justifies the maintenance cost.
 
-Provide relevant versions, reproduction conditions, observed and expected behavior,
-and the evidence boundary. When practical, contribute a focused regression test
-and fix.
+When skill maintenance is authorized, provide relevant versions, reproduction
+conditions, observed and expected behavior, and the evidence boundary. When
+practical, include a focused regression test and fix.
 
-Do not add low-value compatibility branches, one-off workarounds, or project policy.
-The expected reuse value should justify the new behavior and its maintenance cost.
+Do not add one-off workarounds or project policy.
 
 ## `mcp_stdio_client.py`
 

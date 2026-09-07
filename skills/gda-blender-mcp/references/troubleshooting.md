@@ -6,16 +6,17 @@ is not a requirement for other implementations or future versions.
 
 ## Improve troubleshooting selectively
 
-Use the optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
-when a reusable failure mode is likely to save future diagnosis or recovery work.
-Extend a matching entry instead of adding a low-value variant.
+The optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
+defines the authorization and evidence gates for shared maintenance. A reusable
+failure mode belongs here when it is likely to save future diagnosis or recovery
+work. Extend a matching entry instead of adding a separate variant.
 
 Keep the symptom, applicability, evidence, cause or hypothesis, recovery, check,
 and limit distinct. Do not retain routine errors already explained by the tool,
 project-specific mistakes, duplicate symptoms, or unverified workarounds.
 
-When repeated evidence changes a general asset decision, update the workflow and
-keep the incident evidence here.
+When skill maintenance is authorized and repeated evidence changes a general asset
+decision, update the workflow and keep the incident evidence here.
 
 ## Find a symptom
 
