@@ -4,6 +4,19 @@ Use an entry when its conditions match. Observed incidents, source findings, and
 suggested recovery checks are labeled separately. A version-specific workaround
 is not a requirement for other implementations or future versions.
 
+## Improve troubleshooting selectively
+
+Use the optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
+when a reusable failure mode is likely to save future diagnosis or recovery work.
+Extend a matching entry instead of adding a low-value variant.
+
+Keep the symptom, applicability, evidence, cause or hypothesis, recovery, check,
+and limit distinct. Do not retain routine errors already explained by the tool,
+project-specific mistakes, duplicate symptoms, or unverified workarounds.
+
+When repeated evidence changes a general asset decision, update the workflow and
+keep the incident evidence here.
+
 ## Find a symptom
 
 - [P01: SDK import failure](#p01-sdk-upgrade-breaks-the-fastmcp-import)

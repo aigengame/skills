@@ -131,3 +131,15 @@ Record the checks that ran, their relevant versions and file revisions, and the
 remaining unverified behavior. Hashes identify revisions; mesh counts support
 comparisons. Neither is an automatic quality or performance threshold. Application
 packaging is a separate delivery step.
+
+## Evolve the workflow selectively
+
+Use the optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
+when real work exposes a reusable decision gap whose expected value justifies
+shared maintenance.
+
+Start with bounded evidence in troubleshooting or a worked example. Promote the
+smallest decision rule only after repeated evidence or a stable tool or engine
+contract supports it.
+
+Do not add routine success, a project-specific choice, or a speculative branch.

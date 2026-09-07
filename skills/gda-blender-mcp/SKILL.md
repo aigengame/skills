@@ -72,3 +72,26 @@ Match validation to the requested delivery: source reopening, exchange-file
 import, rendered appearance, or interaction. Record what ran and what remains
 unverified. Follow project Git conventions for scripts, documentation, and Godot
 text resources; in projects that use Git LFS, track binary assets there.
+
+## Compound learning through dogfooding
+
+Dogfooding is an option, not a required step or obligation.
+
+Use it only when a finding is likely to change a future decision, diagnosis, or
+automated check. Its reuse value should justify the cost of capture, review,
+testing, and maintenance.
+
+| Finding | Narrowest owner |
+| --- | --- |
+| Missing or repeated asset decision | [Godot asset workflow](references/godot-asset-workflow.md) |
+| Specific failure condition and recovery | [Troubleshooting](references/troubleshooting.md) |
+| Reusable automation or compatibility gap | [Bundled helpers](references/bundled-helpers.md) and a focused regression test |
+| One bounded production case | [Worked example](references/worked-example.md) |
+
+Do not add routine success, duplicates, project-specific detail, or low-information
+variants. Avoid process or abstraction whose complexity is disproportionate to
+its expected benefit.
+
+Before sharing evidence, remove secrets and project-private data. Keep observations,
+diagnoses, and limits distinct. Promote a lesson into shared guidance only when
+the evidence supports reuse.

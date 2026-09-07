@@ -134,3 +134,13 @@ or clips, or establish appearance and gameplay acceptance. The repository's
 optional real-Blender test separately checks the inspector in a fresh background
 process. It does not connect through MCP or run Godot. Repeat the relevant engine
 and player checks when a consumer asset or its requirements change.
+
+## Promote lessons selectively
+
+Use the optional [dogfooding loop](../SKILL.md#compound-learning-through-dogfooding)
+when an example adds evidence that the skill does not already represent. Do not
+add routine runs or low-information variants.
+
+If later evidence confirms a reusable decision, failure mode, or helper gap, move
+the narrow lesson to its owning reference. Keep this case as provenance rather
+than duplicating the guidance here.
