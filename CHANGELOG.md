@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/aigengame/skills/compare/v0.1.0...v0.2.0) (2026-09-07)
+
+
+### Features
+
+* **gda-blender-mcp:** add Blender asset workflow and helpers ([#21](https://github.com/aigengame/skills/issues/21)) ([300842b](https://github.com/aigengame/skills/commit/300842bb589ebf421b1193ffb6303f9c05e7bc01))
+
 ## 0.1.0 (2026-09-01)
 
 
