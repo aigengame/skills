@@ -54,9 +54,10 @@ can continue, but identify the root-cause work and follow-up checks it does not 
 
 This skill produces a review and recovery recommendation by default. It does not
 authorize implementation, requirement changes, commits, pushes, merges, or external
-messages. Existing authorization remains valid within its scope. Obtain the user's
-or designated decision owner's approval before changing product promises, support
-scope, or materially expanding implementation scope.
+messages. Existing authorization remains valid within its scope. Before changing
+product promises, support scope, or materially expanding implementation scope,
+obtain approval from the designated human decision owner, or from the user if no
+owner has been designated.
 
 ## Workflow
 
@@ -90,13 +91,14 @@ Explaining implementation details, covering unpromised scenarios, or preparing
   into the product. Testing an assumption does not require permanent end-to-end
   identity, provenance, or proof retention. Such capabilities need their own
   requirement and cost justification.
-- When the required support scope, necessity, or acceptable cost of an auxiliary
-  mechanism is unclear, use **human-in-the-loop (HITL) decision-making** before
-  building further. Present known facts, uncertainties, the effects of support and
-  non-support, simpler options, and a recommendation. Let the user decide support
-  scope and acceptable cost. Bounded investigation can come first, but technical
-  validation cannot replace a product decision. Do not implement the most complex
-  case by default.
+- When it is unclear whether a scenario must be supported, whether an auxiliary
+  mechanism is necessary, or whether its cost is acceptable, use **human-in-the-loop
+  (HITL) decision-making** before building further. Present known facts, uncertainties,
+  the effects of support and non-support, simpler options, and a recommendation.
+  Ask the designated human decision owner, or the user if no owner has been designated,
+  to decide support scope and acceptable cost. Bounded investigation can come first,
+  but technical validation cannot replace a product decision. Do not implement the
+  most complex case by default.
 - A product can explicitly decline support for a very rare situation outside its
   core promises. Explain the evidence for occurrence, consequences, and support cost;
   do not assert rarity without evidence. Low frequency alone is insufficient: assess
