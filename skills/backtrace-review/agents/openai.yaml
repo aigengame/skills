@@ -1,0 +1,3 @@
+interface:
+  display_name: "Backtrace Review"
+  short_description: "Trace stalled tasks to assumptions and design causes"
