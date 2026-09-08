@@ -196,6 +196,18 @@ each area guides the next decision.](https://media.githubusercontent.com/media/a
 - **How:** Ask: “Use entropy-review to identify disproportionate complexity in this
   plan and propose a smaller reversible alternative.”
 
+#### [`backtrace-review`](skills/backtrace-review/SKILL.md)
+
+- **What:** Traces stalled work through requirements, assumptions, decisions, and
+  patches, then uses first principles to reassess support scope and design boundaries.
+- **Why:** Small fixes can preserve a wrong premise and increase total complexity
+  without bringing the original task closer to acceptance.
+- **When:** Use it when a feature or fix repeatedly fails to converge or supporting
+  mechanisms keep growing without progress toward acceptance. Multiple iterations
+  alone do not prove a design failure.
+- **How:** Ask: “Use backtrace-review to investigate this repeated rework, validate
+  the key assumptions, and recommend a proportionate recovery path.”
+
 #### [`handle-review`](skills/handle-review/SKILL.md)
 
 - **What:** Verifies review feedback against the current change, requirements,
