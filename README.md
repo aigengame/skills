@@ -203,7 +203,8 @@ each area guides the next decision.](https://media.githubusercontent.com/media/a
 - **Why:** Small fixes can preserve a wrong premise and increase total complexity
   without bringing the original task closer to acceptance.
 - **When:** Use it when a feature or fix repeatedly fails to converge or supporting
-  mechanisms keep growing. Multiple iterations alone do not prove a design failure.
+  mechanisms keep growing without progress toward acceptance. Multiple iterations
+  alone do not prove a design failure.
 - **How:** Ask: “Use backtrace-review to investigate this repeated rework, validate
   the key assumptions, and recommend a proportionate recovery path.”
 

@@ -241,11 +241,11 @@ boundaries against the agreed criteria. Preserve historical evidence while expli
 superseding invalid conclusions, so old review suggestions do not become new requirements.
 
 A completed review is not a completed task. The review needs an evidence-bounded
-explanation and a next step that supports a decision; the task still needs formal
-acceptance. If evidence supports the current architecture, end the backtrace review
-and resume normal delivery. If further patches add compensation without acceptance
-progress, revisit the affected assumptions and boundaries rather than restarting an
-unbounded review of everything.
+explanation and a next step that supports a decision; the task still needs to satisfy
+its agreed acceptance criteria. If evidence supports the current architecture, end
+the backtrace review and resume normal delivery. If further patches add compensation
+without acceptance progress, revisit the affected assumptions and boundaries rather
+than restarting an unbounded review of everything.
 
 ## Output
 
@@ -255,7 +255,8 @@ Lead with the conclusion, then report only the detail the task needs:
 - Confirmed causes, assumptions to validate, and necessary complexity to preserve.
 - Recommended responsibility boundaries and changes, compared with the total cost
   and risk of continued local patching.
-- Next validation, implementation scope, acceptance criteria, and decisions for the user.
+- Next validation, implementation scope, acceptance criteria, and open decisions
+  with their decision owners.
 
 If authorized implementation follows, separately report actual changes, validation,
 artifact reconciliation, and remaining risks. When no substantive issue is found,
