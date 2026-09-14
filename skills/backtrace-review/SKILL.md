@@ -25,33 +25,43 @@ current implementation, historical patches, or familiar practices as fixed premi
 This is not design from intuition alone; mature theory, existing solutions, and
 empirical evidence remain important inputs.
 
-Test two distinct, non-exclusive causes of complexity growth:
+First trace the upstream conditions that prevent convergence. An unverified assumption can enter a
+technical decision while a requirement, responsibility, or semantic boundary remains unclear. A
+local fix can then address the visible failure without correcting that condition. The patch can
+create or expose another problem, which starts another local cycle. Repeated failed fixes or review
+cycles can be mistaken for evidence that the solution needs broader completeness, compatibility,
+traceability, or other non-functional requirement (NFR) coverage. This can turn a bounded response
+into general platform obligations.
+
+Test two distinct, non-exclusive causal mechanisms through which unresolved conditions can grow
+complexity:
 
 - **Symptom-patch accumulation:** Successive local fixes address the latest counterexample without
   correcting the requirement, responsibility, semantic, or module boundary that causes it. Each
   patch can be small while total concepts, exceptions, coupling, and verification cost grow.
-- **NFR-driven platformization:** A non-functional requirement (NFR) promotes a bounded quality
-  concern into general infrastructure and creates continuing variant, extension, lifecycle,
-  compatibility, registration, synchronization, operation, or maintenance obligations.
+- **NFR-driven platformization:** An NFR promotes a bounded quality concern into general
+  infrastructure and creates continuing variant, extension, lifecycle, compatibility, registration,
+  synchronization, operation, or maintenance obligations.
 
-Either, both, or neither cause can be present. Repetition and diff size do not prove symptom-patch
-accumulation. An NFR label does not prove platformization. Treat every identified or suspected
-instance of NFR-driven platformization as a high-risk signal that requires a bounded causal screen,
-not as an automatic diagnosis or rejection.
+Either, both, or neither mechanism can be present. Repetition and diff size do not prove symptom-patch
+accumulation. An NFR label does not prove platformization. This causal sequence is a high-risk
+compounding path to test, not a required sequence or an automatic diagnosis. Either mechanism can
+occur independently, and NFR-driven platformization can also be introduced in the initial design.
+Treat every identified or suspected instance of NFR-driven platformization as a high-risk signal
+that requires a bounded causal screen, regardless of when or why it appeared. Do not reject a
+candidate automatically.
 
-Also test one common compounding path. An unverified assumption enters a technical decision while
-responsibilities or semantics remain unclear. Later patches can address only the latest symptom and
-create or expose another problem. They can also turn a bounded response to an NFR into platform
-obligations before the assumption or boundary is validated. Local restraint on each patch does not
-by itself control total complexity while the cause and responsibility boundaries remain unresolved.
-Treat this path as a causal hypothesis, not as a prerequisite for screening or a diagnosis of every
-stalled task.
+Abstraction is not entropy by itself. When root-cause analysis establishes a stable responsibility,
+semantic, module, or variation boundary that the current design does not own, introduce the minimum
+sufficient abstraction required to own it. Avoiding that necessary abstraction and continuing with
+local symptom patches can increase total system entropy even when each patch is small. Treat an
+abstraction as excessive only when its scope or continuing obligations exceed the demonstrated cause
+and need.
 
 Optimize the total cost of understanding, validating, changing, and operating the
 solution, not the size of the current diff. A possible technical situation does not
-create a product support obligation. Necessary abstractions and clear interfaces can
-add local complexity while reducing overall cost; a larger refactor or rewrite must
-also justify its cost. "Cleaner" is not sufficient evidence.
+create a product support obligation. A larger refactor or rewrite must also justify
+its cost. "Cleaner" is not sufficient evidence.
 
 ## When to start and what to pause
 
@@ -113,6 +123,10 @@ Explaining implementation details, covering unpromised scenarios, or preparing
   hypothesis, absent, or unresolved because of an evidence gap. Keep the instance under review until
   the uncertainty is resolved. If the relationship is absent, exclude it from the current recovery;
   `entropy-review` owns any separate proportionality concern.
+- Do not introduce or expand platform obligations to compensate for repeated failed fixes or review
+  cycles, an unverified assumption, or an unresolved responsibility or semantic boundary. First
+  establish the NFR need and scope with evidence. Apply the HITL rule below to remaining support or
+  cost uncertainty before dependent work continues.
 - When any uncertainty remains about support scope or an NFR-driven platformization candidate,
   including its existence, need, scope, causal role, obligations, acceptable cost, or decision
   authority, tell the user and use **human-in-the-loop (HITL) decision-making** before dependent
@@ -153,6 +167,9 @@ only work that depends on the decision; continue unrelated authorized work.
   and responsibility boundaries. Separate local review passes do not establish that the combined
   solution works. Past investment and merged patches alone do not justify retaining a design;
   migration cost and real dependencies do belong in the comparison.
+- Test whether repeated failures or review cycles were mistaken for evidence that broader NFR
+  coverage was necessary and produced a platformization proposal or new platform obligations. Trace
+  that transition as a separate technical or product decision.
 - Give a testable causal explanation. Sequence alone does not establish causation;
   multiple causes can contribute. Separate confirmed causes, hypotheses, and missing
   evidence rather than completing a story that cannot be disproved.
@@ -233,12 +250,17 @@ justified. Do not invent alternatives merely to fill a list.
   interfaces, state, synchronization rules, test combinations, operations, and change
   costs. Identify concrete obligations added or removed, not scores based on lines,
   files, or abstraction counts.
+- For confirmed symptom-patch accumulation, resolve the validated cause instead of the latest
+  symptom. If the cause demonstrates a stable responsibility, semantic, module, or variation
+  boundary that the current design does not own, introduce the minimum sufficient abstraction to
+  own it. Do not continue patching to avoid this necessary abstraction, and do not invent an
+  abstraction when evidence shows only a local cause.
 - For each NFR-driven platformization candidate, compare the evidenced need and scope with its
   variant, extension, lifecycle, compatibility, registration, synchronization, operation, and
-  maintenance obligations. Evidence can justify retaining necessary obligations, but it does not
-  exempt the candidate from the causal and total-complexity screens. Apply the HITL rule above when
-  the need, scope, causal role, or acceptable cost remains uncertain; do not default to keep,
-  expand, simplify, or remove.
+  maintenance obligations. Retain only the minimum sufficient obligations after evidence establishes
+  their need and scope. Evidence does not exempt the candidate from the causal and total-complexity
+  screens. Apply the HITL rule above when the need, scope, causal role, or acceptable cost remains
+  uncertain; do not default to keep, expand, simplify, or remove.
 - Keep complexity that serves real requirements, hard constraints, or evidence-backed
   risks. Remove mechanisms needed only by invalidated assumptions and their compensating
   patches. Preserve demonstrated safety, integrity, compliance, auditing, or an explicit product
@@ -286,10 +308,13 @@ than restarting an unbounded review of everything.
 Lead with the conclusion, then report only the detail the task needs:
 
 - The current goal, supported and unsupported scope, and facts behind the key decisions.
-- Report a separate conclusion for symptom-patch accumulation. For every identified or suspected
-  NFR-driven platformization, report its causal status, evidence and gaps, obligations, remaining
-  uncertainty, and any related HITL decision or open decision with its owner. Also report
-  assumptions to validate and necessary complexity to preserve.
+- Report the upstream cause or unresolved causal hypothesis and how it relates to each
+  complexity-growth mechanism. Report a separate conclusion for symptom-patch accumulation. For
+  every identified or suspected NFR-driven platformization, report its causal status, evidence and
+  gaps, obligations, remaining uncertainty, and any related HITL decision or open decision with its
+  owner. If symptom patches led to a platformization proposal or implementation, report the
+  transition decision and its evidence. Also report each necessary abstraction, if any, and its
+  demonstrated boundary, assumptions to validate, and necessary complexity to preserve.
 - Recommended responsibility boundaries and changes, compared with the total cost
   and risk of continued local patching.
 - Next validation, implementation scope, acceptance criteria, and open decisions
