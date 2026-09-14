@@ -1,6 +1,6 @@
 ---
 name: entropy-review
-description: Review software designs, implementation plans, and implemented changes from an agile perspective to determine whether their software entropy is proportionate to current goals. Identify scope creep, overengineering, excessive defensive design, premature generalization, and hard-to-maintain mechanisms whose costs outweigh their value; provide smaller, more reversible alternatives with faster feedback. Use when the user asks for an entropy review, design simplification, complexity control, an overengineering review, or whether a mechanism is worth introducing, retaining, or expanding.
+description: Review software designs, implementation plans, and implemented changes from an agile perspective to determine whether their software entropy is proportionate to current goals. Identify scope creep, overengineering, excessive defensive design, over-abstraction and platformization driven by non-functional requirements (NFRs), premature generalization, and hard-to-maintain mechanisms whose costs outweigh their value; provide smaller, more reversible alternatives with faster feedback. Use when the user asks for an entropy review, design simplification, complexity control, an overengineering review, or whether a mechanism is worth introducing, retaining, or expanding.
 ---
 
 # Entropy Review
@@ -60,13 +60,15 @@ the design, plan, or change.
 
 Ask for each one:
 
-1. Which current goal does it directly serve?
-2. What current evidence shows that it is needed now?
+1. Which current goal, requirement, hard constraint, actual consumer, or demonstrated loss requires
+   it?
+2. What current evidence shows that it is needed now and at this scope?
 3. Which specified behavior or constraint would break if it were removed?
 4. Is there a smaller, more direct, or more reversible alternative?
 5. Can it be deferred until more feedback is available?
 6. Does it exist only to support another newly introduced mechanism?
-7. What ongoing understanding, synchronization, and maintenance costs does it create?
+7. What ongoing understanding, validation, change, compatibility, operation, and maintenance costs
+   does it create?
 
 Do not retain mechanisms by default when these questions cannot be answered.
 
@@ -83,8 +85,21 @@ Check:
   coordination?
 - **Speculative generality**: Are certain costs paid now for benefits that depend on unverified
   future assumptions?
+- **NFR-driven over-abstraction and platformization**: Does a non-functional requirement (NFR)
+  produce either of these manifestations?
+  - **Over-abstraction**: A model, interface, policy layer, extension point, configuration surface,
+    or abstraction owner has a scope or continuing obligations that exceed a demonstrated consumer,
+    stable responsibility or variation boundary, or evidenced root cause.
+  - **Platformization**: A design or mechanism creates variants, lifecycle, compatibility,
+    registration, synchronization, operation, or maintenance obligations that the current goal does
+    not require.
 
-Use these dimensions to find problems. Do not turn them into a mechanical score.
+Assess over-abstraction and platformization independently; either, both, or neither can apply. Use
+these dimensions to find problems. Do not turn them into a mechanical score.
+
+When an abstraction replaces repeated local fixes, verify that the fixes demonstrate the stated
+root cause or stable responsibility or variation boundary. Then verify that the abstraction remains
+focused on that boundary.
 
 ### 5. Distinguish Essential from Accidental Complexity
 
@@ -96,15 +111,30 @@ Keep complexity that:
 - Remains necessary after a smaller solution has been shown to be insufficient.
 - Reduces overall duplication, divergence, or long-term maintenance burden despite being locally
   complex.
+- Implements an evidence-backed NFR for safety, security, integrity, compliance, performance
+  bounds, or another confirmed requirement.
+- Uses the minimum sufficient abstraction to own a stable responsibility, variation boundary, or
+  root cause demonstrated by repeated local fixes when current capabilities are insufficient.
 
 Simplify, defer, or remove complexity that:
 
 - Is justified mainly by “we may need it later.”
 - Treats completeness, sophistication, or convention as evidence.
 - Builds general capability for one concrete use case.
+- Expands an NFR beyond its evidenced scope into unnecessary variants, extension mechanisms, or
+  continuing obligations.
 - Creates more defenses to explain, verify, or maintain a defense.
 - Solves adjacent problems instead of the current goal.
 - Plans future stages before the first working result exists.
+
+For example, a check for one current artifact can grow into a bounded cross-platform inventory with
+traversal, hashing, caps, truncation, and compatibility rules while still failing to prove complete
+content identity. Keep the check that serves the current outcome; remove or independently justify
+the identity work.
+
+By contrast, repeated local fixes can demonstrate one stable responsibility with no clear owner. A
+focused abstraction that owns that responsibility and replaces the patches is necessary design.
+Report over-abstraction only when its scope or continuing obligations exceed the demonstrated need.
 
 ### 6. Run the Agility Check
 
@@ -160,7 +190,10 @@ Provide:
 2. **Current goal and minimum sufficient solution**: State the problem, observable completion
    outcome, hard constraints, and minimum sufficient solution.
 3. **Review findings**: For each actionable finding, state the mechanism, goal relationship,
-   evidence, entropy cost, action, and a smaller alternative that preserves the same goal.
+   evidence, entropy cost, and action. For an NFR-driven finding, state the NFR and evidence gap,
+   then identify the over-abstraction obligations, platformization obligations, or both. Provide a
+   smaller alternative that preserves the observable outcome and every confirmed requirement and
+   hard constraint.
 4. **Essential complexity**: Identify what must remain and why.
 5. **Lean implementation order**: Provide independently verifiable steps with fast feedback.
 6. **Assumptions to test**: List unsupported assumptions and the cheapest way to test each one.
@@ -181,3 +214,7 @@ exists, return **Keep** and stop; do not manufacture findings to fill the format
 - Do not expand this into a comprehensive correctness, security, or style review, or redesign the
   whole system unless the current goal requires it.
 - Do not let the review cost exceed the scale of the decision being reviewed.
+- Use this skill to judge whether architecture or module-design obligations are proportionate. Use
+  `backtrace-review` to determine whether symptom patching or NFR-driven platformization caused a
+  non-converging task. The skills can be used independently; do not reproduce the complete workflow
+  of one skill in the other.
