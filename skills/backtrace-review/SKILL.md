@@ -31,13 +31,13 @@ Test two distinct, non-exclusive causes of complexity growth:
   correcting the requirement, responsibility, semantic, or module boundary that causes it. Each
   patch can be small while total concepts, exceptions, coupling, and verification cost grow.
 - **NFR-driven platformization:** A non-functional requirement (NFR) promotes a bounded quality
-  concern into general infrastructure and creates variant, extension, lifecycle, compatibility,
-  registration, synchronization, operation, or maintenance obligations.
+  concern into general infrastructure and creates continuing variant, extension, lifecycle,
+  compatibility, registration, synchronization, operation, or maintenance obligations.
 
 Either, both, or neither cause can be present. Repetition and diff size do not prove symptom-patch
-accumulation. An NFR label does not prove platformization. Treat every identified instance of
-NFR-driven platformization as a high-risk signal that requires a bounded causal screen, not as an
-automatic diagnosis or rejection.
+accumulation. An NFR label does not prove platformization. Treat every identified or suspected
+instance of NFR-driven platformization as a high-risk signal that requires a bounded causal screen,
+not as an automatic diagnosis or rejection.
 
 Optimize the total cost of understanding, validating, changing, and operating the
 solution, not the size of the current diff. A possible technical situation does not
@@ -99,18 +99,22 @@ Explaining implementation details, covering unpromised scenarios, or preparing
   into the product. Testing an assumption does not require permanent end-to-end
   identity, provenance, or proof retention. Such capabilities need their own
   requirement and cost justification.
-- For every identified instance of NFR-driven platformization, trace the NFR to its current
-  requirement, hard constraint, demonstrated loss, supporting evidence, and decision owner. Name
-  the continuing platform obligations. Screen the instance through the existing support-scope,
-  total-complexity, HITL, and decision-owner rules; do not reject it from its label alone.
-- When it is unclear whether a scenario must be supported, whether an auxiliary
-  mechanism is necessary, or whether its cost is acceptable, use **human-in-the-loop
-  (HITL) decision-making** before building further. Present known facts, uncertainties,
-  the effects of support and non-support, simpler options, and a recommendation.
+- For every identified or suspected instance of NFR-driven platformization, trace the NFR to its
+  current requirement, hard constraint, demonstrated loss, supporting evidence, and decision owner.
+  Name the continuing platform obligations, then test whether its decisions or obligations explain
+  the current failure, repeated rework, or complexity growth. Classify it as a confirmed cause,
+  hypothesis, absent, or unresolved because of an evidence gap. Keep the instance under review until
+  the uncertainty is resolved. If the relationship is absent, exclude it from the current recovery;
+  `entropy-review` owns any separate proportionality concern.
+- When any uncertainty remains about support scope or an NFR-driven platformization candidate,
+  including its existence, need, scope, causal role, obligations, acceptable cost, or decision
+  authority, tell the user and use **human-in-the-loop (HITL) decision-making** before dependent
+  work continues. Present known facts, uncertainties, the effects of support and non-support,
+  simpler options, and a recommendation.
   Ask the designated human decision owner, or the user if no owner has been designated,
-  to decide support scope and acceptable cost. Bounded investigation can come first,
-  but technical validation cannot replace a product decision. Do not implement the
-  most complex case by default.
+  to decide support scope, acceptable cost, or the next action under unresolved evidence, as
+  applicable. Bounded investigation can come first, but technical validation cannot replace a
+  product decision. Do not implement the most complex case by default.
 - A product can explicitly decline support for a very rare situation outside its
   core promises. Explain the evidence for occurrence, consequences, and support cost;
   do not assert rarity without evidence. Low frequency alone is insufficient: assess
@@ -224,14 +228,15 @@ justified. Do not invent alternatives merely to fill a list.
   files, or abstraction counts.
 - For each NFR-driven platformization candidate, compare the evidenced need and scope with its
   variant, extension, lifecycle, compatibility, registration, synchronization, operation, and
-  maintenance obligations. Keep it only when current evidence demonstrates the need and the scope
-  of those obligations. Use HITL when the need, scope, or acceptable cost requires a product
-  decision.
+  maintenance obligations. Evidence can justify retaining necessary obligations, but it does not
+  exempt the candidate from the causal and total-complexity screens. Apply the HITL rule above when
+  the need, scope, causal role, or acceptable cost remains uncertain; do not default to keep,
+  expand, simplify, or remove.
 - Keep complexity that serves real requirements, hard constraints, or evidence-backed
   risks. Remove mechanisms needed only by invalidated assumptions and their compensating
-  patches. Necessary NFR complexity for demonstrated safety, integrity, compliance, auditing, or
-  an explicit product promise must remain. A mechanism with an independent purpose must not
-  disappear with its old rationale.
+  patches. Preserve demonstrated safety, integrity, compliance, auditing, or an explicit product
+  promise and the minimum sufficient obligations needed to satisfy it. A mechanism with an
+  independent purpose must not disappear with its old rationale.
 - Let design scope cover the cause and affected responsibility boundaries; keep
   implementation batches verifiable and reversible. **Small batches do not require
   preserving a wrong architecture.** Establish the target structure and its basis,
@@ -274,16 +279,19 @@ than restarting an unbounded review of everything.
 Lead with the conclusion, then report only the detail the task needs:
 
 - The current goal, supported and unsupported scope, and facts behind the key decisions.
-- Separate conclusions for symptom-patch accumulation and NFR-driven platformization when either
-  affects the recovery decision, plus assumptions to validate and necessary complexity to preserve.
+- Report a separate conclusion for symptom-patch accumulation. For every identified or suspected
+  NFR-driven platformization, report its causal status, evidence and gaps, obligations, remaining
+  uncertainty, and any related HITL decision or open decision with its owner. Also report
+  assumptions to validate and necessary complexity to preserve.
 - Recommended responsibility boundaries and changes, compared with the total cost
   and risk of continued local patching.
 - Next validation, implementation scope, acceptance criteria, and open decisions
   with their decision owners.
 
 If authorized implementation follows, separately report actual changes, validation,
-artifact reconciliation, and remaining risks. When no substantive issue is found,
-say so and stop expanding the review.
+artifact reconciliation, and remaining risks. When no substantive issue or NFR-driven
+platformization candidate is found, say so and stop expanding the review. If a candidate has no
+causal relationship to the current task, report the bounded result and exclude it from recovery.
 
 Reuse existing issues, ADRs, tests, and review records. Short tasks do not need a new
 assumption ledger, scorecard, gate, or full architecture specification. Retain records
@@ -317,7 +325,7 @@ Identity and deduplication can be core correctness here, not optional features t
 delete because someone calls them traceability or auxiliary mechanisms.
 
 **Compounding symptom patches with NFR-driven platformization.** A same-host artifact smoke needs
-to run one artifact and observe its result. A local coverage fix replaces one platform symptom with
+to run one artifact and observe its result. A fix for one platform-specific coverage gap introduces
 a bounded cross-platform inventory. Membership rules, hashing, caps, and truncation accumulate, but
 the result still cannot prove complete content identity. Trace the patches to the unsupported
 completeness NFR. Keep the smoke, correct its responsibility boundaries, and remove or independently
