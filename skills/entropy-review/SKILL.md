@@ -88,13 +88,15 @@ Check:
 - **NFR-driven over-abstraction and platformization**: Does a non-functional requirement (NFR)
   produce either of these manifestations?
   - **Over-abstraction**: A model, interface, policy layer, extension point, configuration surface,
-    or abstraction owner has a scope or continuing obligations that exceed a demonstrated consumer,
-    stable responsibility or variation boundary, or evidenced root cause.
-  - **Platformization**: A design or mechanism creates variants, lifecycle, compatibility,
-    registration, synchronization, operation, or maintenance obligations that the current goal does
-    not require.
+    or abstraction owner has a scope or continuing obligations that exceed what is required by a
+    demonstrated consumer, stable responsibility or variation boundary, or evidenced root cause.
+  - **Platformization**: An NFR promotes a bounded quality concern into general infrastructure and
+    creates continuing variant, extension, lifecycle, compatibility, registration, synchronization,
+    operation, or maintenance obligations.
 
-Assess over-abstraction and platformization independently; either, both, or neither can apply. Use
+Assess over-abstraction and platformization independently; either, both, or neither can apply. Treat
+every identified or suspected instance of NFR-driven platformization as a high-risk entropy signal.
+Screen it even when the NFR is an explicit product requirement or protects a hard constraint. Use
 these dimensions to find problems. Do not turn them into a mechanical score.
 
 When an abstraction replaces repeated local fixes, verify that the fixes demonstrate the stated
@@ -111,8 +113,8 @@ Keep complexity that:
 - Remains necessary after a smaller solution has been shown to be insufficient.
 - Reduces overall duplication, divergence, or long-term maintenance burden despite being locally
   complex.
-- Implements an evidence-backed NFR for safety, security, integrity, compliance, performance
-  bounds, or another confirmed requirement.
+- Preserves an explicit product NFR or an evidence-backed hard constraint while keeping only the
+  minimum platform obligations required to satisfy it.
 - Uses the minimum sufficient abstraction to own a stable responsibility, variation boundary, or
   root cause demonstrated by repeated local fixes when current capabilities are insufficient.
 
@@ -126,6 +128,11 @@ Simplify, defer, or remove complexity that:
 - Creates more defenses to explain, verify, or maintain a defense.
 - Solves adjacent problems instead of the current goal.
 - Plans future stages before the first working result exists.
+
+If any uncertainty remains about the NFR, its need, scope, consumers, continuing obligations, or
+acceptable cost, tell the user and use HITL before selecting an action. Present known facts, gaps,
+the effects of support and non-support, smaller alternatives, and a recommendation. Ask the
+designated human decision owner, or the user if no owner has been designated, to decide.
 
 For example, a check for one current artifact can grow into a bounded cross-platform inventory with
 traversal, hashing, caps, truncation, and compatibility rules while still failing to prove complete
@@ -190,16 +197,20 @@ Provide:
 2. **Current goal and minimum sufficient solution**: State the problem, observable completion
    outcome, hard constraints, and minimum sufficient solution.
 3. **Review findings**: For each actionable finding, state the mechanism, goal relationship,
-   evidence, entropy cost, and action. For an NFR-driven finding, state the NFR and evidence gap,
-   then identify the over-abstraction obligations, platformization obligations, or both. Provide a
-   smaller alternative that preserves the observable outcome and every confirmed requirement and
-   hard constraint.
+   evidence, entropy cost, and action. For every identified or suspected NFR-driven platformization,
+   report the NFR, current evidence and gaps, continuing platform obligations, proportionality
+   conclusion, and action. Identify over-abstraction obligations separately when they apply, and
+   report any remaining uncertainty and its HITL decision or open decision with its owner. For each
+   actionable finding, provide a smaller alternative that preserves the observable outcome and every
+   confirmed requirement and hard constraint.
 4. **Essential complexity**: Identify what must remain and why.
 5. **Lean implementation order**: Provide independently verifiable steps with fast feedback.
 6. **Assumptions to test**: List unsupported assumptions and the cheapest way to test each one.
 
-Report only findings that can change a decision or implementation approach. If no substantive issue
-exists, return **Keep** and stop; do not manufacture findings to fill the format.
+Report only findings that can change a decision or implementation approach, plus the bounded result
+for each identified or suspected NFR-driven platformization. If no substantive issue or
+platformization candidate exists, return **Keep** and stop; do not manufacture findings to fill the
+format.
 
 ## Boundaries
 
