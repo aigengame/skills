@@ -58,6 +58,47 @@ local symptom patches can increase total system entropy even when each patch is 
 abstraction as excessive only when its scope or continuing obligations exceed the demonstrated cause
 and need.
 
+### Causal map
+
+Use this map to test relationships, not as a required sequence or a mechanical decision tree. It
+shows the common escalation path, the valid root-cause recovery paths, and an independent path for
+platformization introduced in the initial design.
+
+```mermaid
+flowchart TD
+    A["Unverified assumption"] --> C["Technical decision on an unresolved basis"]
+    B["Unclear requirement, semantics,<br/>responsibility, or decision boundary"] --> C
+    C --> D["Local patch addresses the visible failure"]
+    D --> E["Root cause and boundary remain unresolved"]
+    E --> F["Patch creates or exposes another problem"]
+    F -->|Next local cycle| D
+    F --> G["Repeated cycle becomes<br/>symptom-patch accumulation"]
+    G --> H{"Response to non-convergence"}
+    H -->|Correct response| H1["Trace and validate the cause"]
+    H1 --> I{"What does the validated cause require?"}
+    I -->|Stable boundary is missing| J["Introduce the minimum<br/>sufficient abstraction"]
+    I -->|Local cause only| K["Apply a local root-cause fix"]
+    H -->|Wrong response| H2["Mistake non-convergence for insufficient<br/>coverage, completeness, compatibility, or generality"]
+    H2 --> L["Introduce an unverified NFR scope"]
+    L --> M["NFR-driven platformization candidate"]
+    N["Platformization introduced<br/>in the initial design"] --> M
+    M -->|If expanded without evidence| M1["Continuing platform obligations multiply"]
+    M1 --> M2["Total system complexity grows rapidly"]
+    M --> O["Always perform bounded causal<br/>and total-complexity screens"]
+    O --> P{"Does it explain the current<br/>non-convergence?"}
+    P -->|Absent| Q["Report and exclude it<br/>from the current recovery"]
+    P -->|Not absent| R{"Any uncertainty about need, scope,<br/>causal role, obligations, cost,<br/>or decision authority?"}
+    R -->|Yes| S["Tell the user and use HITL<br/>for support, cost, or the next action"]
+    R -->|No| T{"Do verified facts and authorized<br/>decisions support the obligations?"}
+    S --> T
+    T -->|No| U["Do not introduce or expand<br/>unsupported platform obligations"]
+    T -->|Yes| V["Retain only the minimum sufficient<br/>platform obligations"]
+    J --> W["Verify the end-to-end outcome<br/>and total system complexity"]
+    K --> W
+    U --> W
+    V --> W
+```
+
 Optimize the total cost of understanding, validating, changing, and operating the
 solution, not the size of the current diff. A possible technical situation does not
 create a product support obligation. A larger refactor or rewrite must also justify
