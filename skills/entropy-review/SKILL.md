@@ -130,9 +130,11 @@ Simplify, defer, or remove complexity that:
 - Plans future stages before the first working result exists.
 
 If any uncertainty remains about the NFR, its need, scope, consumers, continuing obligations, or
-acceptable cost, tell the user and use HITL before selecting an action. Present known facts, gaps,
-the effects of support and non-support, smaller alternatives, and a recommendation. Ask the
-designated human decision owner, or the user if no owner has been designated, to decide.
+acceptable cost, tell the user and use **human-in-the-loop (HITL) decision-making** before selecting
+an action. Present known facts, gaps, the effects of support and non-support, smaller alternatives,
+and a recommendation. Ask the designated human decision owner, or the user if no owner has been
+designated, to decide support scope, acceptable cost, or the next action under unresolved evidence,
+as applicable.
 
 For example, a check for one current artifact can grow into a bounded cross-platform inventory with
 traversal, hashing, caps, truncation, and compatibility rules while still failing to prove complete
