@@ -25,11 +25,19 @@ current implementation, historical patches, or familiar practices as fixed premi
 This is not design from intuition alone; mature theory, existing solutions, and
 empirical evidence remain important inputs.
 
-Test for this cycle: an unverified assumption enters a technical decision, unclear
-responsibilities or semantics remain, each iteration fixes only the latest symptom,
-and the patch creates another problem. Local restraint cannot guarantee control of
-total complexity when the cause and responsibility boundaries remain unresolved.
-Treat this as a causal hypothesis to investigate, not a diagnosis of every stalled task.
+Test two distinct, non-exclusive causes of complexity growth:
+
+- **Symptom-patch accumulation:** Successive local fixes address the latest counterexample without
+  correcting the requirement, responsibility, semantic, or module boundary that causes it. Each
+  patch can be small while total concepts, exceptions, coupling, and verification cost grow.
+- **NFR-driven platformization:** A non-functional requirement (NFR) promotes a bounded quality
+  concern into general infrastructure and creates variant, extension, lifecycle, compatibility,
+  registration, synchronization, operation, or maintenance obligations.
+
+Either, both, or neither cause can be present. Repetition and diff size do not prove symptom-patch
+accumulation. An NFR label does not prove platformization. Treat every identified instance of
+NFR-driven platformization as a high-risk signal that requires a bounded causal screen, not as an
+automatic diagnosis or rejection.
 
 Optimize the total cost of understanding, validating, changing, and operating the
 solution, not the size of the current diff. A possible technical situation does not
@@ -91,6 +99,10 @@ Explaining implementation details, covering unpromised scenarios, or preparing
   into the product. Testing an assumption does not require permanent end-to-end
   identity, provenance, or proof retention. Such capabilities need their own
   requirement and cost justification.
+- For every identified instance of NFR-driven platformization, trace the NFR to its current
+  requirement, hard constraint, demonstrated loss, supporting evidence, and decision owner. Name
+  the continuing platform obligations. Screen the instance through the existing support-scope,
+  total-complexity, HITL, and decision-owner rules; do not reject it from its label alone.
 - When it is unclear whether a scenario must be supported, whether an auxiliary
   mechanism is necessary, or whether its cost is acceptable, use **human-in-the-loop
   (HITL) decision-making** before building further. Present known facts, uncertainties,
@@ -124,10 +136,12 @@ only work that depends on the decision; continue unrelated authorized work.
   facts, preferences, and review suggestions are different kinds of input. An accepted
   architecture decision record (ADR), a proposed review fix, or a reply saying
   "resolved" does not by itself establish technical correctness.
-- Check whether each iteration addresses only the newest counterexample while the
-  end-to-end goal is lost. Separate local review passes do not establish that the
-  combined solution works. Past investment and merged patches alone do not justify
-  retaining a design; migration cost and real dependencies do belong in the comparison.
+- Starting from the current outcome, test whether successive local fixes address only the newest
+  counterexample while leaving the responsible requirement or boundary unchanged and losing the
+  end-to-end goal. Trace the accumulation through assumptions, decisions, compensating mechanisms,
+  and responsibility boundaries. Separate local review passes do not establish that the combined
+  solution works. Past investment and merged patches alone do not justify retaining a design;
+  migration cost and real dependencies do belong in the comparison.
 - Give a testable causal explanation. Sequence alone does not establish causation;
   multiple causes can contribute. Separate confirmed causes, hypotheses, and missing
   evidence rather than completing a story that cannot be disproved.
@@ -199,17 +213,25 @@ Then inspect the design to retain or revise:
 
 ### 6. Reconsider change scope and compare total complexity
 
-Compare continued local patching with the smallest complete adjustment that removes
-the cause and preserves acceptance. Consider rollback or rewriting when justified.
-Do not invent alternatives merely to fill a list.
+Compare continued local patching with the smallest sufficient adjustment that removes the cause
+and preserves the agreed observable completion outcome, all behavior identified for preservation,
+and every confirmed requirement and hard constraint. Consider rollback or rewriting when
+justified. Do not invent alternatives merely to fill a list.
 
 - Compare one-time implementation and migration risks with ongoing concepts,
   interfaces, state, synchronization rules, test combinations, operations, and change
   costs. Identify concrete obligations added or removed, not scores based on lines,
   files, or abstraction counts.
+- For each NFR-driven platformization candidate, compare the evidenced need and scope with its
+  variant, extension, lifecycle, compatibility, registration, synchronization, operation, and
+  maintenance obligations. Keep it only when current evidence demonstrates the need and the scope
+  of those obligations. Use HITL when the need, scope, or acceptable cost requires a product
+  decision.
 - Keep complexity that serves real requirements, hard constraints, or evidence-backed
   risks. Remove mechanisms needed only by invalidated assumptions and their compensating
-  patches. A mechanism with an independent purpose must not disappear with its old rationale.
+  patches. Necessary NFR complexity for demonstrated safety, integrity, compliance, auditing, or
+  an explicit product promise must remain. A mechanism with an independent purpose must not
+  disappear with its old rationale.
 - Let design scope cover the cause and affected responsibility boundaries; keep
   implementation batches verifiable and reversible. **Small batches do not require
   preserving a wrong architecture.** Establish the target structure and its basis,
@@ -252,7 +274,8 @@ than restarting an unbounded review of everything.
 Lead with the conclusion, then report only the detail the task needs:
 
 - The current goal, supported and unsupported scope, and facts behind the key decisions.
-- Confirmed causes, assumptions to validate, and necessary complexity to preserve.
+- Separate conclusions for symptom-patch accumulation and NFR-driven platformization when either
+  affects the recovery decision, plus assumptions to validate and necessary complexity to preserve.
 - Recommended responsibility boundaries and changes, compared with the total cost
   and risk of continued local patching.
 - Next validation, implementation scope, acceptance criteria, and open decisions
@@ -293,12 +316,19 @@ ownership. Test duplicate delivery and an effect committed before acknowledgment
 Identity and deduplication can be core correctness here, not optional features to
 delete because someone calls them traceability or auxiliary mechanisms.
 
+**Compounding symptom patches with NFR-driven platformization.** A same-host artifact smoke needs
+to run one artifact and observe its result. A local coverage fix replaces one platform symptom with
+a bounded cross-platform inventory. Membership rules, hashing, caps, and truncation accumulate, but
+the result still cannot prove complete content identity. Trace the patches to the unsupported
+completeness NFR. Keep the smoke, correct its responsibility boundaries, and remove or independently
+justify the platform obligations.
+
 ## Relationship to other methods
 
-This skill identifies non-converging work, traces its decision basis, and resets the
-boundary of the solution. First principles guide the derivation of necessary
-capabilities and orthogonal concerns. The requirements, assumptions, counterexamples,
-and evidence approach of validation-driven-design tests those judgments. The minimum
-sufficient total complexity principle of entropy-review compares their costs. Use
-those methods for deeper work when needed; this skill does not require loading other
-skills or reproducing their full workflows.
+This skill determines whether symptom-patch accumulation or NFR-driven platformization caused a
+non-converging task and identifies the affected requirements, decisions, boundaries, and platform
+obligations. First principles guide the derivation of necessary capabilities and orthogonal
+concerns. The requirements, assumptions, counterexamples, and evidence approach of
+validation-driven-design tests those judgments. `entropy-review` owns the deeper proportionality
+review of architecture or module obligations. Use those methods for deeper work when needed; this
+skill does not require loading other skills or reproducing their full workflows.
