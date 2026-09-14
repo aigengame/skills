@@ -39,12 +39,19 @@ accumulation. An NFR label does not prove platformization. Treat every identifie
 instance of NFR-driven platformization as a high-risk signal that requires a bounded causal screen,
 not as an automatic diagnosis or rejection.
 
+Also test one common compounding path. An unverified assumption enters a technical decision while
+responsibilities or semantics remain unclear. Later patches can address only the latest symptom and
+create or expose another problem. They can also turn a bounded response to an NFR into platform
+obligations before the assumption or boundary is validated. Local restraint on each patch does not
+by itself control total complexity while the cause and responsibility boundaries remain unresolved.
+Treat this path as a causal hypothesis, not as a prerequisite for screening or a diagnosis of every
+stalled task.
+
 Optimize the total cost of understanding, validating, changing, and operating the
 solution, not the size of the current diff. A possible technical situation does not
-create a product support obligation. Small batches do not guarantee low total
-complexity. Necessary abstractions and clear interfaces can add local complexity
-while reducing overall cost; a larger refactor or rewrite must also justify its cost.
-"Cleaner" is not sufficient evidence.
+create a product support obligation. Necessary abstractions and clear interfaces can
+add local complexity while reducing overall cost; a larger refactor or rewrite must
+also justify its cost. "Cleaner" is not sufficient evidence.
 
 ## When to start and what to pause
 
