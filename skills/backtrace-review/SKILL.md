@@ -72,6 +72,9 @@ and need.
 
 ### Causal map
 
+The principles above define the mandatory review invariants. The numbered workflow defines how to
+apply them.
+
 Use this map to test relationships, not as a required sequence or a mechanical decision tree. It
 shows the common escalation path, the valid root-cause recovery paths, and two other routes to
 platformization. One route promotes a technical possibility into a support obligation. The other
@@ -107,7 +110,9 @@ flowchart TD
     P -->|Not absent| R{"Any uncertainty about need, scope,<br/>causal role, obligations, cost,<br/>or decision authority?"}
     R -->|Yes| S["Tell the user and use HITL<br/>for support, cost, or the next action"]
     R -->|No| T{"Do verified facts and authorized<br/>decisions support the obligations?"}
-    S --> T
+    S -->|Uncertainty resolved| T
+    S -->|Bounded investigation selected| S1["Run bounded validation;<br/>keep the candidate under review"]
+    S1 --> O
     T -->|No| U["Do not introduce or expand<br/>unsupported platform obligations"]
     T -->|Yes| V["Retain only the minimum sufficient<br/>platform obligations"]
     J --> W["Verify the end-to-end outcome<br/>and total system complexity"]
