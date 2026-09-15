@@ -61,8 +61,9 @@ and need.
 ### Causal map
 
 Use this map to test relationships, not as a required sequence or a mechanical decision tree. It
-shows the common escalation path, the valid root-cause recovery paths, and an independent path for
-platformization introduced in the initial design.
+shows the common escalation path, the valid root-cause recovery paths, and two other routes to
+platformization. One route promotes a technical possibility into a support obligation. The other
+route introduces platformization in the initial design.
 
 ```mermaid
 flowchart TD
@@ -80,6 +81,8 @@ flowchart TD
     I -->|Local cause only| K["Apply a local root-cause fix"]
     H -->|Wrong response| H2["Mistake non-convergence for insufficient<br/>coverage, completeness, compatibility, or generality"]
     H2 --> L["Introduce an unverified NFR scope"]
+    X["Technically possible, narrow,<br/>or low-frequency condition"] --> Y["Mistaken for required<br/>product support"]
+    Y --> L
     L --> M["NFR-driven platformization candidate"]
     N["Platformization introduced<br/>in the initial design"] --> M
     M -->|If expanded without evidence| M1["Continuing platform obligations multiply"]
@@ -100,9 +103,13 @@ flowchart TD
 ```
 
 Optimize the total cost of understanding, validating, changing, and operating the
-solution, not the size of the current diff. A possible technical situation does not
-create a product support obligation. A larger refactor or rewrite must also justify
-its cost. "Cleaner" is not sufficient evidence.
+solution, not the size of the current diff. A technically possible, narrow, or
+low-frequency condition does not by itself create a product support obligation. The
+condition can be mistaken for required support, which can invent or broaden an NFR
+and trigger NFR-driven platformization. Keep every resulting platformization candidate
+under the bounded causal and total-complexity screens, including one backed by an
+established support obligation. A larger refactor or rewrite must also justify its
+cost. "Cleaner" is not sufficient evidence.
 
 ## When to start and what to pause
 
