@@ -25,18 +25,105 @@ current implementation, historical patches, or familiar practices as fixed premi
 This is not design from intuition alone; mature theory, existing solutions, and
 empirical evidence remain important inputs.
 
-Test for this cycle: an unverified assumption enters a technical decision, unclear
-responsibilities or semantics remain, each iteration fixes only the latest symptom,
-and the patch creates another problem. Local restraint cannot guarantee control of
-total complexity when the cause and responsibility boundaries remain unresolved.
-Treat this as a causal hypothesis to investigate, not a diagnosis of every stalled task.
+First trace the upstream conditions that can prevent convergence or expand the response beyond the
+demonstrated need:
+
+- An unverified assumption can enter a technical decision while a requirement, responsibility, or
+  semantic boundary remains unclear. A local fix can then address the visible failure without
+  correcting that condition. The patch can create or expose another problem, which starts another
+  local cycle. Repeated failed fixes or review cycles can be mistaken for evidence that the solution
+  needs broader completeness, compatibility, traceability, or other non-functional requirement
+  (NFR) coverage. This can turn a bounded response into general platform obligations.
+- Reviewing only the visible symptom without reconstructing the requirement, functional boundary,
+  end-to-end behavior, and relevant module architecture can hide the responsible system boundary.
+  Conflating abstraction with entropy is one form of this error: a necessary abstraction can be
+  rejected as over-abstraction. The resulting local fixes can remain individually small while
+  leaving the cause unresolved and growing total system complexity through symptom-patch
+  accumulation.
+- A technically possible, narrow, or low-frequency condition does not by itself create a product
+  support obligation. The condition can be mistaken for required support, which can invent or
+  broaden an NFR and trigger NFR-driven platformization.
+
+Test two distinct, non-exclusive causal mechanisms through which unresolved conditions can grow
+complexity:
+
+- **Symptom-patch accumulation:** Successive local fixes address the latest counterexample without
+  correcting the requirement, responsibility, semantic, or module boundary that causes it. Each
+  patch can be small while total concepts, exceptions, coupling, and verification cost grow.
+- **NFR-driven platformization:** An NFR promotes a bounded quality concern into general
+  infrastructure and creates continuing variant, extension, lifecycle, compatibility, registration,
+  synchronization, operation, or maintenance obligations.
+
+Either, both, or neither mechanism can be present. Repetition and diff size do not prove symptom-patch
+accumulation. An NFR label does not prove platformization. This causal sequence is a high-risk
+compounding path to test, not a required sequence or an automatic diagnosis. Either mechanism can
+occur independently, and NFR-driven platformization can also be introduced in the initial design.
+Treat every identified or suspected instance of NFR-driven platformization as a high-risk signal
+that requires bounded causal and total-complexity screens, regardless of when or why it appeared.
+An established support obligation does not exempt the associated platformization candidate from
+either screen. Do not reject a candidate automatically.
+
+Abstraction is not entropy by itself. When root-cause analysis establishes a stable responsibility,
+semantic, module, or variation boundary that the current design does not own, introduce the minimum
+sufficient abstraction required to own it. Avoiding that necessary abstraction and continuing with
+local symptom patches can increase total system entropy even when each patch is small. Treat an
+abstraction as excessive only when its scope or continuing obligations exceed the demonstrated cause
+and need.
+
+### Causal map
+
+The principles above define the mandatory review invariants. The numbered workflow defines how to
+apply them.
+
+Use this map to test relationships, not as a required sequence or a mechanical decision tree. It
+shows the common escalation path, the valid root-cause recovery paths, and two other routes to
+platformization. One route promotes a technical possibility into a support obligation. The other
+route introduces platformization in the initial design.
+
+```mermaid
+flowchart TD
+    A["Unverified assumption"] --> C["Technical decision on an unresolved basis"]
+    B["Unclear requirement, semantics,<br/>responsibility, or decision boundary"] --> C
+    Z["Requirement, functional boundary,<br/>end-to-end behavior, or module context<br/>not reconstructed"] --> Z1["Visible symptom appears to be the whole problem;<br/>necessary abstraction is missed<br/>or rejected"]
+    Z1 --> D
+    C --> D["Local patch addresses the visible failure"]
+    D --> E["Root cause and boundary remain unresolved"]
+    E --> F["Patch creates or exposes another problem"]
+    F -->|Next local cycle| D
+    F --> G["Repeated cycle becomes<br/>symptom-patch accumulation"]
+    G --> H{"Response to non-convergence"}
+    H -->|Correct response| H1["Trace and validate the cause"]
+    H1 --> I{"What does the validated cause require?"}
+    I -->|Stable boundary is missing| J["Introduce the minimum<br/>sufficient abstraction"]
+    I -->|Local cause only| K["Apply a local root-cause fix"]
+    H -->|Wrong response| H2["Mistake non-convergence for insufficient<br/>coverage, completeness, compatibility, or generality"]
+    H2 --> L["Introduce an unverified NFR scope"]
+    X["Technically possible, narrow,<br/>or low-frequency condition"] --> Y["Mistaken for required<br/>product support"]
+    Y --> L
+    L --> M["NFR-driven platformization candidate"]
+    N["Platformization introduced<br/>in the initial design"] --> M
+    M -->|If expanded without evidence| M1["Continuing platform obligations multiply"]
+    M1 --> M2["Total system complexity grows rapidly"]
+    M --> O["Always perform bounded causal<br/>and total-complexity screens"]
+    O --> P{"Does it explain the current<br/>non-convergence?"}
+    P -->|Absent| Q["Report and exclude it<br/>from the current recovery"]
+    P -->|Not absent| R{"Any uncertainty about need, scope,<br/>causal role, obligations, cost,<br/>or decision authority?"}
+    R -->|Yes| S["Tell the user and use HITL<br/>for support, cost, or the next action"]
+    R -->|No| T{"Do verified facts and authorized<br/>decisions support the obligations?"}
+    S -->|Uncertainty resolved| T
+    S -->|Bounded investigation selected| S1["Run bounded validation;<br/>keep the candidate under review"]
+    S1 --> O
+    T -->|No| U["Do not introduce or expand<br/>unsupported platform obligations"]
+    T -->|Yes| V["Retain only the minimum sufficient<br/>platform obligations"]
+    J --> W["Verify the end-to-end outcome<br/>and total system complexity"]
+    K --> W
+    U --> W
+    V --> W
+```
 
 Optimize the total cost of understanding, validating, changing, and operating the
-solution, not the size of the current diff. A possible technical situation does not
-create a product support obligation. Small batches do not guarantee low total
-complexity. Necessary abstractions and clear interfaces can add local complexity
-while reducing overall cost; a larger refactor or rewrite must also justify its cost.
-"Cleaner" is not sufficient evidence.
+solution, not the size of the current diff. A larger refactor or rewrite must also
+justify its cost. "Cleaner" is not sufficient evidence.
 
 ## When to start and what to pause
 
@@ -91,14 +178,26 @@ Explaining implementation details, covering unpromised scenarios, or preparing
   into the product. Testing an assumption does not require permanent end-to-end
   identity, provenance, or proof retention. Such capabilities need their own
   requirement and cost justification.
-- When it is unclear whether a scenario must be supported, whether an auxiliary
-  mechanism is necessary, or whether its cost is acceptable, use **human-in-the-loop
-  (HITL) decision-making** before building further. Present known facts, uncertainties,
-  the effects of support and non-support, simpler options, and a recommendation.
+- For every identified or suspected instance of NFR-driven platformization, trace the NFR to its
+  current requirement, hard constraint, demonstrated loss, supporting evidence, and decision owner.
+  Name the continuing platform obligations, then test whether its decisions or obligations explain
+  the current failure, repeated rework, or complexity growth. Classify it as a confirmed cause,
+  hypothesis, absent, or unresolved because of an evidence gap. Keep the instance under review until
+  the uncertainty is resolved. If the relationship is absent, exclude it from the current recovery;
+  `entropy-review` owns any separate proportionality concern.
+- Do not introduce or expand platform obligations to compensate for repeated failed fixes or review
+  cycles, an unverified assumption, or an unresolved responsibility or semantic boundary. First
+  establish the NFR need and scope with evidence. Apply the HITL rule below to remaining support or
+  cost uncertainty before dependent work continues.
+- When any uncertainty remains about support scope or an NFR-driven platformization candidate,
+  including its existence, need, scope, causal role, obligations, acceptable cost, or decision
+  authority, tell the user and use **human-in-the-loop (HITL) decision-making** before dependent
+  work continues. Present known facts, uncertainties, the effects of support and non-support,
+  simpler options, and a recommendation.
   Ask the designated human decision owner, or the user if no owner has been designated,
-  to decide support scope and acceptable cost. Bounded investigation can come first,
-  but technical validation cannot replace a product decision. Do not implement the
-  most complex case by default.
+  to decide support scope, acceptable cost, or the next action under unresolved evidence, as
+  applicable. Bounded investigation can come first, but technical validation cannot replace a
+  product decision. Do not implement the most complex case by default.
 - A product can explicitly decline support for a very rare situation outside its
   core promises. Explain the evidence for occurrence, consequences, and support cost;
   do not assert rarity without evidence. Low frequency alone is insufficient: assess
@@ -124,10 +223,15 @@ only work that depends on the decision; continue unrelated authorized work.
   facts, preferences, and review suggestions are different kinds of input. An accepted
   architecture decision record (ADR), a proposed review fix, or a reply saying
   "resolved" does not by itself establish technical correctness.
-- Check whether each iteration addresses only the newest counterexample while the
-  end-to-end goal is lost. Separate local review passes do not establish that the
-  combined solution works. Past investment and merged patches alone do not justify
-  retaining a design; migration cost and real dependencies do belong in the comparison.
+- Starting from the current outcome, test whether successive local fixes address only the newest
+  counterexample while leaving the responsible requirement or boundary unchanged and losing the
+  end-to-end goal. Trace the accumulation through assumptions, decisions, compensating mechanisms,
+  and responsibility boundaries. Separate local review passes do not establish that the combined
+  solution works. Past investment and merged patches alone do not justify retaining a design;
+  migration cost and real dependencies do belong in the comparison.
+- Test whether repeated failures or review cycles were mistaken for evidence that broader NFR
+  coverage was necessary and produced a platformization proposal or new platform obligations. Trace
+  that transition as a separate technical or product decision.
 - Give a testable causal explanation. Sequence alone does not establish causation;
   multiple causes can contribute. Separate confirmed causes, hypotheses, and missing
   evidence rather than completing a story that cannot be disproved.
@@ -199,17 +303,31 @@ Then inspect the design to retain or revise:
 
 ### 6. Reconsider change scope and compare total complexity
 
-Compare continued local patching with the smallest complete adjustment that removes
-the cause and preserves acceptance. Consider rollback or rewriting when justified.
-Do not invent alternatives merely to fill a list.
+Compare continued local patching with the smallest sufficient adjustment that removes the cause
+and preserves the agreed observable completion outcome, all behavior identified for preservation,
+and every confirmed requirement and hard constraint. Consider rollback or rewriting when
+justified. Do not invent alternatives merely to fill a list.
 
 - Compare one-time implementation and migration risks with ongoing concepts,
   interfaces, state, synchronization rules, test combinations, operations, and change
   costs. Identify concrete obligations added or removed, not scores based on lines,
   files, or abstraction counts.
+- For confirmed symptom-patch accumulation, resolve the validated cause instead of the latest
+  symptom. If the cause demonstrates a stable responsibility, semantic, module, or variation
+  boundary that the current design does not own, introduce the minimum sufficient abstraction to
+  own it. Do not continue patching to avoid this necessary abstraction, and do not invent an
+  abstraction when evidence shows only a local cause.
+- For each NFR-driven platformization candidate, compare the evidenced need and scope with its
+  variant, extension, lifecycle, compatibility, registration, synchronization, operation, and
+  maintenance obligations. Retain only the minimum sufficient obligations after evidence establishes
+  their need and scope. Evidence does not exempt the candidate from the causal and total-complexity
+  screens. Apply the HITL rule above when the need, scope, causal role, or acceptable cost remains
+  uncertain; do not default to keep, expand, simplify, or remove.
 - Keep complexity that serves real requirements, hard constraints, or evidence-backed
   risks. Remove mechanisms needed only by invalidated assumptions and their compensating
-  patches. A mechanism with an independent purpose must not disappear with its old rationale.
+  patches. Preserve demonstrated safety, integrity, compliance, auditing, or an explicit product
+  promise and the minimum sufficient obligations needed to satisfy it. A mechanism with an
+  independent purpose must not disappear with its old rationale.
 - Let design scope cover the cause and affected responsibility boundaries; keep
   implementation batches verifiable and reversible. **Small batches do not require
   preserving a wrong architecture.** Establish the target structure and its basis,
@@ -252,15 +370,22 @@ than restarting an unbounded review of everything.
 Lead with the conclusion, then report only the detail the task needs:
 
 - The current goal, supported and unsupported scope, and facts behind the key decisions.
-- Confirmed causes, assumptions to validate, and necessary complexity to preserve.
+- Report the upstream cause or unresolved causal hypothesis and how it relates to each
+  complexity-growth mechanism. Report a separate conclusion for symptom-patch accumulation. For
+  every identified or suspected NFR-driven platformization, report its causal status, evidence and
+  gaps, obligations, remaining uncertainty, and any related HITL decision or open decision with its
+  owner. If symptom patches led to a platformization proposal or implementation, report the
+  transition decision and its evidence. Also report each necessary abstraction, if any, and its
+  demonstrated boundary, assumptions to validate, and necessary complexity to preserve.
 - Recommended responsibility boundaries and changes, compared with the total cost
   and risk of continued local patching.
 - Next validation, implementation scope, acceptance criteria, and open decisions
   with their decision owners.
 
 If authorized implementation follows, separately report actual changes, validation,
-artifact reconciliation, and remaining risks. When no substantive issue is found,
-say so and stop expanding the review.
+artifact reconciliation, and remaining risks. When no substantive issue or NFR-driven
+platformization candidate is found, say so and stop expanding the review. If a candidate has no
+causal relationship to the current task, report the bounded result and exclude it from recovery.
 
 Reuse existing issues, ADRs, tests, and review records. Short tasks do not need a new
 assumption ledger, scorecard, gate, or full architecture specification. Retain records
@@ -293,12 +418,19 @@ ownership. Test duplicate delivery and an effect committed before acknowledgment
 Identity and deduplication can be core correctness here, not optional features to
 delete because someone calls them traceability or auxiliary mechanisms.
 
+**Compounding symptom patches with NFR-driven platformization.** A same-host artifact smoke needs
+to run one artifact and observe its result. A fix for one platform-specific coverage gap introduces
+a bounded cross-platform inventory. Membership rules, hashing, caps, and truncation accumulate, but
+the result still cannot prove complete content identity. Trace the patches to the unsupported
+completeness NFR. Keep the smoke, correct its responsibility boundaries, and remove or independently
+justify the platform obligations.
+
 ## Relationship to other methods
 
-This skill identifies non-converging work, traces its decision basis, and resets the
-boundary of the solution. First principles guide the derivation of necessary
-capabilities and orthogonal concerns. The requirements, assumptions, counterexamples,
-and evidence approach of validation-driven-design tests those judgments. The minimum
-sufficient total complexity principle of entropy-review compares their costs. Use
-those methods for deeper work when needed; this skill does not require loading other
-skills or reproducing their full workflows.
+This skill determines whether symptom-patch accumulation or NFR-driven platformization caused a
+non-converging task and identifies the affected requirements, decisions, boundaries, and platform
+obligations. First principles guide the derivation of necessary capabilities and orthogonal
+concerns. The requirements, assumptions, counterexamples, and evidence approach of
+validation-driven-design tests those judgments. `entropy-review` owns the deeper proportionality
+review of architecture or module obligations. Use those methods for deeper work when needed; this
+skill does not require loading other skills or reproducing their full workflows.
