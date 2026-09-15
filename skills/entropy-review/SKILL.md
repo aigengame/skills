@@ -117,8 +117,9 @@ platformization. Do not report NFR-driven over-abstraction until evidence establ
 NFR drove the abstraction or generalization and that its scope or continuing obligations exceed the
 demonstrated need. A technically possible, narrow, or low-frequency condition does not by itself
 create a product support obligation. Treat every identified or suspected instance of NFR-driven
-platformization as a high-risk entropy signal. Keep it under review until current evidence and any
-required HITL decision establish its need, scope, acceptable cost, and minimum sufficient obligations.
+platformization as a high-risk entropy signal. Keep it under review until evidence establishes the
+relevant facts and minimum sufficient obligations, and any required human-in-the-loop (HITL) decision
+resolves support scope, acceptable cost, or the next action under unresolved evidence.
 Screen it even when the NFR is an explicit product requirement or protects a hard constraint; an
 established support obligation does not exempt the candidate from this proportionality review. Use
 these dimensions to find problems. Do not turn them into a mechanical score.
@@ -145,8 +146,9 @@ Keep complexity that:
   complex.
 - Preserves an explicit product NFR or an evidence-backed hard constraint while keeping only the
   minimum platform obligations required to satisfy it.
-- Uses the minimum sufficient abstraction to own a stable responsibility, variation boundary, or
-  root cause demonstrated by repeated local fixes when current capabilities are insufficient.
+- Uses the minimum sufficient abstraction when repeated local fixes demonstrate a stable
+  responsibility or variation boundary, the abstraction resolves an evidenced root cause, and
+  current capabilities are insufficient.
 
 Simplify, defer, or remove complexity that:
 
@@ -160,7 +162,7 @@ Simplify, defer, or remove complexity that:
 - Plans future stages before the first working result exists.
 
 If any uncertainty remains about the NFR, its need, scope, consumers, continuing obligations, or
-acceptable cost, tell the user and use **human-in-the-loop (HITL) decision-making** before selecting
+acceptable cost, tell the user and use **HITL decision-making** before selecting
 an action. Present known facts, gaps, the effects of support and non-support, smaller alternatives,
 and a recommendation. Ask the designated human decision owner, or the user if no owner has been
 designated, to decide support scope, acceptable cost, or the next action under unresolved evidence,
@@ -239,11 +241,11 @@ Provide:
    a necessary abstraction when a stable boundary is demonstrated. For every identified or suspected
    NFR-driven platformization, report the NFR, current evidence and gaps, continuing platform
    obligations, proportionality conclusion, and action. Report NFR-driven over-abstraction only after
-   evidence establishes both the NFR relationship and disproportionate abstraction scope or
-   obligations; otherwise report the evidence gap without the finding. Report any remaining
-   uncertainty and its HITL decision or open decision with its owner. For each actionable finding,
-   provide a smaller alternative that preserves the observable outcome and every confirmed
-   requirement and hard constraint.
+   evidence establishes both that the NFR drove the abstraction or generalization and that its scope
+   or continuing obligations are disproportionate; otherwise report the evidence gap without the
+   finding. Report any remaining uncertainty and its HITL decision or open decision with its owner.
+   For each actionable finding, provide a smaller alternative that preserves the observable outcome
+   and every confirmed requirement and hard constraint.
 4. **Essential complexity**: Identify what must remain and why.
 5. **Lean implementation order**: Provide independently verifiable steps with fast feedback.
 6. **Assumptions to test**: List unsupported assumptions and the cheapest way to test each one.
