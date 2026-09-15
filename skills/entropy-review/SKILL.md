@@ -100,23 +100,28 @@ Check:
 - **Symptom-patch accumulation**: Do individually small local fixes leave a responsibility, semantic,
   module, or variation boundary unresolved while accumulated concepts, exceptions, state, coupling,
   and verification obligations increase total system complexity?
-- **NFR-driven over-abstraction and platformization**: Does a non-functional requirement (NFR)
-  produce either of these manifestations?
-  - **Over-abstraction**: A model, interface, policy layer, extension point, configuration surface,
-    or abstraction owner has a scope or continuing obligations that exceed what is required by a
-    demonstrated consumer, stable responsibility or variation boundary, or evidenced root cause.
-  - **Platformization**: An NFR promotes a bounded quality concern into general infrastructure and
-    creates continuing variant, extension, lifecycle, compatibility, registration, synchronization,
-    operation, or maintenance obligations.
+- **NFR-driven abstraction and platformization screening**: Does a non-functional requirement (NFR)
+  introduce an abstraction or platformization candidate that requires proportionality review?
+  - **Over-abstraction finding**: Conclude NFR-driven over-abstraction only when evidence shows that
+    the NFR introduced or generalized a model, interface, policy layer, extension point,
+    configuration surface, or abstraction owner whose scope or continuing obligations exceed what a
+    demonstrated consumer, stable responsibility or variation boundary, or evidenced root cause
+    requires.
+  - **Platformization candidate**: An NFR promotes a bounded quality concern into general
+    infrastructure and creates continuing variant, extension, lifecycle, compatibility,
+    registration, synchronization, operation, or maintenance obligations.
 
-Assess over-abstraction and platformization independently; either, both, or neither can apply. A
-technically possible, narrow, or low-frequency condition does not by itself create a product support
-obligation. Treat every identified or suspected instance of NFR-driven platformization as a high-risk
-entropy signal. Keep it under review until current evidence and any required HITL decision establish
-its need, scope, acceptable cost, and minimum sufficient obligations. Screen it even when the NFR is
-an explicit product requirement or protects a hard constraint; an established support obligation
-does not exempt the candidate from this proportionality review. Use these dimensions to find
-problems. Do not turn them into a mechanical score.
+Assess abstraction proportionality and platformization independently. An abstraction can be
+proportionate while platformization is present, and an over-abstraction finding can apply without
+platformization. Do not report NFR-driven over-abstraction until evidence establishes both that the
+NFR drove the abstraction or generalization and that its scope or continuing obligations exceed the
+demonstrated need. A technically possible, narrow, or low-frequency condition does not by itself
+create a product support obligation. Treat every identified or suspected instance of NFR-driven
+platformization as a high-risk entropy signal. Keep it under review until current evidence and any
+required HITL decision establish its need, scope, acceptable cost, and minimum sufficient obligations.
+Screen it even when the NFR is an explicit product requirement or protects a hard constraint; an
+established support obligation does not exempt the candidate from this proportionality review. Use
+these dimensions to find problems. Do not turn them into a mechanical score.
 
 When an abstraction replaces repeated local fixes, verify that the fixes demonstrate the stated
 root cause or stable responsibility or variation boundary. Then verify that the abstraction remains
@@ -233,10 +238,12 @@ Provide:
    comparison between continued local fixes and the minimum sufficient root-cause solution, including
    a necessary abstraction when a stable boundary is demonstrated. For every identified or suspected
    NFR-driven platformization, report the NFR, current evidence and gaps, continuing platform
-   obligations, proportionality conclusion, and action. Identify over-abstraction obligations
-   separately when they apply, and report any remaining uncertainty and its HITL decision or open
-   decision with its owner. For each actionable finding, provide a smaller alternative that preserves
-   the observable outcome and every confirmed requirement and hard constraint.
+   obligations, proportionality conclusion, and action. Report NFR-driven over-abstraction only after
+   evidence establishes both the NFR relationship and disproportionate abstraction scope or
+   obligations; otherwise report the evidence gap without the finding. Report any remaining
+   uncertainty and its HITL decision or open decision with its owner. For each actionable finding,
+   provide a smaller alternative that preserves the observable outcome and every confirmed
+   requirement and hard constraint.
 4. **Essential complexity**: Identify what must remain and why.
 5. **Lean implementation order**: Provide independently verifiable steps with fast feedback.
 6. **Assumptions to test**: List unsupported assumptions and the cheapest way to test each one.
