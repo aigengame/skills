@@ -26,6 +26,14 @@ make a system increasingly difficult to understand, verify, and change.
 Seek the minimum sufficient complexity for the current goal. Preserve necessary structure without
 letting completeness or robustness become reasons for unrelated mechanisms.
 
+Evaluate total system complexity, not only the local complexity added by the current change.
+Successive symptom patches can each be small while their concepts, exceptions, state, coupling, and
+verification obligations accumulate. Abstraction is not entropy by itself. A minimum sufficient
+abstraction that owns a demonstrated stable responsibility, semantic, module, or variation boundary
+can add local structure while reducing and stabilizing total system complexity. Necessary abstraction
+is not over-abstraction; it becomes excessive only when its scope or continuing obligations exceed
+the demonstrated need.
+
 ## Workflow
 
 ### 1. Pin the Current Goal
@@ -58,6 +66,10 @@ Use this solution as a comparison baseline, not as a predetermined final answer.
 Identify every concept, layer, state, rule, exception, process, and maintenance duty introduced by
 the design, plan, or change.
 
+Include obligations accumulated across earlier local fixes when they remain part of the current
+design, even if the current change adds little local complexity. Inventory the resulting system, not
+only the current diff.
+
 Ask for each one:
 
 1. Which current goal, requirement, hard constraint, actual consumer, or demonstrated loss requires
@@ -85,6 +97,9 @@ Check:
   coordination?
 - **Speculative generality**: Are certain costs paid now for benefits that depend on unverified
   future assumptions?
+- **Symptom-patch accumulation**: Do individually small local fixes leave a responsibility, semantic,
+  module, or variation boundary unresolved while accumulated concepts, exceptions, state, coupling,
+  and verification obligations increase total system complexity?
 - **NFR-driven over-abstraction and platformization**: Does a non-functional requirement (NFR)
   produce either of these manifestations?
   - **Over-abstraction**: A model, interface, policy layer, extension point, configuration surface,
@@ -94,16 +109,26 @@ Check:
     creates continuing variant, extension, lifecycle, compatibility, registration, synchronization,
     operation, or maintenance obligations.
 
-Assess over-abstraction and platformization independently; either, both, or neither can apply. Treat
-every identified or suspected instance of NFR-driven platformization as a high-risk entropy signal.
-Screen it even when the NFR is an explicit product requirement or protects a hard constraint. Use
-these dimensions to find problems. Do not turn them into a mechanical score.
+Assess over-abstraction and platformization independently; either, both, or neither can apply. A
+technically possible, narrow, or low-frequency condition does not by itself create a product support
+obligation. Treat every identified or suspected instance of NFR-driven platformization as a high-risk
+entropy signal. Keep it under review until current evidence and any required HITL decision establish
+its need, scope, acceptable cost, and minimum sufficient obligations. Screen it even when the NFR is
+an explicit product requirement or protects a hard constraint; an established support obligation
+does not exempt the candidate from this proportionality review. Use these dimensions to find
+problems. Do not turn them into a mechanical score.
 
 When an abstraction replaces repeated local fixes, verify that the fixes demonstrate the stated
 root cause or stable responsibility or variation boundary. Then verify that the abstraction remains
 focused on that boundary.
 
 ### 5. Distinguish Essential from Accidental Complexity
+
+For suspected symptom-patch accumulation, compare the total cost of continued local fixes with the
+smallest root-cause solution. When evidence demonstrates a missing stable boundary, include the
+one-time and continuing cost of the minimum sufficient abstraction. Include all affected concepts,
+exceptions, state, coupling, and understanding, validation, change, operation, and maintenance
+obligations. A smaller current diff is not evidence of lower total entropy.
 
 Keep complexity that:
 
@@ -135,6 +160,10 @@ an action. Present known facts, gaps, the effects of support and non-support, sm
 and a recommendation. Ask the designated human decision owner, or the user if no owner has been
 designated, to decide support scope, acceptable cost, or the next action under unresolved evidence,
 as applicable.
+
+If HITL selects a bounded investigation, keep the platformization candidate under review and repeat
+the proportionality screen after validation. Do not treat the consultation itself as evidence that
+the obligations are necessary.
 
 For example, a check for one current artifact can grow into a bounded cross-platform inventory with
 traversal, hashing, caps, truncation, and compatibility rules while still failing to prove complete
@@ -199,12 +228,15 @@ Provide:
 2. **Current goal and minimum sufficient solution**: State the problem, observable completion
    outcome, hard constraints, and minimum sufficient solution.
 3. **Review findings**: For each actionable finding, state the mechanism, goal relationship,
-   evidence, entropy cost, and action. For every identified or suspected NFR-driven platformization,
-   report the NFR, current evidence and gaps, continuing platform obligations, proportionality
-   conclusion, and action. Identify over-abstraction obligations separately when they apply, and
-   report any remaining uncertainty and its HITL decision or open decision with its owner. For each
-   actionable finding, provide a smaller alternative that preserves the observable outcome and every
-   confirmed requirement and hard constraint.
+   evidence, entropy cost, and action. For suspected symptom-patch accumulation, report the
+   accumulated obligations, total-complexity effect, demonstrated boundary or evidence gap, and the
+   comparison between continued local fixes and the minimum sufficient root-cause solution, including
+   a necessary abstraction when a stable boundary is demonstrated. For every identified or suspected
+   NFR-driven platformization, report the NFR, current evidence and gaps, continuing platform
+   obligations, proportionality conclusion, and action. Identify over-abstraction obligations
+   separately when they apply, and report any remaining uncertainty and its HITL decision or open
+   decision with its owner. For each actionable finding, provide a smaller alternative that preserves
+   the observable outcome and every confirmed requirement and hard constraint.
 4. **Essential complexity**: Identify what must remain and why.
 5. **Lean implementation order**: Provide independently verifiable steps with fast feedback.
 6. **Assumptions to test**: List unsupported assumptions and the cheapest way to test each one.
@@ -227,7 +259,8 @@ format.
 - Do not expand this into a comprehensive correctness, security, or style review, or redesign the
   whole system unless the current goal requires it.
 - Do not let the review cost exceed the scale of the decision being reviewed.
-- Use this skill to judge whether architecture or module-design obligations are proportionate. Use
-  `backtrace-review` to determine whether symptom patching or NFR-driven platformization caused a
-  non-converging task. The skills can be used independently; do not reproduce the complete workflow
-  of one skill in the other.
+- Use this skill to identify and assess accumulated symptom-patch obligations as an entropy source
+  and judge whether architecture or module-design obligations are proportionate. Use
+  `backtrace-review` to reconstruct their causal history or determine whether symptom patching or
+  NFR-driven platformization caused a non-converging task. The skills can be used independently; do
+  not reproduce the complete workflow of one skill in the other.
