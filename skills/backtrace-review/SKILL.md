@@ -34,6 +34,12 @@ demonstrated need:
   local cycle. Repeated failed fixes or review cycles can be mistaken for evidence that the solution
   needs broader completeness, compatibility, traceability, or other non-functional requirement
   (NFR) coverage. This can turn a bounded response into general platform obligations.
+- Reviewing only the visible symptom without reconstructing the requirement, functional boundary,
+  end-to-end behavior, and relevant module architecture can hide the responsible system boundary.
+  Conflating abstraction with entropy is one form of this error: a necessary abstraction can be
+  rejected as over-abstraction. The resulting local fixes can remain individually small while
+  leaving the cause unresolved and growing total system complexity through symptom-patch
+  accumulation.
 - A technically possible, narrow, or low-frequency condition does not by itself create a product
   support obligation. The condition can be mistaken for required support, which can invent or
   broaden an NFR and trigger NFR-driven platformization.
@@ -75,6 +81,8 @@ route introduces platformization in the initial design.
 flowchart TD
     A["Unverified assumption"] --> C["Technical decision on an unresolved basis"]
     B["Unclear requirement, semantics,<br/>responsibility, or decision boundary"] --> C
+    Z["Requirement, functional boundary,<br/>end-to-end behavior, or module context<br/>not reconstructed"] --> Z1["Visible symptom appears to be the whole problem;<br/>necessary abstraction is missed<br/>or rejected"]
+    Z1 --> D
     C --> D["Local patch addresses the visible failure"]
     D --> E["Root cause and boundary remain unresolved"]
     E --> F["Patch creates or exposes another problem"]
