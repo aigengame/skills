@@ -25,13 +25,18 @@ current implementation, historical patches, or familiar practices as fixed premi
 This is not design from intuition alone; mature theory, existing solutions, and
 empirical evidence remain important inputs.
 
-First trace the upstream conditions that prevent convergence. An unverified assumption can enter a
-technical decision while a requirement, responsibility, or semantic boundary remains unclear. A
-local fix can then address the visible failure without correcting that condition. The patch can
-create or expose another problem, which starts another local cycle. Repeated failed fixes or review
-cycles can be mistaken for evidence that the solution needs broader completeness, compatibility,
-traceability, or other non-functional requirement (NFR) coverage. This can turn a bounded response
-into general platform obligations.
+First trace the upstream conditions that can prevent convergence or expand the response beyond the
+demonstrated need:
+
+- An unverified assumption can enter a technical decision while a requirement, responsibility, or
+  semantic boundary remains unclear. A local fix can then address the visible failure without
+  correcting that condition. The patch can create or expose another problem, which starts another
+  local cycle. Repeated failed fixes or review cycles can be mistaken for evidence that the solution
+  needs broader completeness, compatibility, traceability, or other non-functional requirement
+  (NFR) coverage. This can turn a bounded response into general platform obligations.
+- A technically possible, narrow, or low-frequency condition does not by itself create a product
+  support obligation. The condition can be mistaken for required support, which can invent or
+  broaden an NFR and trigger NFR-driven platformization.
 
 Test two distinct, non-exclusive causal mechanisms through which unresolved conditions can grow
 complexity:
@@ -48,8 +53,9 @@ accumulation. An NFR label does not prove platformization. This causal sequence 
 compounding path to test, not a required sequence or an automatic diagnosis. Either mechanism can
 occur independently, and NFR-driven platformization can also be introduced in the initial design.
 Treat every identified or suspected instance of NFR-driven platformization as a high-risk signal
-that requires a bounded causal screen, regardless of when or why it appeared. Do not reject a
-candidate automatically.
+that requires bounded causal and total-complexity screens, regardless of when or why it appeared.
+An established support obligation does not exempt the associated platformization candidate from
+either screen. Do not reject a candidate automatically.
 
 Abstraction is not entropy by itself. When root-cause analysis establishes a stable responsibility,
 semantic, module, or variation boundary that the current design does not own, introduce the minimum
@@ -103,13 +109,8 @@ flowchart TD
 ```
 
 Optimize the total cost of understanding, validating, changing, and operating the
-solution, not the size of the current diff. A technically possible, narrow, or
-low-frequency condition does not by itself create a product support obligation. The
-condition can be mistaken for required support, which can invent or broaden an NFR
-and trigger NFR-driven platformization. Keep every resulting platformization candidate
-under the bounded causal and total-complexity screens, including one backed by an
-established support obligation. A larger refactor or rewrite must also justify its
-cost. "Cleaner" is not sufficient evidence.
+solution, not the size of the current diff. A larger refactor or rewrite must also
+justify its cost. "Cleaner" is not sufficient evidence.
 
 ## When to start and what to pause
 
