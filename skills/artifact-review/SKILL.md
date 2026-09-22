@@ -14,8 +14,8 @@ understand it, make decisions, or act on it reliably.
 Review both content and language:
 
 - Is the content correct, usable, and clearly bounded?
-- Do requirements, decisions, constraints, and product commitments have non-circular
-  authority and remain bounded by the recorded user outcome?
+- Do requirements, decisions, constraints, and product commitments have current
+  standing, non-circular provenance, and scope bounded by the recorded user outcome?
 - Are terms accurate, stable, and consistent with project or domain usage?
 - Is the prose concrete and natural, and does it express conceptual relationships
   accurately?
@@ -41,15 +41,15 @@ until this pass is complete and its result is reported.
   artifact's meaning.
 - Trace key facts, constraints, and references to the nearest authoritative source.
   Read only material relevant to the artifact's purpose or the change under review.
-- For an implementation-oriented artifact, pin the originating product record that
-  defines the user need independently of the disputed observation, together with
-  later owner decisions that explicitly changed its scope. Establish the user
-  problem, recorded outcome, current acceptance criteria, hard constraints, explicit
-  exclusions, and the decision owner for unresolved scope. Compare added or changed
-  obligations with that baseline.
-- Do not treat a downstream artifact as independent authority merely because it is
-  current, tested, published, or marked accepted. Verify that the designated owner
-  explicitly authorized any added product scope.
+- For an implementation-oriented artifact, pin the originating requirement,
+  recorded user outcome, or explicit owner decision that defines the need
+  independently of the disputed observation, together with later owner decisions
+  that changed its scope. Establish the user problem, current acceptance criteria,
+  hard constraints, explicit exclusions, and the decision owner for unresolved
+  scope. Compare added or changed obligations with that baseline.
+- Do not treat a downstream artifact as proof of independent product need merely
+  because it is current, tested, published, or marked accepted. Verify that the
+  designated owner explicitly authorized any added product scope.
 - Distinguish observations, proposals, accepted decisions, and current requirements.
   Do not infer authority from an artifact type, a test, or polished prose alone.
 - Inspect code, configuration, scripts, project state, or external-system behavior
@@ -91,15 +91,21 @@ artifact.
 #### Requirement Authority and Scope
 
 - Judge technical truth and requirement standing separately. **Requirement
-  standing** is current, non-circular authority that the product owes a behavior.
-  Ground it in a recorded user outcome, an explicit decision by the designated owner
-  to address a demonstrated need or loss for an actual consumer, or a hard safety,
-  integrity, or interoperability constraint.
+  standing** is current authority that the product owes a behavior, such as a
+  recorded user outcome, approved acceptance criterion, accepted compatibility
+  obligation, current public promise, or hard safety, integrity, or interoperability
+  constraint.
+- Requirement standing and non-circular provenance answer different questions.
+  Standing records a current product obligation; it does not by itself prove the
+  actual product need or authorize retaining or expanding its scope. For scope
+  approval, require provenance grounded in a recorded user outcome, an explicit
+  decision by the designated owner to address a demonstrated need or loss for an
+  actual consumer, or a hard safety, integrity, or interoperability constraint.
 - A probe, current behavior, implementation limit, review finding, or regression test
   can prove a fact. It does not by itself establish that the product must support the
   observed input or behavior.
 - For each new or changed requirement, acceptance criterion, compatibility rule,
-  public promise, or non-functional requirement (NFR), trace a non-circular authority
+  public promise, or non-functional requirement (NFR), trace a non-circular provenance
   chain to the actual product need or hard constraint that requires it. Do not use
   the artifact under review, or a downstream issue, ADR, test, schema, or description
   derived from the same observation, as its own authority. A discovered technical
@@ -113,14 +119,17 @@ artifact.
   registry, field, abstraction, single authority, or other mechanism. Report any
   mechanism, supported input, or contract surface that exceeds the recorded product
   outcome and hard constraints as scope inflation.
-- For an NFR, require an independently authorized and bounded acceptance scenario,
-  together with a demonstrated consumer, loss, or hard constraint, before it creates
-  reusable infrastructure or continuing variant, extension, lifecycle,
-  compatibility, registration, synchronization, operation, or maintenance
-  obligations. A product-requirement label or quality word is not sufficient
-  authority. Otherwise, report an NFR-driven platformization candidate and do not
-  approve the platform obligations. Use `entropy-review` for the deeper
-  proportionality assessment.
+- Treat an NFR as a platformization candidate whenever it promotes a bounded quality
+  concern into reusable infrastructure and creates continuing variant, extension,
+  lifecycle, compatibility, registration, synchronization, operation, or maintenance
+  obligations. This classification does not depend on requirement standing. Always
+  route the candidate to `entropy-review` for the deeper proportionality assessment.
+- Independently require an authorized and bounded acceptance scenario, together with
+  a demonstrated consumer, loss, or hard constraint, for the NFR and its proposed
+  scope. A product-requirement label or quality word is not sufficient authority. If
+  this authority is missing, report the gap and do not approve the dependent platform
+  obligations. If standing is established, record it without treating it as proof
+  that the platform obligations are proportionate.
 - When published text and behavior conflict, trace the authority and history of both.
   Do not assume that the text is stale or make an accidental behavior authoritative
   only by documenting, testing, or making it consistent.
@@ -251,10 +260,11 @@ For each finding, give:
 
 - The location.
 - Verifiable evidence.
-- For a requirement or scope finding, the actual product need or hard constraint, the
-  non-circular authority chain or its first unsupported link, and the exact behavior,
-  input, contract surface, or continuing obligation added beyond, removed from, or
-  changed relative to that need.
+- For a requirement or scope finding, the current requirement standing, including any
+  accepted compatibility obligation or current public promise; the actual product need
+  or hard constraint; the non-circular provenance chain or its first unsupported link;
+  and the exact behavior, input, contract surface, or continuing obligation added
+  beyond, removed from, or changed relative to that need.
 - The impact on accuracy, understanding, or use.
 - The smallest practical alternative that preserves the intent.
 
