@@ -1,6 +1,6 @@
 ---
 name: artifact-review
-description: Review project documents such as issues, ADRs, architecture documents, specifications, plans, and documentation changes for correctness, usability, consistency, completeness, orthogonality, DRY, terminology accuracy, and clear prose. Use only when the user explicitly asks for a review of such a document or a re-review of claimed fixes to one.
+description: Review project documents such as issues, ADRs, architecture documents, specifications, plans, and documentation changes for correctness, current requirement authority, explicit scope boundaries, usability, consistency, completeness, orthogonality, DRY, terminology accuracy, and clear prose. Distinguish technical facts from product commitments and identify requirement drift or unsupported scope before implementation. Use only when the user explicitly asks for a review of such a document or a re-review of claimed fixes to one.
 ---
 
 # Artifact Review
@@ -14,6 +14,8 @@ understand it, make decisions, or act on it reliably.
 Review both content and language:
 
 - Is the content correct, usable, and clearly bounded?
+- Do requirements, decisions, constraints, and product commitments have current
+  authority and remain bounded by the recorded user outcome?
 - Are terms accurate, stable, and consistent with project or domain usage?
 - Is the prose concrete and natural, and does it express conceptual relationships
   accurately?
@@ -39,6 +41,12 @@ until this pass is complete and its result is reported.
   artifact's meaning.
 - Trace key facts, constraints, and references to the nearest authoritative source.
   Read only material relevant to the artifact's purpose or the change under review.
+- For an implementation-oriented artifact, pin the originating user problem,
+  recorded outcome, current acceptance criteria, hard constraints, explicit
+  exclusions, and the decision owner for unresolved scope. Compare added or changed
+  obligations with that baseline.
+- Distinguish observations, proposals, accepted decisions, and current requirements.
+  Do not infer authority from an artifact type, a test, or polished prose alone.
 - Inspect code, configuration, scripts, project state, or external-system behavior
   when a claim depends on them.
 - Base conclusions on the artifact, the user's request, and observable evidence. Do
@@ -74,6 +82,31 @@ artifact.
   preserving judgment when several approaches are valid.
 - Validate critical, non-obvious claims with a representative check. Disclose what
   was not tested when validation is impractical.
+
+#### Requirement Authority and Scope
+
+- Judge technical truth and requirement standing separately. **Requirement
+  standing** is current authority that the product owes a behavior, such as a
+  recorded user outcome, approved acceptance criterion, accepted compatibility
+  obligation, current public promise, or hard safety, integrity, or interoperability
+  constraint.
+- A probe, current behavior, implementation limit, review finding, or regression test
+  can prove a fact. It does not by itself establish that the product must support the
+  observed input or behavior.
+- Trace each new or changed requirement, acceptance criterion, compatibility rule,
+  public promise, or non-functional requirement (NFR) to its current authority and
+  observable outcome. Treat an observation, mechanism, current behavior, or quality
+  goal stated as mandatory without that authority as an unsupported proposed
+  requirement, and report the authority gap.
+- Translate mechanism-led criteria, such as a required helper, registry, field,
+  abstraction, or single authority, back to the outcome they serve. Report the
+  mechanism as unsupported scope when that relationship is absent or speculative.
+- When published text and behavior conflict, trace the authority and history of both.
+  Do not assume that the text is stale or make an accidental behavior authoritative
+  only by documenting, testing, or making it consistent.
+- Do not approve an unsupported obligation as current scope. If it might become a new
+  product decision, name the decision owner and keep dependent implementation paused
+  until the owner decides its support scope.
 
 #### Consistency and Completeness
 
@@ -141,6 +174,9 @@ artifact.
 Choose the smallest sufficient validation for the artifact's actual claims:
 
 - Open cited material and confirm that it supports the claim.
+- Compare normative claims with the originating requirement, accepted decisions, and
+  current support scope. Confirm whether each cited source proves a technical fact,
+  authorizes a product obligation, or does both.
 - Compare claims with current implementation, configuration, project documentation,
   or issue-tracker state.
 - Search for conflicting or drifting terminology, responsibilities, relationships,
@@ -148,6 +184,9 @@ Choose the smallest sufficient validation for the artifact's actual claims:
 - Run document checks, link checks, scripts, or tests directly relevant to a claim.
 - For a versioned change, identify the reviewed revision, relevant baseline, and
   actual scope of the change.
+- When an artifact bounds work by a count of texts, schema fields, help entries, or
+  similar surfaces, inventory the underlying fact by meaning across the relevant
+  contract surfaces. Do not accept a literal-text search as proof of complete scope.
 - When the artifact cites CI, validation results, or runtime evidence, verify that the
   evidence supports the stated conclusion.
 - Record the terminology sources, writing reference, inspected scope, and prose
@@ -191,6 +230,8 @@ For each finding, give:
 
 - The location.
 - Verifiable evidence.
+- For a requirement or scope finding, the current authority or authority gap and the
+  scope added, removed, or changed relative to the recorded outcome.
 - The impact on accuracy, understanding, or use.
 - The smallest practical alternative that preserves the intent.
 
@@ -199,6 +240,12 @@ changes and include them only when they materially help.
 
 If new context invalidates a proposed fix but not the underlying problem, revise the
 fix rather than dropping the finding.
+
+If an implementation-oriented artifact presents an unresolved product decision as
+approved scope, report **Changes required**, identify the decision owner, and name the
+dependent work that must pause. An artifact whose purpose is to frame that decision
+can pass when it labels the proposal, authority gap, owner, and open decision
+accurately.
 
 If there are no substantive findings, report **Pass**, identify the reviewed target,
 include the required **Terminology and prose assessment**, and summarize the main
@@ -216,6 +263,23 @@ perform other remote writes only when the user explicitly authorizes them.
 - Repeat the terminology and prose pass for changed text and report its assessment,
   even when prior findings concerned only content.
 - Review scope added or changed since the previous review.
+- Verify that a fix did not turn an observation into a requirement, add an unsupported
+  obligation, or restore rejected scope under a new name.
 - For an item declined by design, verify that the accepted constraint, rationale, and
   necessary mitigations appear in the appropriate authoritative material.
 - Use the same conclusion and finding format as the initial review.
+
+## Relationship to Other Review Skills
+
+- Use this skill to review an artifact's correctness, requirement authority, and
+  explicit scope boundaries, especially before implementation. Identify
+  disproportionate mechanisms or repeated repair as routing signals; do not reproduce
+  the deeper workflows below.
+- Use `entropy-review` to determine whether a design, plan, or implementation adds
+  mechanisms and continuing obligations proportionate to the approved goal.
+- Use `handle-review` to decide whether and how to adopt pull request feedback without
+  turning a review finding into an unsupported product commitment.
+- Use `backtrace-review` when repeated fixes or review rounds expand the contract or
+  move failures across boundaries without progress toward acceptance.
+- After an accepted requirement, decision, scope, or term changes, use `reconcile` to
+  find and repair stale dependent artifacts.

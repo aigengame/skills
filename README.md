@@ -166,9 +166,11 @@ each area guides the next decision.](https://media.githubusercontent.com/media/a
 #### [`artifact-review`](skills/artifact-review/SKILL.md)
 
 - **What:** Reviews issues, ADRs, specifications, plans, and other project documents
-  for correctness, usability, consistency, completeness, terminology, and prose.
-- **Why:** A polished document can still contradict its evidence, omit a required
-  decision, or give readers instructions they cannot use.
+  for correctness, current requirement authority, explicit scope boundaries,
+  usability, consistency, completeness, terminology, and prose.
+- **Why:** A polished document can still turn a technical observation into an
+  unsupported product commitment, drift from its originating requirement, omit a
+  required decision, or give readers instructions they cannot use.
 - **When:** Use it when you explicitly need a document review or a re-review of claimed
   fixes.
 - **How:** Ask: “Use artifact-review to review this ADR against the implementation and
@@ -218,6 +220,24 @@ each area guides the next decision.](https://media.githubusercontent.com/media/a
   adopt, adapt, or decline a finding.
 - **How:** Ask: “Use handle-review to evaluate these comments, implement verified
   fixes, and explain any finding we should not adopt as written.”
+
+### How the review skills work together
+
+These skills share evidence but answer different primary questions. Use the smallest
+review that matches the current problem, and route deeper work instead of repeating a
+sibling skill's workflow. `skill-review` remains the specialized review for Skill
+packages.
+
+| Current need | Start with | Continue when needed |
+| --- | --- | --- |
+| Review an issue, ADR, specification, or plan before implementation | `artifact-review` checks factual correctness, current requirement authority, and explicit scope boundaries. | Use `entropy-review` when the approved artifact proposes mechanisms or obligations whose proportionality needs deeper assessment. |
+| Assess the complexity of a design, plan, or implementation | `entropy-review` compares total obligations with the current goal and minimum sufficient solution. | Return to `artifact-review` when the source requirement or decision artifact is itself unclear or has drifted. |
+| Evaluate pull request feedback | `handle-review` decides whether each finding is true, in scope, and appropriate to adopt. | Use `entropy-review` for a disproportionate proposed mechanism, or `backtrace-review` when repeated review fixes expand the contract without acceptance progress. |
+| Recover non-converging work | `backtrace-review` reconstructs the requirement, assumption, decision, and patch chain. | Use `artifact-review` to review the recovered requirement or decision record, then `entropy-review` to assess the recovery design. |
+
+After an accepted requirement, decision, scope, or term changes, use `reconcile` to
+repair stale dependent artifacts. The skills can also be used independently when one
+primary question is sufficient.
 
 #### [`reconcile`](skills/reconcile/SKILL.md)
 
