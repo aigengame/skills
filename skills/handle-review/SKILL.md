@@ -1,6 +1,6 @@
 ---
 name: handle-review
-description: Analyze, evaluate, and handle pull request review feedback before changing code. Verify each comment against the current PR head, requirements, product support scope, project constraints, and runtime evidence; distinguish technical truth from requirement standing; then decide with evidence whether to fully adopt, partially adopt, not adopt, or request an owner decision. Prevent review findings and suggested mechanisms from turning unsupported cases into product promises, scope inflation, symptom-patch loops, NFR-driven platformization, disproportionate complexity, rigid processes, or regressions. Use when addressing PR review comments, evaluating findings, implementing accepted feedback, or drafting a reviewer reply.
+description: Analyze, evaluate, and handle pull request review feedback before changing code. Verify each comment against the current PR head, requirements, product support scope, project constraints, and runtime evidence; distinguish technical truth from requirement standing; then decide with evidence whether to fully adopt, partially adopt, not adopt, or request an owner decision. Prevent review findings and suggested mechanisms from turning unsupported cases into product promises, scope inflation, symptom-patch loops, non-functional requirement (NFR)-driven platformization, disproportionate complexity, rigid processes, or regressions. Use when addressing PR review comments, evaluating findings, implementing accepted feedback, or drafting a reviewer reply.
 ---
 
 # Handle Review
