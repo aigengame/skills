@@ -265,8 +265,9 @@ Provide:
 
 1. **Verdict**: State the primary action selected in step 7: **Keep**, **Simplify**, **Reuse**,
    **Defer**, **Remove**, or **Experiment**. Use **Decision required** only when the designated owner
-   has not made a necessary scope or cost decision; name that owner and the dependent work to pause.
-   If the owner selected bounded validation, report **Experiment** and the question it must resolve.
+   has not made a necessary scope, cost, or next-action decision; name that owner and the dependent
+   work to pause. If the owner selected bounded validation, report **Experiment** and the question it
+   must resolve.
 2. **Current goal and minimum sufficient solution**: State the problem, observable completion
    outcome, hard constraints, supported and unsupported scope, and minimum sufficient solution.
 3. **Review findings**: For each actionable finding, state the mechanism, goal relationship,
