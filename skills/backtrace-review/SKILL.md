@@ -30,9 +30,7 @@ Separate technical truth from **requirement standing**. Requirement standing is 
 that the product owes a behavior, such as a recorded user outcome, approved acceptance criterion,
 accepted compatibility obligation, current public promise, or hard safety, integrity, or
 interoperability constraint. A probe, current behavior, review finding, or regression test can prove
-a fact without establishing that the current goal must support it. Public behavior or documentation
-can still create a real compatibility obligation, so missing original authority does not authorize
-automatic removal.
+a fact without establishing that the current goal must support it.
 
 First trace the upstream conditions that can prevent convergence or expand the response beyond the
 demonstrated need:

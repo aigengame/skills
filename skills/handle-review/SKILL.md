@@ -21,9 +21,7 @@ or suggesting the wrong solution. Judge separately:
 user outcome, approved acceptance criterion, accepted compatibility obligation, current public
 promise, or hard safety, integrity, or interoperability constraint. A probe, current behavior,
 review finding, or regression test can prove a fact without establishing that the current goal must
-support it. A published contract or demonstrated external dependency can still create a real
-compatibility obligation, so missing original authority does not authorize automatic rejection or
-removal.
+support it.
 
 Protect correctness, existing working results, fast feedback, reversible changes, and long-term
 comprehensibility. Do not introduce disproportionate software entropy merely to close a review,
@@ -324,8 +322,6 @@ modifications.
   for local consistency.
 - Do not force another local patch when evidence demonstrates a stable shared mechanism or
   responsibility boundary; introduce only the minimum sufficient abstraction that owns it.
-- Do not use missing original authority alone to reject behavior that a current public contract or
-  demonstrated external dependency requires.
 - Do not preserve a design disproved by evidence merely because work has already been invested in
   it.
 - Do not replace verification with argument; declining feedback also requires evidence.

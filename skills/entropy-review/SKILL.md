@@ -38,9 +38,7 @@ Separate technical truth from **requirement standing**. Requirement standing is 
 that the product owes a behavior, such as a recorded user outcome, approved acceptance criterion,
 accepted compatibility obligation, current public promise, or hard safety, integrity, or
 interoperability constraint. A probe, current behavior, review finding, or regression test can prove
-a fact without establishing that the current goal must support it. Public behavior or documentation
-can still create a real compatibility obligation, so missing original authority does not authorize
-automatic removal.
+a fact without establishing that the current goal must support it.
 
 ## Workflow
 
@@ -192,8 +190,7 @@ decision-making** before selecting a dependent action. Present known facts, gaps
 support and non-support, smaller alternatives, and a recommendation. Ask the designated human
 decision owner, or the user if no owner has been designated, to choose deliberate support,
 compatibility-preserving deprecation, refusal through an existing channel, no change, acceptable
-cost, or the next action under unresolved evidence, as applicable. Lack of recorded standing does
-not select one of these outcomes by itself.
+cost, or the next action under unresolved evidence, as applicable.
 
 If HITL selects a bounded investigation, keep the platformization candidate under review and repeat
 the proportionality screen after validation. Do not treat the consultation itself as evidence that
