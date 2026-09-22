@@ -1,6 +1,6 @@
 ---
 name: artifact-review
-description: Review project documents such as issues, ADRs, architecture documents, specifications, plans, and documentation changes for correctness, current requirement authority, explicit scope boundaries, usability, consistency, completeness, orthogonality, DRY, terminology accuracy, and clear prose. Distinguish technical facts from product commitments and identify requirement drift or unsupported scope before implementation. Use only when the user explicitly asks for a review of such a document or a re-review of claimed fixes to one.
+description: Review project documents such as issues, ADRs, architecture documents, specifications, plans, and documentation changes for correctness, requirement provenance and authority, explicit scope boundaries, usability, consistency, completeness, orthogonality, DRY, terminology accuracy, and clear prose. Distinguish technical facts from product commitments and identify requirement drift or unsupported scope before implementation. Use only when the user explicitly asks for a review of such a document or a re-review of claimed fixes to one.
 ---
 
 # Artifact Review
@@ -14,7 +14,7 @@ understand it, make decisions, or act on it reliably.
 Review both content and language:
 
 - Is the content correct, usable, and clearly bounded?
-- Do requirements, decisions, constraints, and product commitments have current
+- Do requirements, decisions, constraints, and product commitments have non-circular
   authority and remain bounded by the recorded user outcome?
 - Are terms accurate, stable, and consistent with project or domain usage?
 - Is the prose concrete and natural, and does it express conceptual relationships
@@ -41,10 +41,15 @@ until this pass is complete and its result is reported.
   artifact's meaning.
 - Trace key facts, constraints, and references to the nearest authoritative source.
   Read only material relevant to the artifact's purpose or the change under review.
-- For an implementation-oriented artifact, pin the originating user problem,
-  recorded outcome, current acceptance criteria, hard constraints, explicit
+- For an implementation-oriented artifact, pin the originating product record that
+  defines the user need independently of the disputed observation, together with
+  later owner decisions that explicitly changed its scope. Establish the user
+  problem, recorded outcome, current acceptance criteria, hard constraints, explicit
   exclusions, and the decision owner for unresolved scope. Compare added or changed
   obligations with that baseline.
+- Do not treat a downstream artifact as independent authority merely because it is
+  current, tested, published, or marked accepted. Verify that the designated owner
+  explicitly authorized any added product scope.
 - Distinguish observations, proposals, accepted decisions, and current requirements.
   Do not infer authority from an artifact type, a test, or polished prose alone.
 - Inspect code, configuration, scripts, project state, or external-system behavior
@@ -86,21 +91,36 @@ artifact.
 #### Requirement Authority and Scope
 
 - Judge technical truth and requirement standing separately. **Requirement
-  standing** is current authority that the product owes a behavior, such as a
-  recorded user outcome, approved acceptance criterion, accepted compatibility
-  obligation, current public promise, or hard safety, integrity, or interoperability
-  constraint.
+  standing** is current, non-circular authority that the product owes a behavior.
+  Ground it in a recorded user outcome, an explicit decision by the designated owner
+  to address a demonstrated need or loss for an actual consumer, or a hard safety,
+  integrity, or interoperability constraint.
 - A probe, current behavior, implementation limit, review finding, or regression test
   can prove a fact. It does not by itself establish that the product must support the
   observed input or behavior.
-- Trace each new or changed requirement, acceptance criterion, compatibility rule,
-  public promise, or non-functional requirement (NFR) to its current authority and
-  observable outcome. Treat an observation, mechanism, current behavior, or quality
-  goal stated as mandatory without that authority as an unsupported proposed
-  requirement, and report the authority gap.
-- Translate mechanism-led criteria, such as a required helper, registry, field,
-  abstraction, or single authority, back to the outcome they serve. Report the
-  mechanism as unsupported scope when that relationship is absent or speculative.
+- For each new or changed requirement, acceptance criterion, compatibility rule,
+  public promise, or non-functional requirement (NFR), trace a non-circular authority
+  chain to the actual product need or hard constraint that requires it. Do not use
+  the artifact under review, or a downstream issue, ADR, test, schema, or description
+  derived from the same observation, as its own authority. A discovered technical
+  fact can trigger a product decision, but it must not become a requirement,
+  acceptance criterion, regression obligation, or public promise without an explicit
+  decision by the designated owner. Until that decision exists, report the fact as
+  an observation and identify the authority gap.
+- Establish the actual product need independently of the proposed mechanism before
+  evaluating mechanism-led criteria. Do not infer a product requirement from the
+  existence, technical correctness, reuse value, or consistency of a helper,
+  registry, field, abstraction, single authority, or other mechanism. Report any
+  mechanism, supported input, or contract surface that exceeds the recorded product
+  outcome and hard constraints as scope inflation.
+- For an NFR, require an independently authorized and bounded acceptance scenario,
+  together with a demonstrated consumer, loss, or hard constraint, before it creates
+  reusable infrastructure or continuing variant, extension, lifecycle,
+  compatibility, registration, synchronization, operation, or maintenance
+  obligations. A product-requirement label or quality word is not sufficient
+  authority. Otherwise, report an NFR-driven platformization candidate and do not
+  approve the platform obligations. Use `entropy-review` for the deeper
+  proportionality assessment.
 - When published text and behavior conflict, trace the authority and history of both.
   Do not assume that the text is stale or make an accidental behavior authoritative
   only by documenting, testing, or making it consistent.
@@ -176,7 +196,8 @@ Choose the smallest sufficient validation for the artifact's actual claims:
 - Open cited material and confirm that it supports the claim.
 - Compare normative claims with the originating requirement, accepted decisions, and
   current support scope. Confirm whether each cited source proves a technical fact,
-  authorizes a product obligation, or does both.
+  independently authorizes a product obligation, or does both. Do not accept a source
+  that only repeats the downstream claim as independent authority for that claim.
 - Compare claims with current implementation, configuration, project documentation,
   or issue-tracker state.
 - Search for conflicting or drifting terminology, responsibilities, relationships,
@@ -230,8 +251,10 @@ For each finding, give:
 
 - The location.
 - Verifiable evidence.
-- For a requirement or scope finding, the current authority or authority gap and the
-  scope added, removed, or changed relative to the recorded outcome.
+- For a requirement or scope finding, the actual product need or hard constraint, the
+  non-circular authority chain or its first unsupported link, and the exact behavior,
+  input, contract surface, or continuing obligation added beyond, removed from, or
+  changed relative to that need.
 - The impact on accuracy, understanding, or use.
 - The smallest practical alternative that preserves the intent.
 

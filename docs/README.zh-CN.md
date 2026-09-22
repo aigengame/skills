@@ -1,4 +1,4 @@
-<!-- skills-readme-i18n: source=README.md sha256=7bd73fd7936a104806a8e9ee89b8a79cd70da549742b61a9b096fd0ad60008b0 -->
+<!-- skills-readme-i18n: source=README.md sha256=5858758fb20f535455b16a307a4c0caba2c5276fcb4ead1ad4275e014bf19ae2 -->
 
 # AIGen Game Agent Skills：在复杂多变的环境中，以证据驱动软件交付
 
@@ -124,7 +124,7 @@
 
 #### [`artifact-review`](../skills/artifact-review/SKILL.md)
 
-- **做什么：** 审查 issue、ADR、规格、计划和其他项目文档的正确性、需求的当前权威依据、明确的范围边界、可用性、一致性、完整性、术语和行文。
+- **做什么：** 审查 issue、ADR、规格、计划和其他项目文档的正确性、需求来源及权威依据、明确的范围边界、可用性、一致性、完整性、术语和行文。
 - **为什么：** 文档即使写得流畅，也可能把技术观察变成未经批准的产品承诺、偏离原始需求、遗漏必要决策，或给出无法执行的说明。
 - **何时使用：** 当你明确需要审查文档，或需要复核声称已经修复的问题时使用。
 - **怎么用：** “使用 artifact-review，对照实现和相关决策审查这份 ADR。”
@@ -163,7 +163,7 @@
 
 | 当前需要 | 从这里开始 | 必要时继续 |
 | --- | --- | --- |
-| 在实施前审查 issue、ADR、规格或计划 | `artifact-review` 检查事实正确性、需求的当前权威依据和明确的范围边界。 | 如果获准工件提出的机制或持续义务需要进一步判断是否适度，使用 `entropy-review`。 |
+| 在实施前审查 issue、ADR、规格或计划 | `artifact-review` 检查事实正确性、需求来源、权威依据和明确的范围边界。 | 如果获准工件提出的机制或持续义务需要进一步判断是否适度，使用 `entropy-review`。 |
 | 评估设计、计划或实现的复杂度 | `entropy-review` 对照当前目标和最小充分方案，评估全部持续义务。 | 如果作为依据的需求或决策工件本身不清楚或已经漂移，返回 `artifact-review`。 |
 | 评估 PR 审查意见 | `handle-review` 判断每项意见是否真实、是否在范围内，以及是否适合采纳。 | 如果建议的机制不成比例，使用 `entropy-review`；如果反复修改仍在扩大契约而没有推动验收，使用 `backtrace-review`。 |
 | 恢复反复不收敛的工作 | `backtrace-review` 重建需求、假设、决策和补丁链。 | 使用 `artifact-review` 审查恢复后的需求或决策记录，再用 `entropy-review` 评估恢复方案。 |

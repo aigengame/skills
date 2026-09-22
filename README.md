@@ -166,7 +166,7 @@ each area guides the next decision.](https://media.githubusercontent.com/media/a
 #### [`artifact-review`](skills/artifact-review/SKILL.md)
 
 - **What:** Reviews issues, ADRs, specifications, plans, and other project documents
-  for correctness, current requirement authority, explicit scope boundaries,
+  for correctness, requirement provenance and authority, explicit scope boundaries,
   usability, consistency, completeness, terminology, and prose.
 - **Why:** A polished document can still turn a technical observation into an
   unsupported product commitment, drift from its originating requirement, omit a
@@ -230,7 +230,7 @@ packages.
 
 | Current need | Start with | Continue when needed |
 | --- | --- | --- |
-| Review an issue, ADR, specification, or plan before implementation | `artifact-review` checks factual correctness, current requirement authority, and explicit scope boundaries. | Use `entropy-review` when the approved artifact proposes mechanisms or obligations whose proportionality needs deeper assessment. |
+| Review an issue, ADR, specification, or plan before implementation | `artifact-review` checks factual correctness, requirement provenance and authority, and explicit scope boundaries. | Use `entropy-review` when the approved artifact proposes mechanisms or obligations whose proportionality needs deeper assessment. |
 | Assess the complexity of a design, plan, or implementation | `entropy-review` compares total obligations with the current goal and minimum sufficient solution. | Return to `artifact-review` when the source requirement or decision artifact is itself unclear or has drifted. |
 | Evaluate pull request feedback | `handle-review` decides whether each finding is true, in scope, and appropriate to adopt. | Use `entropy-review` for a disproportionate proposed mechanism, or `backtrace-review` when repeated review fixes expand the contract without acceptance progress. |
 | Recover non-converging work | `backtrace-review` reconstructs the requirement, assumption, decision, and patch chain. | Use `artifact-review` to review the recovered requirement or decision record, then `entropy-review` to assess the recovery design. |
