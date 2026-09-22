@@ -1,6 +1,6 @@
 ---
 name: handle-review
-description: Analyze, evaluate, and handle pull request review feedback before changing code. Verify each comment against the current PR head, requirements, product support scope, project constraints, and runtime evidence; distinguish technical truth from requirement standing; then decide with evidence whether to fully adopt, partially adopt, not adopt, or request an owner decision. Prevent review findings and suggested mechanisms from turning unsupported cases into product promises, scope inflation, symptom-patch loops, NFR-driven platforms, disproportionate complexity, rigid processes, or regressions. Use when addressing PR review comments, evaluating findings, implementing accepted feedback, or drafting a reviewer reply.
+description: Analyze, evaluate, and handle pull request review feedback before changing code. Verify each comment against the current PR head, requirements, product support scope, project constraints, and runtime evidence; distinguish technical truth from requirement standing; then decide with evidence whether to fully adopt, partially adopt, not adopt, or request an owner decision. Prevent review findings and suggested mechanisms from turning unsupported cases into product promises, scope inflation, symptom-patch loops, NFR-driven platformization, disproportionate complexity, rigid processes, or regressions. Use when addressing PR review comments, evaluating findings, implementing accepted feedback, or drafting a reviewer reply.
 ---
 
 # Handle Review
@@ -152,8 +152,8 @@ mixed comment, identify the adopted and unadopted parts explicitly.
 Fully adopt when all of the following are true:
 
 - Current evidence confirms the problem.
-- The affected input or behavior has requirement standing, or the designated owner has authorized
-  that support in this PR.
+- The affected input or behavior has requirement standing, or the designated product or support
+  decision owner has authorized that support in this PR.
 - The problem should be addressed in this PR.
 - When the reviewer suggests a solution, it is direct, sufficient, and free of material excess
   complexity.
@@ -184,11 +184,17 @@ State what is adopted, what is not adopted, and why.
 
 Use **Decision Required** when the technical finding is confirmed or plausible but requirement
 standing, compatibility treatment, acceptable cost, or the next action under unresolved evidence
-still needs an authorized product or maintainer decision. State the known facts, the authority gap,
-the effects of support and non-support, simpler options, a recommendation, the decision owner, and
-the dependent work to pause. Options can include deliberate support, compatibility-preserving
-deprecation, refusal through an existing channel, or no change. Do not implement the broadest case by
-default.
+still needs an authorized decision. Route support scope and compatibility promises to the designated
+product or support decision owner. Route the implementation, current PR action, and acceptable
+engineering cost to the maintainer. One person can hold both roles. If no owner is designated,
+follow the project's governance or ask the user. State the known facts, the authority gap, the effects
+of support and non-support, simpler options, a recommendation, the decision owner, and the dependent
+work to pause. Options can include deliberate support, compatibility-preserving deprecation, refusal
+through an existing channel, or no change. Do not implement the broadest case by default.
+
+**Decision Required** takes precedence over **Do Not Adopt** while a current public promise,
+demonstrated external dependency, or hard constraint leaves compatibility treatment or follow-up
+work unresolved.
 
 #### Do Not Adopt
 
@@ -196,8 +202,10 @@ Do not adopt when:
 
 - Current evidence disproves the claim, or a bounded investigation finds no supporting evidence
   and the residual risk does not justify a change.
-- The designated owner has explicitly excluded the affected input or behavior from support, and the
-  retained behavior does not silently corrupt data or report false success.
+- The designated product or support decision owner has explicitly excluded the affected input or
+  behavior, compatibility treatment is resolved, neither a current public promise nor a demonstrated
+  external dependency nor a hard constraint requires further work, and the retained behavior does
+  not silently corrupt data or report false success.
 - The suggestion solves a problem outside the current scope.
 - A minor difference creates no material comprehension or maintenance cost.
 - The change would introduce substantially greater software entropy.
@@ -323,4 +331,6 @@ modifications.
 - Do not replace verification with argument; declining feedback also requires evidence.
 - Do not expand into a comprehensive review or architectural rewrite unrelated to the current
   feedback.
-- Leave the final engineering decision to the maintainer; review supplies input and feedback.
+- Leave support scope and compatibility promises to the designated product or support decision
+  owner. Leave implementation, PR action, and engineering cost to the maintainer. One person can
+  hold both roles; review supplies input and feedback.
