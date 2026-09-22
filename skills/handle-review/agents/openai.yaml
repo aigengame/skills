@@ -1,4 +1,4 @@
 interface:
   display_name: "Handle Review"
   short_description: "Evaluate PR feedback before making changes"
-  default_prompt: "Use $handle-review to evaluate these PR comments and decide, with evidence, what to fully adopt, partially adopt, or not adopt."
+  default_prompt: "Use $handle-review to evaluate these PR comments, separate technical truth from requirement standing, and decide what to fully adopt, partially adopt, not adopt, or route to an owner decision."

@@ -1,13 +1,14 @@
 ---
 name: backtrace-review
 description: >-
-  Trace stalled software tasks back through requirements, assumptions, technical
-  decisions, and accumulated patches. Use first principles to review support scope,
-  architectural boundaries, and total complexity, then recommend an evidence-backed
-  recovery path. Use when a feature or fix repeatedly fails to converge, fixes cause
-  adjacent failures, or mechanisms keep growing without progress toward acceptance.
-  Do not substitute this for routine code review or infer a design failure from the
-  number of iterations alone.
+  Trace stalled or scope-inflated software tasks back through requirements,
+  assumptions, technical decisions, and accumulated patches. Use first principles to
+  review support scope, architectural boundaries, and total complexity, then recommend
+  an evidence-backed recovery path. Use when a feature or fix repeatedly fails to
+  converge, fixes cause adjacent failures, or requirements, contracts, and mechanisms
+  keep growing through implementation or review without progress toward acceptance. Do
+  not substitute this for routine code review or infer a design failure from the number
+  of iterations alone.
 ---
 
 # Backtrace Review
@@ -24,6 +25,12 @@ from current user goals, verified facts, and hard constraints. Do not treat the
 current implementation, historical patches, or familiar practices as fixed premises.
 This is not design from intuition alone; mature theory, existing solutions, and
 empirical evidence remain important inputs.
+
+Separate technical truth from **requirement standing**. Requirement standing is current authority
+that the product owes a behavior, such as a recorded user outcome, approved acceptance criterion,
+accepted compatibility obligation, current public promise, or hard safety, integrity, or
+interoperability constraint. A probe, current behavior, review finding, or regression test can prove
+a fact without establishing that the current goal must support it.
 
 First trace the upstream conditions that can prevent convergence or expand the response beyond the
 demonstrated need:
@@ -43,6 +50,10 @@ demonstrated need:
 - A technically possible, narrow, or low-frequency condition does not by itself create a product
   support obligation. The condition can be mistaken for required support, which can invent or
   broaden an NFR and trigger NFR-driven platformization.
+- A true observation can acquire apparent authority as an issue frames it as required, a patch makes
+  it consistent, a regression test pins it, and documentation or a schema publishes it. Each local
+  step can be accurate while the contract and implementation drift from the recorded outcome and
+  expand the next review round.
 
 Test two distinct, non-exclusive causal mechanisms through which unresolved conditions can grow
 complexity:
@@ -133,6 +144,12 @@ toward the original acceptance criteria. There is no fixed iteration threshold.
 Normal exploration, changed requirements, environment failures, and unrelated defects
 can also cause repeated work.
 
+A second review round on the same slice, or any review response that materially expands input forms
+or public contract surface, is an early authority-refresh trigger: re-read the originating
+requirement and the record that introduced the disputed behavior before another patch. This is not a
+fixed diagnosis threshold. If the slice's premise lacks requirement standing or the causal chain
+remains unclear, pause dependent scope growth and start or continue the backtrace review.
+
 Tell the user that you are starting a backtrace review. Pause further patches,
 interfaces, and compatibility rules along the disputed approach. Preserve the
 workspace, reproducible failures, and verified behavior. Continue relevant read-only
@@ -150,16 +167,22 @@ owner has been designated.
 
 ### 1. Reconstruct the goal and factual baseline
 
-- Pin the implementation revision, relevant issue or pull request, requirements,
-  acceptance criteria, and current architecture decisions. Distinguish the original
-  user problem, currently approved requirements, and goals added during implementation.
-  Historical records explain past decisions; they are not automatically current requirements.
+- Pin the implementation revision, current issue or pull request, the originating requirement for
+  the slice, the record that introduced the disputed behavior, acceptance criteria, and current
+  architecture decisions. When drift is suspected, read the authoritative records in full and quote
+  the relevant criteria instead of relying on memory or a paraphrase. Distinguish the original user
+  problem, currently approved requirements, and goals added during implementation. Historical
+  records explain past decisions; they are not automatically current requirements.
 - Define completion through observable outcomes. Identify behavior to preserve, hard
   constraints, actual consumers, and exclusions. Translate a prescribed mechanism,
   such as a field, adapter, or gate, back into the problem it is meant to solve.
 - Assess the user need, the proposed mechanism, and the breadth of the current
   interpretation separately. A wrong mechanism does not invalidate the need. Do not
   make the task appear complete by silently reducing acceptance or removing necessary checks.
+- If a proposed scope bound comes from a count of texts, schema hunks, help entries, or similar
+  artifacts, inventory the underlying fact by meaning across relevant contract, code, documentation,
+  and test surfaces before treating that count as a boundary. A literal search result is inventory
+  evidence, not a product requirement.
 
 ### 2. Establish support scope and limit auxiliary mechanisms
 
@@ -174,6 +197,11 @@ Explaining implementation details, covering unpromised scenarios, or preparing
   why simpler handling is insufficient, and its state, coupling, and maintenance
   costs. Technical possibility, completeness, or a reviewer's preference alone does
   not justify these costs.
+- For each input or behavior surfaced by a probe or review, decide two questions independently:
+  whether the finding is technically true, and whether that input or behavior has requirement
+  standing. A true finding without established standing is an observation for a support decision,
+  not an automatic fix, regression, or published contract. If a test is retained while the decision
+  is open, keep its review origin and undecided status explicit in an existing record.
 - Distinguish evidence needed to validate a design from evidence capabilities built
   into the product. Testing an assumption does not require permanent end-to-end
   identity, provenance, or proof retention. Such capabilities need their own
@@ -195,9 +223,10 @@ Explaining implementation details, covering unpromised scenarios, or preparing
   work continues. Present known facts, uncertainties, the effects of support and non-support,
   simpler options, and a recommendation.
   Ask the designated human decision owner, or the user if no owner has been designated,
-  to decide support scope, acceptable cost, or the next action under unresolved evidence, as
-  applicable. Bounded investigation can come first, but technical validation cannot replace a
-  product decision. Do not implement the most complex case by default.
+  to choose deliberate support, compatibility-preserving deprecation, refusal through an existing
+  channel, no change, acceptable cost, or the next action under unresolved evidence, as applicable.
+  Bounded investigation can come first, but technical validation cannot replace a product decision.
+  Do not implement the most complex case by default.
 - A product can explicitly decline support for a very rare situation outside its
   core promises. Explain the evidence for occurrence, consequences, and support cost;
   do not assert rarity without evidence. Low frequency alone is insufficient: assess
@@ -223,6 +252,14 @@ only work that depends on the decision; continue unrelated authorized work.
   facts, preferences, and review suggestions are different kinds of input. An accepted
   architecture decision record (ADR), a proposed review fix, or a reply saying
   "resolved" does not by itself establish technical correctness.
+- Trace requirement and contract drift across issue framing, implementer briefs, patches, review
+  findings, regression tests, and published descriptions. Test whether an observation was made
+  consistent and then treated as required because later artifacts looked authoritative. This is an
+  upstream causal path that can feed symptom-patch accumulation, NFR-driven platformization, or both;
+  do not report it as a third complexity-growth mechanism.
+- When published text and behavior conflict, trace the authority and history of both. Do not assume
+  that the text is stale or that current behavior is intended. A documentation-only repair can ratify
+  an accidental behavior and expand the contract instead of correcting the implementation.
 - Starting from the current outcome, test whether successive local fixes address only the newest
   counterexample while leaving the responsible requirement or boundary unchanged and losing the
   end-to-end goal. Trace the accumulation through assumptions, decisions, compensating mechanisms,
@@ -309,9 +346,9 @@ and every confirmed requirement and hard constraint. Consider rollback or rewrit
 justified. Do not invent alternatives merely to fill a list.
 
 - Compare one-time implementation and migration risks with ongoing concepts,
-  interfaces, state, synchronization rules, test combinations, operations, and change
-  costs. Identify concrete obligations added or removed, not scores based on lines,
-  files, or abstraction counts.
+  interfaces, state, synchronization rules, test combinations, public contract surfaces,
+  operations, and change costs. Identify concrete obligations added or removed, not scores based on
+  lines, files, or abstraction counts.
 - For confirmed symptom-patch accumulation, resolve the validated cause instead of the latest
   symptom. If the cause demonstrates a stable responsibility, semantic, module, or variation
   boundary that the current design does not own, introduce the minimum sufficient abstraction to
@@ -357,6 +394,9 @@ revise affected requirements or design rationale, then reconcile code, tests, ex
 and issue or pull request descriptions. Validate the original problem and affected
 boundaries against the agreed criteria. Preserve historical evidence while explicitly
 superseding invalid conclusions, so old review suggestions do not become new requirements.
+Brief replacement work by outcome, acceptance criteria, boundaries, and required evidence rather
+than by the next helper or mechanism. Review its support scope before perfecting technical
+consistency within that scope.
 
 A completed review is not a completed task. The review needs an evidence-bounded
 explanation and a next step that supports a decision; the task still needs to satisfy
@@ -369,7 +409,8 @@ than restarting an unbounded review of everything.
 
 Lead with the conclusion, then report only the detail the task needs:
 
-- The current goal, supported and unsupported scope, and facts behind the key decisions.
+- The current goal, supported and unsupported scope, requirement standing and authority or gap for
+  each disputed input or behavior, and facts behind the key decisions.
 - Report the upstream cause or unresolved causal hypothesis and how it relates to each
   complexity-growth mechanism. Report a separate conclusion for symptom-patch accumulation. For
   every identified or suspected NFR-driven platformization, report its causal status, evidence and
@@ -429,8 +470,10 @@ justify the platform obligations.
 
 This skill determines whether symptom-patch accumulation or NFR-driven platformization caused a
 non-converging task and identifies the affected requirements, decisions, boundaries, and platform
-obligations. First principles guide the derivation of necessary capabilities and orthogonal
-concerns. The requirements, assumptions, counterexamples, and evidence approach of
-validation-driven-design tests those judgments. `entropy-review` owns the deeper proportionality
-review of architecture or module obligations. Use those methods for deeper work when needed; this
-skill does not require loading other skills or reproducing their full workflows.
+obligations. It traces requirement or contract drift when that drift supplies either mechanism with
+an unsupported premise; drift is an upstream causal path, not a third mechanism. First principles
+guide the derivation of necessary capabilities and orthogonal concerns. The requirements,
+assumptions, counterexamples, and evidence approach of validation-driven-design tests those
+judgments. `entropy-review` owns the deeper proportionality review of architecture or module
+obligations. Use those methods for deeper work when needed; this skill does not require loading other
+skills or reproducing their full workflows.

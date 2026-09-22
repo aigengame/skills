@@ -1,6 +1,6 @@
 ---
 name: entropy-review
-description: Review software designs, implementation plans, and implemented changes from an agile perspective to determine whether their software entropy is proportionate to current goals. Identify scope creep, overengineering, excessive defensive design, over-abstraction and platformization driven by non-functional requirements (NFRs), premature generalization, and hard-to-maintain mechanisms whose costs outweigh their value; provide smaller, more reversible alternatives with faster feedback. Use when the user asks for an entropy review, design simplification, complexity control, an overengineering review, or whether a mechanism is worth introducing, retaining, or expanding.
+description: Review software designs, implementation plans, and implemented changes from an agile perspective to determine whether their software entropy is proportionate to current goals. Identify requirement and contract drift, scope creep, overengineering, excessive defensive design, over-abstraction and platformization driven by non-functional requirements (NFRs), premature generalization, and hard-to-maintain mechanisms whose costs outweigh their value; provide smaller, more reversible alternatives with faster feedback. Use when the user asks for an entropy review, design simplification, complexity control, an overengineering review, or whether a mechanism is worth introducing, retaining, or expanding.
 ---
 
 # Entropy Review
@@ -34,6 +34,12 @@ can add local structure while reducing and stabilizing total system complexity. 
 is not over-abstraction; it becomes excessive only when its scope or continuing obligations exceed
 the demonstrated need.
 
+Separate technical truth from **requirement standing**. Requirement standing is current authority
+that the product owes a behavior, such as a recorded user outcome, approved acceptance criterion,
+accepted compatibility obligation, current public promise, or hard safety, integrity, or
+interoperability constraint. A probe, current behavior, review finding, or regression test can prove
+a fact without establishing that the current goal must support it.
+
 ## Workflow
 
 ### 1. Pin the Current Goal
@@ -44,10 +50,13 @@ Establish:
 - What facts prove that the problem exists?
 - What observable outcome proves that the problem is solved?
 - Which hard constraints must not be violated?
+- Which inputs and behaviors have requirement standing, and which authority or decision owner gives
+  them that standing?
 - Which adjacent problems are explicitly out of scope?
 
 Mark judgments without evidence as assumptions. Do not use assumptions as reasons to expand the
-solution.
+solution. If work originates from a probe or review finding, verify that the observed input or
+behavior is within the approved scope before treating consistency as a goal.
 
 ### 2. Describe the Minimum Sufficient Solution
 
@@ -66,6 +75,10 @@ Use this solution as a comparison baseline, not as a predetermined final answer.
 Identify every concept, layer, state, rule, exception, process, and maintenance duty introduced by
 the design, plan, or change.
 
+Include supported input forms and public or executable contract surfaces such as regression tests,
+schemas, command help, docstrings, error behavior, and published documentation. Making an observed
+behavior consistent across these surfaces can create continuing support and synchronization duties.
+
 Include obligations accumulated across earlier local fixes when they remain part of the current
 design, even if the current change adds little local complexity. Inventory the resulting system, not
 only the current diff.
@@ -73,8 +86,9 @@ only the current diff.
 Ask for each one:
 
 1. Which current goal, requirement, hard constraint, actual consumer, or demonstrated loss requires
-   it?
-2. What current evidence shows that it is needed now and at this scope?
+   it, and what authoritative record establishes that relationship?
+2. Does the evidence establish a support obligation, or only a true observation or current
+   behavior?
 3. Which specified behavior or constraint would break if it were removed?
 4. Is there a smaller, more direct, or more reversible alternative?
 5. Can it be deferred until more feedback is available?
@@ -89,6 +103,10 @@ Do not retain mechanisms by default when these questions cannot be answered.
 Check:
 
 - **Scope creep**: Does the change solve problems outside the current acceptance scope?
+- **Requirement and contract drift**: Did a mechanism-led issue, technically true counterexample,
+  review request, regression test, or documentation repair expand the approved behavior? Is an
+  accidental or undecided behavior being made consistent across code, tests, schemas, and prose
+  before its support scope is decided?
 - **Concept proliferation**: Do new terms or abstractions add more cognitive cost than value?
 - **Needless indirection**: Do added layers exceed what the problem requires?
 - **Duplicated state**: Must multiple representations of one fact remain synchronized?
@@ -111,15 +129,20 @@ Check:
     infrastructure and creates continuing variant, extension, lifecycle, compatibility,
     registration, synchronization, operation, or maintenance obligations.
 
+For each disputed finding, judge technical truth and requirement standing independently. A true
+finding without established standing is an observation that can inform a support decision, not an
+automatic fix or regression obligation.
+
 Assess abstraction proportionality and platformization independently. An abstraction can be
 proportionate while platformization is present, and an over-abstraction finding can apply without
 platformization. Do not report NFR-driven over-abstraction until evidence establishes both that the
 NFR drove the abstraction or generalization and that its scope or continuing obligations exceed the
 demonstrated need. A technically possible, narrow, or low-frequency condition does not by itself
-create a product support obligation. Treat every identified or suspected instance of NFR-driven
-platformization as a high-risk entropy signal. Keep it under review until evidence establishes the
-relevant facts and minimum sufficient obligations, and any required human-in-the-loop (HITL) decision
-resolves support scope, acceptable cost, or the next action under unresolved evidence.
+create a product support obligation; apply this rule to input forms as well as outputs and added
+capabilities. Treat every identified or suspected instance of NFR-driven platformization as a
+high-risk entropy signal. Keep it under review until evidence establishes the relevant facts and
+minimum sufficient obligations, and any required human-in-the-loop (HITL) decision resolves support
+scope, acceptable cost, or the next action under unresolved evidence.
 Screen it even when the NFR is an explicit product requirement or protects a hard constraint; an
 established support obligation does not exempt the candidate from this proportionality review. Use
 these dimensions to find problems. Do not turn them into a mechanical score.
@@ -161,12 +184,13 @@ Simplify, defer, or remove complexity that:
 - Solves adjacent problems instead of the current goal.
 - Plans future stages before the first working result exists.
 
-If any uncertainty remains about the NFR, its need, scope, consumers, continuing obligations, or
-acceptable cost, tell the user and use **HITL decision-making** before selecting
-an action. Present known facts, gaps, the effects of support and non-support, smaller alternatives,
-and a recommendation. Ask the designated human decision owner, or the user if no owner has been
-designated, to decide support scope, acceptable cost, or the next action under unresolved evidence,
-as applicable.
+If any uncertainty remains about requirement standing, support scope, or an NFR's need, scope,
+consumers, continuing obligations, or acceptable cost, tell the user and use **HITL
+decision-making** before selecting a dependent action. Present known facts, gaps, the effects of
+support and non-support, smaller alternatives, and a recommendation. Ask the designated human
+decision owner, or the user if no owner has been designated, to choose deliberate support,
+compatibility-preserving deprecation, refusal through an existing channel, no change, acceptable
+cost, or the next action under unresolved evidence, as applicable.
 
 If HITL selects a bounded investigation, keep the platformization candidate under review and repeat
 the proportionality screen after validation. Do not treat the consultation itself as evidence that
@@ -190,6 +214,8 @@ Check whether the design, plan, or change:
 - Allows local modification, reversal, or replacement.
 - Makes decisions from current learning instead of trying to enumerate the future in advance.
 - Focuses effort on working results, not support structures or out-of-scope work.
+- Re-pins the outcome, requirement standing, and resulting obligations when review introduces a new
+  input form, rule, contract surface, or material expansion of the declared change.
 
 If testing the core judgment requires a long investment, split the work into smaller increments or
 run an experiment first.
@@ -212,16 +238,20 @@ Choose one primary action for each mechanism:
 Do not merely label something “overdesigned.” Provide a smaller alternative that still satisfies
 the current goal.
 
+When support scope is unresolved, do not force **Keep**, **Simplify**, or **Remove**. Use **Defer**
+or **Experiment** as appropriate and obtain the required decision before dependent work continues.
+
 ### 8. Order the Lean Implementation
 
 Organize the work in this order:
 
-1. Remove content that drifts from the current goal.
-2. Define the minimum verifiable outcome.
-3. Reuse existing capabilities.
-4. Deliver the smallest end-to-end slice.
-5. Obtain feedback and test key assumptions.
-6. Add the next layer of complexity only after evidence appears.
+1. Reconfirm the current outcome, acceptance scope, and requirement standing.
+2. Remove content that drifts from that goal.
+3. Define the minimum verifiable outcome.
+4. Reuse existing capabilities.
+5. Deliver the smallest end-to-end slice.
+6. Obtain feedback and test key assumptions.
+7. Add the next layer of complexity only after evidence appears.
 
 Stop expanding when the current goal is satisfied and the next step is driven only by future
 assumptions.
@@ -230,30 +260,34 @@ assumptions.
 
 Provide:
 
-1. **Verdict**: Choose **Keep**, **Simplify**, or **Remove**. Explain the primary basis in one
-   paragraph.
+1. **Verdict**: State the primary action selected in step 7: **Keep**, **Simplify**, **Reuse**,
+   **Defer**, **Remove**, or **Experiment**. Use **Decision required** only when the designated owner
+   has not made a necessary scope, cost, or next-action decision; name that owner and the dependent
+   work to pause. If the owner selected bounded validation, report **Experiment** and the question it
+   must resolve.
 2. **Current goal and minimum sufficient solution**: State the problem, observable completion
-   outcome, hard constraints, and minimum sufficient solution.
+   outcome, hard constraints, supported and unsupported scope, and minimum sufficient solution.
 3. **Review findings**: For each actionable finding, state the mechanism, goal relationship,
-   evidence, entropy cost, and action. For suspected symptom-patch accumulation, report the
-   accumulated obligations, total-complexity effect, demonstrated boundary or evidence gap, and the
-   comparison between continued local fixes and the minimum sufficient root-cause solution, including
-   a necessary abstraction when a stable boundary is demonstrated. For every identified or suspected
-   NFR-driven platformization, report the NFR, current evidence and gaps, continuing platform
-   obligations, proportionality conclusion, and action. Report NFR-driven over-abstraction only after
-   evidence establishes both that the NFR drove the abstraction or generalization and that its scope
-   or continuing obligations are disproportionate; otherwise report the evidence gap without the
-   finding. Report any remaining uncertainty and its HITL decision or open decision with its owner.
-   For each actionable finding, provide a smaller alternative that preserves the observable outcome
-   and every confirmed requirement and hard constraint.
+   requirement standing and authority or gap, evidence, contract and entropy costs, and action. For
+   suspected symptom-patch accumulation, report the accumulated obligations, total-complexity effect,
+   demonstrated boundary or evidence gap, and the comparison between continued local fixes and the
+   minimum sufficient root-cause solution, including a necessary abstraction when a stable boundary
+   is demonstrated. For every identified or suspected NFR-driven platformization, report the NFR,
+   current evidence and gaps, continuing platform obligations, proportionality conclusion, and
+   action. Report NFR-driven over-abstraction only after evidence establishes both that the NFR drove
+   the abstraction or generalization and that its scope or continuing obligations are
+   disproportionate; otherwise report the evidence gap without the finding. Report any remaining
+   uncertainty and its HITL decision or open decision with its owner. For each actionable finding,
+   provide a smaller alternative that preserves the observable outcome and every confirmed
+   requirement and hard constraint.
 4. **Essential complexity**: Identify what must remain and why.
 5. **Lean implementation order**: Provide independently verifiable steps with fast feedback.
 6. **Assumptions to test**: List unsupported assumptions and the cheapest way to test each one.
 
 Report only findings that can change a decision or implementation approach, plus the bounded result
-for each identified or suspected NFR-driven platformization. If no substantive issue or
-platformization candidate exists, return **Keep** and stop; do not manufacture findings to fill the
-format.
+for each identified or suspected NFR-driven platformization. If no substantive issue,
+platformization candidate, or unresolved scope decision exists, return **Keep** and stop; do not
+manufacture findings to fill the format.
 
 ## Boundaries
 
