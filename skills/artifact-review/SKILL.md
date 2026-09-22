@@ -95,12 +95,13 @@ artifact.
   recorded user outcome, approved acceptance criterion, accepted compatibility
   obligation, current public promise, or hard safety, integrity, or interoperability
   constraint.
-- Requirement standing and non-circular provenance answer different questions.
-  Standing records a current product obligation; it does not by itself prove the
-  actual product need or authorize retaining or expanding its scope. For scope
-  approval, require provenance grounded in a recorded user outcome, an explicit
-  decision by the designated owner to address a demonstrated need or loss for an
-  actual consumer, or a hard safety, integrity, or interoperability constraint.
+- **Non-circular provenance** traces that obligation to an actual product need or hard
+  constraint without relying on the artifact under review or downstream claims
+  derived from the same observation. Requirement standing alone does not prove that
+  need or authorize retaining or expanding scope. For scope approval, require a
+  recorded user outcome, an explicit decision by the designated owner to address a
+  demonstrated need or loss for an actual consumer, or a hard safety, integrity, or
+  interoperability constraint.
 - A probe, current behavior, implementation limit, review finding, or regression test
   can prove a fact. It does not by itself establish that the product must support the
   observed input or behavior.
