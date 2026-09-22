@@ -200,8 +200,8 @@ Explaining implementation details, covering unpromised scenarios, or preparing
   costs. Technical possibility, completeness, or a reviewer's preference alone does
   not justify these costs.
 - For each input or behavior surfaced by a probe or review, decide two questions independently:
-  whether the finding is technically true, and whether the product has requirement standing to
-  support it. A true finding without established standing is an observation for a support decision,
+  whether the finding is technically true, and whether that input or behavior has requirement
+  standing. A true finding without established standing is an observation for a support decision,
   not an automatic fix, regression, or published contract. If a test is retained while the decision
   is open, keep its review origin and undecided status explicit in an existing record.
 - Distinguish evidence needed to validate a design from evidence capabilities built
