@@ -242,8 +242,8 @@ Start with one conclusion:
   non-circular support from a recorded user outcome, explicit owner decision, or
   hard constraint, or contradicts one of them. Correcting it would replace the
   proposed work. Do not use this artifact to approve or guide implementation.
-  Recommend a redraft or replacement grounded in confirmed authority and bounded
-  scope.
+  Recommend a redraft or replacement based on confirmed authority and bounded
+  scope. If either is unknown, leave it for the decision owner to determine.
 
 Use **Decline** only when the proposed purpose cannot survive a bounded correction.
 Finding count and severity do not decide the verdict. An open support decision does
@@ -274,20 +274,24 @@ For each finding, give:
 - The location.
 - Verifiable evidence.
 - For a requirement or scope finding, the current requirement standing, including any
-  accepted compatibility obligation or current public promise; the actual product need
-  or hard constraint; the non-circular provenance chain or its first unsupported link;
-  and the exact behavior, input, contract surface, or continuing obligation added
-  beyond, removed from, or changed relative to that need.
+  accepted compatibility obligation or current public promise; any confirmed product
+  need or hard constraint, or the gap if neither is known; the non-circular provenance
+  chain or its first unsupported link; and the exact behavior, input, contract
+  surface, or continuing obligation at issue, with its delta from any confirmed
+  need or current scope.
 - The impact on accuracy, understanding, or use.
-- The smallest practical alternative that serves the authorized goal.
+- The smallest practical alternative for a confirmed authorized goal. If none is
+  confirmed, identify the owner decision needed before proposing an alternative.
 
-For **Decline**, cite the recorded user outcome, accepted owner decision, or hard
-constraint that bounds the work. Identify the first unsupported premise or
-contradiction and explain why bounded edits cannot restore the artifact's purpose.
-State the known authorized outcome and scope boundary for a replacement, any useful
-evidence to retain, and any open support decision and its owner. This verdict rejects
-the current artifact, not the observed facts or an existing product obligation; it
-does not itself close or replace the artifact.
+For **Decline**, cite any recorded user outcome, accepted owner decision, or hard
+constraint that bounds the work. If none exists, state the authority gap. Identify
+the first unsupported premise or contradiction and explain why bounded edits cannot
+restore the artifact's purpose. State any confirmed replacement outcome and scope
+boundary. Do not infer missing ones; name the decision owner for each open support
+choice. Record useful evidence to retain and any existing compatibility obligation
+or public promise.
+This verdict rejects the current artifact, not the observed facts or an existing
+product obligation; it does not itself close or replace the artifact.
 
 Report only actionable issues. Keep optional improvements separate from required
 changes and include them only when they materially help.
