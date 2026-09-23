@@ -236,8 +236,19 @@ Start with one conclusion:
 - **Pass**: no substantive content, terminology, or prose issue prevents the artifact
   from fulfilling its purpose, and the required terminology and prose pass is
   complete and reported.
-- **Changes required**: one or more substantive content, terminology, or prose issues
-  must be resolved.
+- **Changes required**: substantive issues must be resolved, but the artifact's
+  purpose can still serve the authorized goal after bounded corrections.
+- **Decline**: the artifact's central premise or essential acceptance scope lacks
+  non-circular support from a recorded user outcome, explicit owner decision, or
+  hard constraint, or contradicts one of them. Correcting it would replace the
+  proposed work. Do not use this artifact to approve or guide implementation.
+  Recommend a redraft or replacement grounded in confirmed authority and bounded
+  scope.
+
+Use **Decline** only when the proposed purpose cannot survive a bounded correction.
+Finding count and severity do not decide the verdict. An open support decision does
+not let the reviewer cancel an accepted compatibility obligation or public promise.
+Identify its decision owner and pause dependent work.
 
 Always include a **Terminology and prose assessment**, even when it produces no
 finding. State:
@@ -253,9 +264,10 @@ If no substantive terminology or prose issue was found, say so explicitly. The
 assessment documents review coverage; it does not require a finding.
 
 Group actionable findings under **Required changes** or **Minor** as appropriate.
-Classify by impact, not by issue type. A terminology or prose problem that affects
-accuracy, understanding, decisions, or use belongs under **Required changes** rather
-than being downgraded as wording feedback.
+For **Decline**, put the findings that invalidate the artifact's premise under
+**Reasons for decline**. Classify by impact, not by issue type. A terminology or
+prose problem that affects accuracy, understanding, decisions, or use is substantive
+and must not be downgraded to wording feedback.
 
 For each finding, give:
 
@@ -267,7 +279,15 @@ For each finding, give:
   and the exact behavior, input, contract surface, or continuing obligation added
   beyond, removed from, or changed relative to that need.
 - The impact on accuracy, understanding, or use.
-- The smallest practical alternative that preserves the intent.
+- The smallest practical alternative that serves the authorized goal.
+
+For **Decline**, cite the recorded user outcome, accepted owner decision, or hard
+constraint that bounds the work. Identify the first unsupported premise or
+contradiction and explain why bounded edits cannot restore the artifact's purpose.
+State the known authorized outcome and scope boundary for a replacement, any useful
+evidence to retain, and any open support decision and its owner. This verdict rejects
+the current artifact, not the observed facts or an existing product obligation; it
+does not itself close or replace the artifact.
 
 Report only actionable issues. Keep optional improvements separate from required
 changes and include them only when they materially help.
@@ -276,10 +296,11 @@ If new context invalidates a proposed fix but not the underlying problem, revise
 fix rather than dropping the finding.
 
 If an implementation-oriented artifact presents an unresolved product decision as
-approved scope, report **Changes required**, identify the decision owner, and name the
-dependent work that must pause. An artifact whose purpose is to frame that decision
-can pass when it labels the proposal, authority gap, owner, and open decision
-accurately.
+approved scope, report **Changes required** when bounded corrections can preserve
+its purpose, or **Decline** when that assumption defines its purpose or acceptance
+scope. Identify the decision owner and dependent work that must pause. An artifact
+whose purpose is to frame that decision can pass when it labels the proposal,
+authority gap, owner, and open decision accurately.
 
 If there are no substantive findings, report **Pass**, identify the reviewed target,
 include the required **Terminology and prose assessment**, and summarize the main
@@ -299,8 +320,9 @@ perform other remote writes only when the user explicitly authorizes them.
 - Review scope added or changed since the previous review.
 - Verify that a fix did not turn an observation into a requirement, add an unsupported
   obligation, or restore rejected scope under a new name.
-- For an item declined by design, verify that the accepted constraint, rationale, and
-  necessary mitigations appear in the appropriate authoritative material.
+- For an option excluded by an accepted decision, verify that the constraint,
+  rationale, and necessary mitigations appear in the appropriate authoritative
+  material.
 - Use the same conclusion and finding format as the initial review.
 
 ## Relationship to Other Review Skills
